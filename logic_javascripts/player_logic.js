@@ -71,163 +71,165 @@ function player(){
 
 function deck(){
 	this.cards = {
-		'three' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : true //three starts every game as wild so it's default is set to true.
-		},
-		'four' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'five' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'six' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'seven' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'eight' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'nine' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'ten' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'jack' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'queen' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'king' : {
-			red : 2,
-			blue : 2,
-			green : 2,
-			yellow : 2,
-			black : 2,
-			is_wild : false
-		},
-		'joker' : {
-			number : 6,
-			is_wild : true //jokers are always wild
+		each_card : {
+			'three' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : true //three starts every game as wild so it's default is set to true.
+			},
+			'four' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'five' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'six' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'seven' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'eight' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'nine' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'ten' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'jack' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'queen' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'king' : {
+				red : 2,
+				blue : 2,
+				green : 2,
+				yellow : 2,
+				black : 2,
+				is_wild : false
+			},
+			'joker' : {
+				number : 6,
+				is_wild : true //jokers are always wild
+			}	
 		},
 			
 		get : function(){
-			return this;
+			return this.each_card;
 		},
 	
 		set_is_wild : function (round) {
 			switch(round){
 				case 'four':
 				{
-					this.three.is_wild = false;
-					this.four.is_wild = true;
+					this.each_card.three.is_wild = false;
+					this.each_card.four.is_wild = true;
 					break;	
 				}
 				case 'five':
 				{
-					this.four.is_wild = false;
-					this.five.is_wild = true;
+					this.each_card.four.is_wild = false;
+					this.each_card.five.is_wild = true;
 					break;
 				}
 				case 'six':
 				{
-					this.five.is_wild = false;
-					this.six.is_wild = true;
+					this.each_card.five.is_wild = false;
+					this.each_card.six.is_wild = true;
 					break;
 				}
 				case 'seven':
 				{
-					this.six.is_wild = false;
-					this.seven.is_wild = true;
+					this.each_card.six.is_wild = false;
+					this.each_card.seven.is_wild = true;
 					break;
 				}
 				case 'eight':
 				{
-					this.seven.is_wild = false;
-					this.eight.is_wild = true;
+					this.each_card.seven.is_wild = false;
+					this.each_card.eight.is_wild = true;
 					break;
 				}
 				case 'nine':
 				{
-					this.eight.is_wild = false;
-					this.nine.is_wild = true;
+					this.each_card.eight.is_wild = false;
+					this.each_card.nine.is_wild = true;
 					break;
 				}
 				case 'ten':
 				{
-					this.nine.is_wild = false;
-					this.ten.is_wild = true;
+					this.each_card.nine.is_wild = false;
+					this.each_card.ten.is_wild = true;
 					break;
 				}
 				case 'jack':
 				{
-					this.ten.is_wild = false;
-					this.jack.is_wild = true;
+					this.each_card.ten.is_wild = false;
+					this.each_card.jack.is_wild = true;
 					break;
 				}
 				case 'queen':
 				{
-					this.jack.is_wild = false;
-					this.queen.is_wild = true;
+					this.each_card.jack.is_wild = false;
+					this.each_card.queen.is_wild = true;
 					break;
 				}
 				case 'king':
 				{
-					this.queen.is_wild = false;
-					this.king.is_wild = true;
+					this.each_card.queen.is_wild = false;
+					this.each_card.king.is_wild = true;
 					break;
 				}				
 			}
@@ -243,6 +245,24 @@ function deck(){
 
 function game(){
 	var _deck = new deck;
+	var current_deck = _deck.cards.get();
+	var suffled_deck = new Array;
+	var i = 0;
+	
+	for (key in current_deck){
+    	if(current_deck.hasOwnProperty(key)){
+        	for (v in current_deck[key]){
+        		if(current_deck[key].hasOwnProperty(v)){
+        			if ( v != 'is_wild'){
+        				suffled_deck[i] = { v : current_deck[key][v]};
+        				i++;
+        				console.log(suffled_deck);
+        			}
+        		}
+        	}
+    	}
+	}
+	
 	console.log(_deck.cards.get());
 	console.log(_deck.cards.set_is_wild('queen'));	
 }
