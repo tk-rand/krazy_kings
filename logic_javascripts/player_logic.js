@@ -1,38 +1,14 @@
 
 function player(){
-	var hand = [];
-
-	this.deal = function(deck_ref, round){
-		switch(round){
-			case 1:
-				{	
-					for(var i = 0;i <= 2; i++){
-						hand[i] = deck_ref.pop();	
-					}
-					return hand;
-					break;
-				}
-			case 2:
-				{
-					return 4;
-				}
-			case 3:
-				{
-					return 5;
-				}
-			case 4:
-				{
-					return 6;
-				}
-			case 5:
-				{
-					return 7;
-				}
-		}
-	}
+	this.hand = [];
+	this.name = '';
 	
-	this.hand = function(){
-		
+	this.deal = function(deck_ref, round){
+		var _hand = [];
+		for(var i = 0; i< round+2; i++){ //11 rounds starts at 1 (3 cards) last round has 13 cards 11+2
+			_hand[i] = deck_ref.pop()
+		}
+		return {'hand': _hand, 'deck_ref': deck_ref};
 	}
 	
 	this.draw_from_deck_or_discard = function(){
@@ -128,25 +104,51 @@ function deck(){
 	}	
 }
 
-function round() {
-	
-	this.round = function(){
-		var cur_round = 0;
+function round() {	
+	this.get_round = function(cur_round){
 		return ++cur_round;		
 	}
 }
 
+function game(){	
+	//num of players and name of players must be same,
+	//pass computer 1, computer 2, etc... for computer players
+	this.inilize_game = function(num_of_players, name_of_players){
+		var deck_instance = new deck;
+		var round_instance = new round;
+		var players = []
+		for(var i = 0; i< num_of_players; i++){
+			players[i] = new player;
+			players[i].name = name_of_players[i];	
 
-function game(){
-	var game = new deck;
-	var _deck = game.build_deck();
-	var current_round = new round;
-	_deck = game.shuffle(_deck);
-
-	var players = new player;
-
-	return players.deal(_deck, current_round.round());
+		}
+		var _deck = deck_instance.build_deck();
 		
+		return 	{'deck_instance': deck_instance, 'round_instance': round_instance, 'deck': _deck, 'players': players};
+	}
+	//@game_constants is a object literal
+	this.start_game = function(game_constants, round){
+		//pull out needed vars
+		var _deck_instance = game_constants.deck_instance;
+		var _deck = game_constants.deck;
+		var _round_instance = game_constants.round_instance;
+		var _players = game_constants.players;
+		var _round = round;
+		var deal_return = {};
+		
+		_deck = _deck_instance.shuffle(_deck);
+		_round = _round_instance.get_round(round);
+		
+		for(var i = 0; i < _players.length; i++){
+			if(i == 0){
+				deal_return	= _players[i].deal(_deck, _round);
+			}else{
+				deal_return = _players[i].deal(deal_return.deck_ref, _round);
+			}
+			_players[i].hand = deal_return.hand;	
+		}
+		return _players;	
+	}		
 }
 
 
