@@ -127,17 +127,17 @@ function game(){
 		return 	{'deck_instance': deck_instance, 'round_instance': round_instance, 'deck': _deck, 'players': players};
 	}
 	//@game_constants is a object literal
-	this.start_game = function(game_constants, round){
+	this.start_game = function(game_constants){
 		//pull out needed vars
 		var _deck_instance = game_constants.deck_instance;
 		var _deck = game_constants.deck;
 		var _round_instance = game_constants.round_instance;
 		var _players = game_constants.players;
-		var _round = round;
+		var _round = 0;
 		var deal_return = {};
 		
 		_deck = _deck_instance.shuffle(_deck);
-		_round = _round_instance.get_round(round);
+		_round = _round_instance.get_round(0); //get_round pre_increments so at start pass 0
 		
 		for(var i = 0; i < _players.length; i++){
 			if(i == 0){
@@ -147,7 +147,11 @@ function game(){
 			}
 			_players[i].hand = deal_return.hand;	
 		}
-		return _players;	
+		return {'players': _players, 'deck': deal_return.deck_ref, 'round_instance': _round_instance, 'round': _round, 'deck_instance': _deck_instance};	
+	}
+	
+	this.new_round = function(game_constants){
+		
 	}		
 }
 
