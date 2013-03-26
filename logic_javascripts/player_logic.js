@@ -45,7 +45,8 @@ function deck(){
 		var card = {
 			value : value,
 			is_wild : is_wild,
-			suite : suite	
+			suite : suite,
+			display : ''	
 		}
 		return card;
 	}
@@ -65,23 +66,28 @@ function deck(){
 				}	
 				if( j <= 1){
 					suite = 'stars'; //and change the suite after 2 of each card in a suite is made.
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite);
+					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++; //increment the card count each time				
 				}else if(j > 1 && j <= 3){	
 					suite = 'hearts'; 
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite);
+					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++;
 				}else if(j > 3 && j <= 5){
 					suite = 'dimonds';
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite);
+					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++;
 				}else if (j > 5 && j <= 7){
 					suite = 'spades';
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite);
+					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++;
 				}else if(j > 7 && j <= 9){
 					suite = 'clubs';
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite);
+					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+						"<div class='"+suite + card_values[i]+ "' onclick='card_handler(this);'></div>");
 					cc++;
 				}
 			}
