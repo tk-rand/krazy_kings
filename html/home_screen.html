@@ -4,24 +4,48 @@
 		<title>I don't think I need a title</title>
 		<script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
 		<script type="text/javascript" src="../ui_javascripts/navigation.js"></script>
-		<script type="text/javascript" src="../ui_javascripts/home_screen.js"></script>
+
 		<script type="text/javascript" src="../logic_javascripts/player_logic.js"></script>
 		<link type="text/css" href="/css/home_screen.css" />
 		<link type="text/css" href="/css/modals.css" />
 		<link type="text/css" href="/css/menu.css" />
 	</head>
 	<body style="background-color: red;">
-        <header class="home_screen_header">
-            <h4>Five Crowns!</h4>
-        </header>
-
-        <div id="main_content" class="content">
-
+		
+        <div id="home_screen" class="home_screen screen">
+			<header class="home_screen_header">
+            	<h4>Five Crowns!</h4>
+        	</header>
+        	<div id="menu" class="main_menu partial">
+        		<ul class="menu navigation">
+        			<li value="main_screen" onclick="navigation(this);">New Game</li>
+        			<li value="options_screen" onclick="navigation(this);">Options</li>
+        			<li value="score" onclick="navigation(this);">High Scores</li>
+        			<li value="exit" onclick="navigation(this);">Exit</li> 
+        		</ul>	
+        	</div>
+        	
+        	<div id="score" class="score_screen partial">
+        		
+        	</div>
+        	
+			<footer class="home_screen_footer">
+            	Five Crowns!
+        	</footer>
+        </div>
+        
+        <div id="options_screen" class="options_screen screen">
+        	
+        </div>
+        
+        <div id="main_screen" class="main_screen screen">
+        	
+        </div>
+        
+        <div id="popup_modal" class="popup modal">
+        	
         </div>
 
-        <footer class="home_screen_footer">
-            Five Crowns!
-        </footer>
-
 	</body>
+	<script type="text/javascript" src="../ui_javascripts/home_screen.js"></script>
 </html>
