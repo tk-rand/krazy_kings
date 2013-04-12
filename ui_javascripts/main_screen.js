@@ -70,36 +70,80 @@ Game.prototype.warn_other_players = function(){
 	
 }
 
-var laydown_logic = {
-	three : function(hand){
-		 var _set = [];
-		 var _run = [];
+function laydown(hand){
+    var temp_hand = hand; // copy hand to work with
+    var _set = [];
+    var _run = [];
+    var can_laydown = false;
+    var cant_laydown = false;
 
-		 for(var i = hand.length; i > 0; i--){
-		 	if(_set.length == 0){ //set is empty to start
-		 		_set.push(hand[i]);
-		 		_run.push(hand[i]);
-		 	}else{
-		 		for(var j = 0; j < _set.length; j++){
-		 			if(_set[j].value == hand[i].value){
-		 				if(_set.length <= 3){
-		 					_set.push(hand[i]);	
-		 				}else if(_run[j].suite == hand[i].suite){
-		 					var hand_next = hand[i].value + 1;
-		 					var hand_prev = hand[i].value - 1;
-		 					var run_next = _run[j].value + 1;
-		 					var run_prev = _run[j].value - 1;
-		 					//2 is not valid values start at 3 except for jokers which are permanently wild and have a value of 1
-		 					if(hand[i].name == 'joker' || run_prev != 2 || _run[j].name == 'joker'){
-		 						//
-		 						if(run_next == hand_next || run_prev == hand_prev){
-		 							_run.push(hand[i]);	
-		 						}		
-		 					}
-		 				}	
-		 			}
-		 		} 
-		 	}	
-		}
-	}
+    do{
+        var first_card = temp_hand[0]; //make a temp copy of the first card since we have to push it onto both set and run
+        _set.push(first_card);
+        _run.push(first_card);
+
+        var set_return = set(_set, temp_hand);
+        if(set_return.length == hand.length){
+            can_laydown = true;
+        }else{
+            var run_return = run(_run, temp_hand, 0);
+            if(run_return.length == hand.length){
+                can_laydown = true;
+            }else{
+                cant_laydown = true;
+            }
+        }
+    }while(!can_laydown || !cant_laydown)
+}
+
+function set(_set, hand){
+
+    if(_set[0].value == hand[0].value || hand[0].is_wild){
+        _set.push(hand.shift());
+        if(hand.length == 0){
+            return _set;
+        }else{
+            return set(_set, hand);
+        }
+    }else{
+        return _set;
+    }
+}
+
+function run(_run, hand, index){
+    if(hand[0].is_wild){
+        _run.push(hand.shift());
+        if(hand.length == 0){
+            return _run;
+        }else{
+            return run(_run, hand, index++);
+        }
+    }else{
+        if(_run[index].is_wild){
+            _run.push(hand.shift());
+            index++;
+            if(hand.length == 0){
+                return _run;
+            }else if(hand.length != 0){
+                return run(_run, hand, index);
+            }
+        }else {
+            if(_run[0].name == hand[0].name){
+                var temp_card_pos = hand[0].value + 1;
+                var temp_card_neg = hand[0].value - 1;
+                if(_run[index].value == temp_card_pos || _run[index].value == temp_card_neg){
+                    _run.push(hand.shift());
+                    if(hand.length == 0){
+                        return _run;
+                    }else{
+                        return run(_run, hand, index++);
+                    }
+                }else{
+                    return _run;
+                }
+            }else{
+                return _run;
+            }
+        }
+    }
 }
