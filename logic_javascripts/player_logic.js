@@ -2,6 +2,7 @@
 function player(){
 	this.hand = [];
 	this.name = '';
+	this.score = 0;
 	
 	this.deal = function(deck_ref, round){
 		var _hand = [];
@@ -11,7 +12,8 @@ function player(){
 		return {'hand': _hand, 'deck_ref': deck_ref};
 	}
 	
-	this.draw_from_deck_or_discard = function(){
+	this.draw_from_deck_or_discard = function(deck_ref){
+		
 		
 	}
 	
@@ -41,9 +43,10 @@ function player(){
 //deck class
 function deck(){	
 
-	this.create_card = function(value, is_wild, suite) {
+	this.create_card = function(value, name, is_wild, suite) {
 		var card = {
 			value : value,
+			name : name,
 			is_wild : is_wild,
 			suite : suite,
 			display : ''	
@@ -53,7 +56,8 @@ function deck(){
 	
 	this.build_deck = function(){
 		var _deck = [];
-		var card_values = ['three','four','five','six','seven','eight','nine','ten','jack','queen','king'];
+		var card_names = ['three','four','five','six','seven','eight','nine','ten','jack','queen','king'];
+		var card_values = [3,4,5,6,7,8,9,10,11,12,13];
 		var suite = '';
 		var cc = 0; //cc is the card count
 		var is_wild = false;
@@ -66,7 +70,7 @@ function deck(){
 				}	
 				if( j <= 1){
 					suite = 'stars'; //and change the suite after 2 of each card in a suite is made.
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+					_deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
 						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++; //increment the card count each time				
 				}else if(j > 1 && j <= 3){	
@@ -76,17 +80,17 @@ function deck(){
 					cc++;
 				}else if(j > 3 && j <= 5){
 					suite = 'dimonds';
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+					_deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
 						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++;
 				}else if (j > 5 && j <= 7){
 					suite = 'spades';
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+					_deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
 						"<div class='"+suite + card_values[i]+"' onclick='card_handler(this);'></div>");
 					cc++;
 				}else if(j > 7 && j <= 9){
 					suite = 'clubs';
-					_deck[cc] = this.create_card(card_values[i], is_wild, suite,
+					_deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
 						"<div class='"+suite + card_values[i]+ "' onclick='card_handler(this);'></div>");
 					cc++;
 				}
@@ -94,7 +98,7 @@ function deck(){
 		}
 		//in a double deck there are 6 jokers
 		for (var i = 0; i < 6; i++){
-			_deck.push(this.create_card('joker', true, 'none'));
+			_deck.push(this.create_card(1,'joker', true, 'none'));
 		}
 		return _deck;					
 	} 
@@ -119,7 +123,7 @@ function round() {
 function game(){	
 	//num of players and name of players must be same,
 	//pass computer 1, computer 2, etc... for computer players
-	this.inilize_game = function(num_of_players, name_of_players){
+	this.initialize_game = function(num_of_players, name_of_players){
 		var deck_instance = new deck;
 		var round_instance = new round;
 		var players = []
@@ -132,18 +136,18 @@ function game(){
 		
 		return 	{'deck_instance': deck_instance, 'round_instance': round_instance, 'deck': _deck, 'players': players};
 	}
-	//@game_constants is a object literal
-	this.start_game = function(game_constants){
-		//pull out needed vars
+	
+	this.new_round = function(game_constants){
 		var _deck_instance = game_constants.deck_instance;
 		var _deck = game_constants.deck;
+		var _round = game_constants.round || 0;
 		var _round_instance = game_constants.round_instance;
 		var _players = game_constants.players;
-		var _round = 0;
-		var deal_return = {};
+		var _discard_pile = {};
+		var deal_return = [];
 		
 		_deck = _deck_instance.shuffle(_deck);
-		_round = _round_instance.get_round(0); //get_round pre_increments so at start pass 0
+		_round = _round_instance.get_round(_round);
 		
 		for(var i = 0; i < _players.length; i++){
 			if(i == 0){
@@ -153,11 +157,11 @@ function game(){
 			}
 			_players[i].hand = deal_return.hand;	
 		}
-		return {'players': _players, 'deck': deal_return.deck_ref, 'round_instance': _round_instance, 'round': _round, 'deck_instance': _deck_instance};	
-	}
-	
-	this.new_round = function(game_constants){
+		//turn over the first card of the game
+		//this will always be the zero index of the discard pile
+		_discard_pile[0] = deal_return.deck_ref.pop();
 		
+		return {'players': _players, 'deck': deal_return.deck_ref, 'round_instance': _round_instance, 'round': _round, 'deck_instance': _deck_instance, 'discard_pile': _discard_pile};			
 	}		
 }
 
