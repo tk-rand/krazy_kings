@@ -1,6 +1,6 @@
 
 
-//Main Game class instansiates a new game
+//Main Game class creates a new game
 //Also starts the game which deals the first round to each player
 function Game(){
 	this.game = new game;
