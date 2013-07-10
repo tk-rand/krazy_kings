@@ -1,0 +1,41 @@
+/* cards coordinates are 0,0 in the bottom right hand side (I think) */
+
+.card{
+    background-image:url('../assets/svg-z-cards.png');
+    height: 244px;
+    width: 168px;
+}
+
+.card.hearts3{
+    background-position: 1844px 730px;
+}
+.card .hearts4{
+    background-position: 1677px 730px;
+}
+.card .hearts5{
+    background-position: 1509px 730px;
+}
+.card .hearts6{
+    background-position: 1342px 730px;
+}
+.card .hearts7{
+    background-position: 1174px 730px;
+}
+.card .hearts8{
+    background-position: 1007px 730px;
+}
+.card .hearts9{
+    background-position: 840px 730px;
+}
+.card .hearts10{
+    background-position: 672px 730px;
+}
+.card .hearts11{
+    background-position: 505px 730px;
+}
+.card .hearts12{
+    background-position: 337px 730px;
+}
+.card .hearts13{
+    background-position: 169px 730px;
+}

@@ -2,16 +2,16 @@
 <html>
 	<head>
 		<title>I don't think I need a title</title>
-        <script type="text/javascript" src="../assets/jquery.js"></script>
         <script type="text/javascript" src="../logic_javascripts/deck_class.js"></script>
         <script type="text/javascript" src="../logic_javascripts/game_class.js"></script>
 		<script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
 		<script type="text/javascript" src="../ui_javascripts/navigation.js"></script>
 
 		<script type="text/javascript" src="../logic_javascripts/player_logic.js"></script>
-		<link type="text/css" href="/css/home_screen.css" />
-		<link type="text/css" href="/css/modals.css" />
-		<link type="text/css" href="/css/menu.css" />
+        <link rel='stylesheet' type="text/css" href="../css/cards.css" />
+		<link rel='stylesheet' type="text/css" href="../css/home_screen.css" />
+		<link rel='stylesheet' type="text/css" href="../css/modals.css" />
+		<link rel='stylesheet' type="text/css" href="../css/menu.css" />
 	</head>
 	<body>
 		
@@ -25,9 +25,9 @@
         			<li value="options_screen" onclick="navigation(this);">Options</li>
         			<li value="score" onclick="navigation(this);">High Scores</li>
         			<li value="exit" onclick="navigation(this);">Exit</li> 
-        		</ul>	
+        		</ul>
         	</div>
-        	
+            <div class='card hearts3' onclick='card_handler(this);'></div>
         	<div id="score" class="score_screen partial">
         		
         	</div>
