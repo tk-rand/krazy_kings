@@ -38,7 +38,7 @@ function deck(){
                         "<div class='card "+ suite + card_values[i]+"' onclick='card_handler(this);'></div>");
                     cc++;
                 }else if(j > 3 && j <= 5){
-                    suite = 'dimonds';
+                    suite = 'diamonds';
                     _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
                         "<div class='card "+ suite + card_values[i]+"' onclick='card_handler(this);'></div>");
                     cc++;
