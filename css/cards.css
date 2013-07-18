@@ -4,7 +4,12 @@
     background-image:url('../assets/svg-z-cards.png');
     height: 244px;
     width: 168px;
+    cursor: move;
 }
+.card.over{
+    border: 2px dashed #000;
+}
+
 /*suit of hearts */
 .card.hearts3{
     background-position: 1844px 730px;
