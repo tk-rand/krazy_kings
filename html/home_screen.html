@@ -2,15 +2,18 @@
 <html>
 	<head>
 		<title>I don't think I need a title</title>
-		<script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
-		<script type="text/javascript" src="../ui_javascripts/navigation.js"></script>
 
+        <script type="text/javascript" src="../logic_javascripts/deck_class.js"></script>
+        <script type="text/javascript" src="../logic_javascripts/game_class.js"></script>
 		<script type="text/javascript" src="../logic_javascripts/player_logic.js"></script>
-		<link type="text/css" href="/css/home_screen.css" />
-		<link type="text/css" href="/css/modals.css" />
-		<link type="text/css" href="/css/menu.css" />
+        <script type="text/javascript" src="../ui_javascripts/main_screen.js"></script>
+
+        <link rel='stylesheet' type="text/css" href="../css/cards.css" />
+		<link rel='stylesheet' type="text/css" href="../css/home_screen.css" />
+		<link rel='stylesheet' type="text/css" href="../css/modals.css" />
+		<link rel='stylesheet' type="text/css" href="../css/menu.css" />
 	</head>
-	<body style="background-color: red;">
+	<body>
 		
         <div id="home_screen" class="home_screen screen">
 			<header class="home_screen_header">
@@ -22,9 +25,9 @@
         			<li value="options_screen" onclick="navigation(this);">Options</li>
         			<li value="score" onclick="navigation(this);">High Scores</li>
         			<li value="exit" onclick="navigation(this);">Exit</li> 
-        		</ul>	
+        		</ul>
         	</div>
-        	
+
         	<div id="score" class="score_screen partial">
         		
         	</div>
@@ -33,13 +36,27 @@
             	Five Crowns!
         	</footer>
         </div>
-        
+
         <div id="options_screen" class="options_screen screen">
         	
         </div>
         
         <div id="main_screen" class="main_screen screen">
-        	
+            <div id="deck_and_discard">
+
+            </div>
+            <div id="player_1_hand">
+
+            </div>
+            <div id="player_2_hand">
+
+            </div>
+            <div id="player_3_hand">
+
+            </div>
+            <div id="player_4_hand">
+
+            </div>
         </div>
         
         <div id="popup_modal" class="popup modal">
@@ -47,5 +64,7 @@
         </div>
 
 	</body>
+    <script type="text/javascript" src="../ui_javascripts/navigation.js"></script>
+    <script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
 	<script type="text/javascript" src="../ui_javascripts/home_screen.js"></script>
 </html>

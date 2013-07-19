@@ -7,4 +7,9 @@ function navigation(screen_name){
         id(new_screen).style.display = 'block';
     }
     screen_index = new_screen;
+
+    if(screen_index =='main_screen' ){
+       var current_game_instance = Game();
+    }
+
 }

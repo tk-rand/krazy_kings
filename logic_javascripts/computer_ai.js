@@ -1,5 +1,10 @@
 
+//computer ai class
+function computer(){
 
-function Computer(){
-	
+}
+
+
+function q_learing(){
+
 }
