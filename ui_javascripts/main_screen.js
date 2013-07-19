@@ -8,10 +8,11 @@ function Game(){
 
     var _constants = _game.initialize_game(player_names.length, player_names);
     var round = _game.new_round(_constants);
-    draw_game(round.round);
+    draw_game(round);
 }
 
-function draw_game(round_num){
+function draw_game(round_constants){
+
     var screen = document.getElementById("main_screen");
     var deck_area = document.getElementById("deck_and_discard");
     var player_1_area = document.getElementById("player_1_hand");
@@ -22,9 +23,13 @@ function draw_game(round_num){
     var _deck = document.createElement('div');
 
     _deck.setAttribute("id", 'playing_deck');
-    _deck.setAttribute('class', "card back");
+    _deck.setAttribute('class', "cards back");
 
     deck_area.appendChild(_deck);
+
+    for (var i = 0; i< round_constants.round + 2; i++){
+        player_1_area.innerHTML += round_constants.players[0].hand[i].display;
+    }
 }
 
 

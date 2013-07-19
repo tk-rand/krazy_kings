@@ -30,34 +30,34 @@ function deck(){
                 if( j <= 1){
                     suite = 'stars'; //and change the suite after 2 of each card in a suite is made.
                     _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' onclick='card_handler(this);'></div>");
+                        "<div class='card "+ suite + card_values[i]+"'></div>");
                     cc++; //increment the card count each time
                 }else if(j > 1 && j <= 3){
                     suite = 'hearts';
-                    _deck[cc] = this.create_card(card_values[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' onclick='card_handler(this);'></div>");
+                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
+                        "<div class='card "+ suite + card_values[i]+"'></div>");
                     cc++;
                 }else if(j > 3 && j <= 5){
                     suite = 'diamonds';
                     _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' onclick='card_handler(this);'></div>");
+                        "<div class='card "+ suite + card_values[i]+"'></div>");
                     cc++;
                 }else if (j > 5 && j <= 7){
                     suite = 'spades';
                     _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' onclick='card_handler(this);'></div>");
+                        "<div class='card "+ suite + card_values[i]+"'></div>");
                     cc++;
                 }else if(j > 7 && j <= 9){
                     suite = 'clubs';
                     _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+ "' onclick='card_handler(this);'></div>");
+                        "<div class='card "+ suite + card_values[i]+ "''></div>");
                     cc++;
                 }
             }
         }
         //in a double deck there are 6 jokers
         for (var i = 0; i < 6; i++){
-            _deck.push(this.create_card(1,'joker', true, 'none'));
+            _deck.push(this.create_card(1,'joker', true, 'all', "<div class='cards joker'></div>"));
         }
         return _deck;
     }
