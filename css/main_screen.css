@@ -1,0 +1,27 @@
+#player_1_hand{
+    margin-left: 120px;
+    position: absolute;
+}
+#player_2_hand{
+    -webkit-transform: rotate(90deg);
+    position: absolute;
+    margin-left: 300px;
+    margin-top: 175px;
+}
+#player_3_hand{
+    -webkit-transform: rotate(270deg);
+    position: absolute;
+    margin-top: 175px;
+    margin-left: -61px;
+}
+#player_4_hand{
+    margin-top: 360px;
+    position: absolute;
+    margin-left: 122px;
+}
+
+#deck_and_discard{
+    margin-left: 125px;
+    margin-top: 165px;
+    position: absolute;
+}

@@ -27,8 +27,16 @@ function draw_game(round_constants){
 
     deck_area.appendChild(_deck);
 
+    //TODO This needs to be cleaned up I am sure there is a better way to determine how many hands need to be shown.
     for (var i = 0; i< round_constants.round + 2; i++){
         player_1_area.innerHTML += round_constants.players[0].hand[i].display;
+        player_2_area.innerHTML += round_constants.players[1].hand[i].display;
+        if(round_constants.players.length > 2){
+            player_3_area.innerHTML += round_constants.players[2].hand[i].display;
+            if(round_constants.players.length > 3){
+                player_4_area.innerHTML += round_constants.players[3].hand[i].display;
+            }
+        }
     }
 }
 
