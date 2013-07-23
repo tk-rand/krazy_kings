@@ -3,6 +3,7 @@ function player(){
 	this.hand = [];
 	this.name = '';
 	this.score = 0;
+    this.actions_taken = []
 	
 	this.deal = function(deck_ref, round){
 		var _hand = [];
@@ -11,14 +12,15 @@ function player(){
 		}
 		return {'hand': _hand, 'deck_ref': deck_ref};
 	}
-	
+
 	this.draw_from_deck_or_discard = function(deck_ref){
-		
-		
+
+	    this.actions_taken.push('drew')
 	}
-	
+
 	this.discard = function(){
-		
+
+        this.actions_taken.push('discarded')
 	}
 	
 	this.laydown = function(hand){
@@ -59,4 +61,8 @@ function player(){
 	this.running_score_total = function(){
 	
 	}
+
+    this.can_player_move = function(){
+        console.log("hello");
+    }
 }

@@ -9,7 +9,7 @@ function navigation(screen_name){
     screen_index = new_screen;
 
     if(screen_index =='main_screen' ){
-       var current_game_instance = Game();
+       var current_game_instance = Main();
     }
 
 }
