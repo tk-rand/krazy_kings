@@ -13,8 +13,8 @@ function player(){
 		return {'hand': _hand, 'deck_ref': deck_ref};
 	}
 
-	this.draw_from_deck_or_discard = function(deck_ref){
-
+	this.draw_from_deck_or_discard = function(card){
+        console.log(card);
 	    this.actions_taken.push('drew')
 	}
 
@@ -62,7 +62,13 @@ function player(){
 	
 	}
 
-    this.can_player_move = function(){
-        console.log("hello");
+    this.can_player_move = function(element){
+        if(element.id == 'playing_deck'){
+            if(this.actions_taken.indexOf('drew') == -1){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 }

@@ -17,9 +17,9 @@ function assign_event_listeners(_game){
     var deck = id('playing_deck');
 
     for(var i = 0; i < cards.length; i++){
-        cards[i].addEventListener('click', _game.handle_events, false);
+        cards[i].addEventListener('click', function(){_game.handle_events(event, _game)}, false);
     }
-    deck.addEventListener("click", _game.handle_events, false);
+    deck.addEventListener("click", function(){_game.handle_events(event, _game)}, false);
 
 }
 

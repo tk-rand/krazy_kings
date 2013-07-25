@@ -50,7 +50,7 @@ function deck(){
                 }else if(j > 7 && j <= 9){
                     suite = 'clubs';
                     _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+ "''></div>");
+                        "<div class='card "+ suite + card_values[i]+ "'></div>");
                     cc++;
                 }
             }
