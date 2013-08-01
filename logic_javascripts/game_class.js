@@ -91,7 +91,7 @@ Game.prototype.draw_game = function(round_constants){
 Game.prototype.draw_discard_pile = function(_game){
     var _deck = id("playing_deck");
 
-    _deck.innerHTML = ''
+    _deck.innerHTML = '';
 
 }
 
@@ -100,7 +100,7 @@ Game.prototype.handle_events = function(event, _game){
     if(_game.players[_game.current_player].can_player_move(event.target)){
         switch(event.target.id){
             case 'playing_deck':{
-                _game.players[_game.current_player].draw_from_deck_or_discard(_game);
+                _game.players[_game.current_player].draw_from_deck_or_discard(_game.deck, 'deck');
                 break;
             }
         }

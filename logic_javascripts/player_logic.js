@@ -13,9 +13,17 @@ function player(){
 		return {'hand': _hand, 'deck_ref': deck_ref};
 	}
 
-	this.draw_from_deck_or_discard = function(card){
-        console.log(card);
-	    this.actions_taken.push('drew')
+	this.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc){
+        console.log(deck_and_dc);
+
+        if(d_or_dc == 'deck'){
+            this.hand.push(deck_and_dc.pop());
+            return deck_and_dc;
+        }else if(d_or_dc == 'discard'){
+            this.hand.push(deck_and_dc.pop());
+            return deck_and_dc;
+        }
+	    this.actions_taken.push('drew');
 	}
 
 	this.discard = function(){
