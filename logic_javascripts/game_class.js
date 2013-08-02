@@ -95,6 +95,10 @@ Game.prototype.draw_discard_pile = function(_game){
 
 }
 
+Game.prototype.draw_drawn_card = function(_game){
+
+}
+
 Game.prototype.handle_events = function(event, _game){
 
     if(_game.players[_game.current_player].can_player_move(event.target)){
