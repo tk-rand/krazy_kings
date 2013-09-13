@@ -3,6 +3,7 @@ function player(){
 	this.hand = [];
 	this.name = '';
 	this.score = 0;
+    this.actions_taken = []
 	
 	this.deal = function(deck_ref, round){
 		var _hand = [];
@@ -11,14 +12,23 @@ function player(){
 		}
 		return {'hand': _hand, 'deck_ref': deck_ref};
 	}
-	
-	this.draw_from_deck_or_discard = function(deck_ref){
-		
-		
+
+	this.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc){
+        console.log(deck_and_dc);
+
+        if(d_or_dc == 'deck'){
+            this.hand.push(deck_and_dc.pop());
+            return deck_and_dc;
+        }else if(d_or_dc == 'discard'){
+            this.hand.push(deck_and_dc.pop());
+            return deck_and_dc;
+        }
+	    this.actions_taken.push('drew');
 	}
-	
+
 	this.discard = function(){
-		
+
+        this.actions_taken.push('discarded')
 	}
 	
 	this.laydown = function(hand){
@@ -59,4 +69,14 @@ function player(){
 	this.running_score_total = function(){
 	
 	}
+
+    this.can_player_move = function(element){
+        if(element.id == 'playing_deck'){
+            if(this.actions_taken.indexOf('drew') == -1){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
 }
