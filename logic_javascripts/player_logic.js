@@ -3,6 +3,7 @@ function player(){
 	this.hand = [];
 	this.name = '';
 	this.score = 0;
+	this.hand_area = '';
     this.actions_taken = []
 	
 	this.deal = function(deck_ref, round){
@@ -14,21 +15,30 @@ function player(){
 	}
 
 	this.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc){
-        console.log(deck_and_dc);
-
         if(d_or_dc == 'deck'){
             this.hand.push(deck_and_dc.pop());
+            this.actions_taken.push('drew');
             return deck_and_dc;
         }else if(d_or_dc == 'discard'){
             this.hand.push(deck_and_dc.pop());
+            this.actions_taken.push('drew');
             return deck_and_dc;
         }
-	    this.actions_taken.push('drew');
 	}
 
-	this.discard = function(){
-
-        this.actions_taken.push('discarded')
+	this.discard = function(card_to_discard, discard_pile){
+        var card_name = '';
+        var element_data = card_to_discard.getAttribute('data-element');
+        
+        for(var i = 0; i < this.hand.length; i++){
+        	card_name = this.hand[i].suite + this.hand[i].value;
+	        if(element_data == card_name){
+	        	var discarded_card = this.hand.splice(i,1);
+	        	this.actions_taken.push('discarded');
+	        	discard_pile.push(discarded_card[0]); //splice returns an array, facepalm
+	        	return discard_pile;
+	        }	       	
+        }	
 	}
 	
 	this.laydown = function(hand){
@@ -70,13 +80,33 @@ function player(){
 	
 	}
 
-    this.can_player_move = function(element){
-        if(element.id == 'playing_deck'){
-            if(this.actions_taken.indexOf('drew') == -1){
-                return true;
-            }else{
-                return false;
-            }
-        }
+    this.can_player_move = function(element){ 
+        switch(element){
+        	case 'deck':{
+	        	if(this.actions_taken.indexOf('drew') == -1){
+	                return true;
+	            }else{
+	                return false;
+	            }
+	            break; 
+        	}
+        	case 'discard':{
+	        	if(this.actions_taken.indexOf('drew') == -1){
+        			return true;
+        		}else{
+        			return false;
+        		}
+	        	break;	
+        	}
+        	case this.hand_area:{
+        		if(this.actions_taken.indexOf('drew') != -1){
+        			if(this.actions_taken.indexOf('discarded') == -1){
+        				return true;
+        			}else{
+        				return false;
+        			}
+        		}
+        	}
+        } 
     }
 }

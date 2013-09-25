@@ -11,6 +11,7 @@ function Game(){
         for(var i = 0; i< num_of_players; i++){
             this.players[i] = new player;
             this.players[i].name = name_of_players[i];
+            this.players[i].hand_area = 'player_'+i+'_hand';
 
         }
         this.deck = deck_instance.build_deck();
@@ -67,13 +68,19 @@ Game.prototype.draw_game = function(round_constants){
     var player_4_area = id("player_4_hand");
 
     var _deck = document.createElement('div');
-
+    var discard = document.createElement('div');
+    
+    discard.setAttribute('id', 'discard_pile');
+    discard.setAttribute('class', 'discard_pile');
+    discard.setAttribute('data-element', 'discard');
+	discard.innerHTML = round_constants.discard_pile[round_constants.discard_pile.length - 1].display;
+	
     _deck.setAttribute("id", 'playing_deck');
     _deck.setAttribute('class', "cards back");
     _deck.setAttribute('data-element', 'deck')
 
     deck_area.appendChild(_deck);
-    deck_area.innerHTML += round_constants.discard_pile[round_constants.discard_pile.length - 1].display;
+    deck_area.appendChild(discard);
 
     //TODO This needs to be cleaned up I am sure there is a better way to determine how many hands need to be shown.
     for (var i = 0; i< round_constants.round + 2; i++){
@@ -88,24 +95,64 @@ Game.prototype.draw_game = function(round_constants){
     }
 }
 
-Game.prototype.draw_discard_pile = function(_game){
-    var _deck = id("playing_deck");
+Game.prototype.draw_current_players_hand = function(_game){
+	var position = _game.current_player;
+	var player = _game.players[_game.current_player];
+		
+	switch(position){
+		case 0:
+		{
+			var hand = id('player_1_hand');
+			hand.innerHTML = ''; 
+			for(var i =0; i <  player.hand.length; i++){
+				hand.innerHTML += player.hand[i].display;	
+			}
+			break;		
+		}
+	}
+}
 
-    _deck.innerHTML = '';
+Game.prototype.draw_discard_pile = function(round_constants){
+    var visual_discard_pile = id("discard_pile");
+	var discard_pile = round_constants.discard_pile
+
+	if(discard_pile.length > 0){
+	    visual_discard_pile.innerHTML = discard_pile[discard_pile.length - 1].display;	
+	}else{
+		visual_discard_pile.innerHTML = '';
+	}
+
 
 }
 
-Game.prototype.draw_drawn_card = function(_game){
+Game.prototype.handle_events = function(event, _game, round_constants){
+	var _current_player = _game.players[_game.current_player];
+	
+	//Cards don't have id's so because the initial click on the discard pile is actually on a card and not the discard pile, need to get the parent element.	
+	if(event.target.id == '' || event.target.id != 'playing_deck'){
+		var element_data = event.target.parentElement.getAttribute('data-element');	
+	}else{
+		var element_data = event.target.getAttribute('data-element');
+	}
 
-}
-
-Game.prototype.handle_events = function(event, _game){
-
-    if(_game.players[_game.current_player].can_player_move(event.target)){
-        switch(event.target.id){
-            case 'playing_deck':{
-                _game.players[_game.current_player].draw_from_deck_or_discard(_game.deck, 'deck');
+    if(_current_player.can_player_move(element_data)){ 
+        switch(element_data){
+            case 'deck':{
+                _current_player.draw_from_deck_or_discard(_game.deck, 'deck');
+                this.draw_current_players_hand(_game);
                 break;
+            }
+            case 'discard':{
+            	_current_player.draw_from_deck_or_discard(round_constants.discard_pile, 'discard');
+            	this.draw_current_players_hand(_game);
+            	this.draw_discard_pile(round_constants);
+            	break;
+            }
+            case _current_player.hand_area:{
+				round_constants.discard_pile = _current_player.discard(event.target, round_constants.discard_pile);
+				this.draw_current_players_hand(_game);
+				this.draw_discard_pile(round_constants);
+				break;
             }
         }
     }

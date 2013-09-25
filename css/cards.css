@@ -19,6 +19,12 @@
     display:inline-block;
 }
 
+.discard_pile{
+	height: 98px;
+	width: 72px;
+	display: inline-block;
+}
+
 /*suit of hearts */
 .card.hearts3{
     background-position: 852px 289px;
