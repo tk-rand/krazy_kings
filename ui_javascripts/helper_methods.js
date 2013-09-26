@@ -13,7 +13,7 @@ function get_number_of_players_and_player_names(){
     var name_of_players = [];
 
     for(var i = 0; i < num_of_players; i++){
-        name_of_players[i] = prompt("Enter the name of player"+ i+1);
+        name_of_players[i] = prompt("Enter the name of player "+ i);
     }
 
     return name_of_players;

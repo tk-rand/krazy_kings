@@ -96,13 +96,40 @@ Game.prototype.draw_game = function(round_constants){
 }
 
 Game.prototype.draw_current_players_hand = function(_game){
-	var position = _game.current_player;
 	var player = _game.players[_game.current_player];
-		
+	var position = player.hand_area;
+			
 	switch(position){
-		case 0:
+		case 'player_0_hand':
 		{
 			var hand = id('player_1_hand');
+			hand.innerHTML = ''; 
+			for(var i =0; i <  player.hand.length; i++){
+				hand.innerHTML += player.hand[i].display;	
+			}
+			break;		
+		}		
+		case 'player_1_hand':
+		{
+			var hand = id('player_2_hand');
+			hand.innerHTML = ''; 
+			for(var i =0; i <  player.hand.length; i++){
+				hand.innerHTML += player.hand[i].display;	
+			}
+			break;		
+		}		
+		case 'player_2_hand':
+		{
+			var hand = id('player_3_hand');
+			hand.innerHTML = ''; 
+			for(var i =0; i <  player.hand.length; i++){
+				hand.innerHTML += player.hand[i].display;	
+			}
+			break;		
+		}		
+		case 'player_3_hand':
+		{
+			var hand = id('player_4_hand');
 			hand.innerHTML = ''; 
 			for(var i =0; i <  player.hand.length; i++){
 				hand.innerHTML += player.hand[i].display;	
@@ -129,7 +156,7 @@ Game.prototype.handle_events = function(event, _game, round_constants){
 	var _current_player = _game.players[_game.current_player];
 	
 	//Cards don't have id's so because the initial click on the discard pile is actually on a card and not the discard pile, need to get the parent element.	
-	if(event.target.id == '' || event.target.id != 'playing_deck'){
+	if(event.target.id == '' && event.target.id != 'playing_deck'){
 		var element_data = event.target.parentElement.getAttribute('data-element');	
 	}else{
 		var element_data = event.target.getAttribute('data-element');
@@ -153,6 +180,15 @@ Game.prototype.handle_events = function(event, _game, round_constants){
 				this.draw_current_players_hand(_game);
 				this.draw_discard_pile(round_constants);
 				break;
+            }
+            case 'end_turn':{
+            	_game.current_player = _current_player.end_turn(_game);
+            	break;
+            }
+            case 'lay_down':{
+            	var result = _current_player.lay_down(_current_player.hand);
+            	console.log(result);
+            	break;	
             }
         }
     }

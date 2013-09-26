@@ -5,7 +5,7 @@
 #player_2_hand{
     -webkit-transform: rotate(90deg);
     position: absolute;
-    margin-left: 300px;
+    margin-left: 370px;
     margin-top: 175px;
 }
 #player_3_hand{
@@ -24,4 +24,15 @@
     margin-left: 125px;
     margin-top: 165px;
     position: absolute;
+}
+
+.discard_pile{
+	height: 98px;
+	width: 72px;
+	display: inline-block;
+}
+
+.player_menu{
+	position: absolute;
+	top: 470px;
 }

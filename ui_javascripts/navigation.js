@@ -11,5 +11,8 @@ function navigation(screen_name){
     if(screen_index =='main_screen' ){
        var current_game_instance = Main();
     }
+    if(screen_index == 'home_screen' && current_game_instance != null){
+    	delete(current_game_instance);
+    }
 
 }

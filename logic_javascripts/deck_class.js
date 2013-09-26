@@ -73,57 +73,5 @@ function deck(){
     }
 
     //helper methods
-    this.set = function(_set, hand){
-        if(_set[0].is_wild && _set.length == 1){
-            _set[0].value = hand[0].value;
-        }
-        if(_set[0].value == hand[0].value || hand[0].is_wild){
-            _set.push(hand.shift());
-            if(hand.length == 0){
-                return _set;
-            }else{
-                return this.set(_set, hand);
-            }
-        }else{
-            return _set;
-        }
-    }
 
-    this.run = function(_run, hand, index){
-        if(hand[0].is_wild){
-            _run.push(hand.shift());
-            if(hand.length == 0){
-                return _run;
-            }else{
-                return this.run(_run, hand, index++);
-            }
-        }else{
-            if(_run[index].is_wild){
-                _run.push(hand.shift());
-                index++;
-                if(hand.length == 0){
-                    return _run;
-                }else if(hand.length != 0){
-                    return this.run(_run, hand, index);
-                }
-            }else {
-                if(_run[0].name == hand[0].name){
-                    var temp_card_pos = hand[0].value + 1;
-                    var temp_card_neg = hand[0].value - 1;
-                    if(_run[index].value == temp_card_pos || _run[index].value == temp_card_neg){
-                        _run.push(hand.shift());
-                        if(hand.length == 0){
-                            return _run;
-                        }else{
-                            return this.run(_run, hand, index++);
-                        }
-                    }else{
-                        return _run;
-                    }
-                }else{
-                    return _run;
-                }
-            }
-        }
-    }
 }
