@@ -141,8 +141,8 @@ Game.prototype.draw_current_players_hand = function(_game){
 
 Game.prototype.draw_discard_pile = function(round_constants){
     var visual_discard_pile = id("discard_pile");
-	var discard_pile = round_constants.discard_pile
-
+	var discard_pile = round_constants.discard_pile;
+	
 	if(discard_pile.length > 0){
 	    visual_discard_pile.innerHTML = discard_pile[discard_pile.length - 1].display;	
 	}else{

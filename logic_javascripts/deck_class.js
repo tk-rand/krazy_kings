@@ -57,7 +57,7 @@ function deck(){
         }
         //in a double deck there are 6 jokers
         for (var i = 0; i < 6; i++){
-            _deck.push(this.create_card(1,'joker', true, 'all', "<div class='cards joker' data-element='joker1'></div>"));
+            _deck.push(this.create_card(1,'joker', true, 'joker', "<div class='cards joker' data-element='joker1'></div>"));
         }
         return _deck;
     }
