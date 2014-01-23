@@ -9,9 +9,9 @@ function deck(){
             is_wild : is_wild,
             suite : suite,
             display : display
-        }
+        };
         return card;
-    }
+    };
 
     this.build_deck = function(){
         var _deck = [];
@@ -60,7 +60,7 @@ function deck(){
             _deck.push(this.create_card(1,'joker', true, 'joker', "<div class='cards joker' data-element='joker1'></div>"));
         }
         return _deck;
-    }
+    };
 
     this.shuffle = function(deck){
         for(var i = deck.length - 1; i > 0; i--){
@@ -70,7 +70,7 @@ function deck(){
             deck[j] = temp;
         }
         return deck;
-    }
+    };
 
     //helper methods
 

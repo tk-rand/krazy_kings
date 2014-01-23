@@ -133,6 +133,7 @@ function player(){
 		var buckets = {3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [], 13: []};
 		var runs = [];
 		var count = 1;
+		var sets = [];
 
 		hand.forEach(function(card){
 			if(card.is_wild){
@@ -142,6 +143,7 @@ function player(){
 			}
 		});
 		
+		//deletes empty buckets
 		for(var k in buckets){
 			if(buckets.hasOwnProperty(k)){
 				if(buckets[k].length == 0){
@@ -150,6 +152,29 @@ function player(){
 			}
 		};
 		
+        /* This for loop evaluates for sets.
+         * The reason that it's here before the cards are seperated into suits
+         * is so that if all the cards are used for a set, it doesn't have to go though 
+         * the run logic. This should work for the first 3 rounds, 
+         * TODO add extra logic for handling multiple sets/run
+         */
+
+        for (var i in buckets) {
+            if (buckets.hasOwnProperty(i)) {
+                if (buckets[i].length == 2 && wilds.length > 0) {
+                    buckets[i].forEach(function(card){
+                        sets.push(card);   
+                    });  
+                    sets.push(wilds.pop());
+                } else if (buckets[i].length > 2) {
+                    buckets[i].forEach(function(card){
+                        sets.push(card);   
+                    });
+                }
+            }
+        }
+
+		//pushes cards into suites
 		for(var b in buckets){
 			if(buckets.hasOwnProperty(b)){
 				if(buckets[b].length > 1 ){
@@ -161,7 +186,8 @@ function player(){
 				}	
 			}
 		};
-		
+
+        //deletes empty suites
 		for(var s in suites){
 			if(suites.hasOwnProperty(s)){
 				if(suites[s].length == 0){
@@ -170,6 +196,7 @@ function player(){
 			}
 		};
 		
+		//determins runs
 		for(var s in suites ){
 			if(suites.hasOwnProperty(s)){
 				if(suites[s].length >= 2){
@@ -211,6 +238,15 @@ function player(){
 				}
 			}
 		};
-		console.log(runs);	
+
+		if(runs.length == 2 && wilds.length > 0){
+		    console.log("inside the wilds check for runs");
+		    runs.push(wilds.pop());
+		}
+		var results = {
+		    r_sets: sets,
+		    r_runs: runs
+		};
+		return results;	
 	};	
 }

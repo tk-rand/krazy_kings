@@ -17,7 +17,7 @@ function Game(){
         this.deck = deck_instance.build_deck();
 
         return 	{'deck_instance': deck_instance, 'round_instance': round_instance};
-    }
+    };
 
     this.new_round = function(game_constants){
         var _deck_instance = game_constants.deck_instance;
@@ -42,21 +42,21 @@ function Game(){
         _discard_pile[0] = deal_return.deck_ref.pop();
 
         return {'round_instance': _round_instance, 'round': _round, 'deck_instance': _deck_instance, 'discard_pile': _discard_pile};
-    }
+    };
 
     this.update_current_player = function(){
         this.current_player++;
-    }
+    };
     this.return_players = function(){
         return this.players;
-    }
+    };
 }
 
 
 function round() {
     this.get_round = function(cur_round){
         return ++cur_round;
-    }
+    };
 }
 
 Game.prototype.draw_game = function(round_constants){
@@ -77,7 +77,7 @@ Game.prototype.draw_game = function(round_constants){
 	
     _deck.setAttribute("id", 'playing_deck');
     _deck.setAttribute('class', "cards back");
-    _deck.setAttribute('data-element', 'deck')
+    _deck.setAttribute('data-element', 'deck');
 
     deck_area.appendChild(_deck);
     deck_area.appendChild(discard);
@@ -93,7 +93,7 @@ Game.prototype.draw_game = function(round_constants){
             }
         }
     }
-}
+};
 
 Game.prototype.draw_current_players_hand = function(_game){
 	var player = _game.players[_game.current_player];
@@ -137,7 +137,7 @@ Game.prototype.draw_current_players_hand = function(_game){
 			break;		
 		}
 	}
-}
+};
 
 Game.prototype.draw_discard_pile = function(round_constants){
     var visual_discard_pile = id("discard_pile");
@@ -148,14 +148,12 @@ Game.prototype.draw_discard_pile = function(round_constants){
 	}else{
 		visual_discard_pile.innerHTML = '';
 	}
-
-
-}
+};
 
 Game.prototype.handle_events = function(event, _game, round_constants){
 	var _current_player = _game.players[_game.current_player];
 	
-	//Cards don't have id's so because the initial click on the discard pile is actually on a card and not the discard pile, need to get the parent element.	
+	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
 	if(event.target.id == '' && event.target.id != 'playing_deck'){
 		var element_data = event.target.parentElement.getAttribute('data-element');	
 	}else{
@@ -192,4 +190,4 @@ Game.prototype.handle_events = function(event, _game, round_constants){
             }
         }
     }
-}
+};

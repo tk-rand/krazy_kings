@@ -41,13 +41,13 @@ function assign_event_listeners(_game, round){
     for(var i = 0; i < cards.length; i++){
         //cards[i].addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
     }
-    deck.addEventListener("click", function(){_game.handle_events(event, _game, round)}, false);
-	discard_pile.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
-	player_1.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
-	player_2.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
-	player_3.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
-	player_4.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
-	end_turn.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
-	lay_down.addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
+    deck.addEventListener("click", function(){_game.handle_events(event, _game, round);}, false);
+	discard_pile.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+	player_1.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+	player_2.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+	player_3.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+	player_4.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+	end_turn.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+	lay_down.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
 }
 
