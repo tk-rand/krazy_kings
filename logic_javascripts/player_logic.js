@@ -49,8 +49,7 @@ function player(){
         }
 		
 		var results = this.evaluate_cards(temp_hand);
-		
-		console.log(results);
+
 		return results;
 	};
 	
