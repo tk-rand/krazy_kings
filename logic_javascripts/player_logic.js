@@ -1,3 +1,5 @@
+//TODO refactor to use prototype instead of `this` also make player uppercase
+
  //player class
 function player(){
 	this.hand = [];
@@ -126,6 +128,9 @@ function player(){
         } 
     };
     
+    //The reason hand is being passed instead of using `this.hand` 
+    //is because we don't want to be poping cards off of the players hand
+    //so the hand being passed is a temp copy of their actual hand.
     this.evaluate_cards = function(hand){
 		var suites = {'clubs': [], 'diamonds': [], 'hearts': [], 'spades': [], 'stars': []};
 		var wilds = [];
@@ -156,8 +161,8 @@ function player(){
          * is so that if all the cards are used for a set, it doesn't have to go though 
          * the run logic. This should work for the first 3 rounds, 
          * TODO add extra logic for handling multiple sets/run
+         * TODO make sets return an array of sets/partial sets like runs do
          */
-
         for (var i in buckets) {
             if (buckets.hasOwnProperty(i)) {
                 if (buckets[i].length == 2 && wilds.length > 0) {
