@@ -80,7 +80,8 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
                 low = this.card_values[temp_hand[i].value];
             }
         }
-        //temp_discarded_card = temp_hand.pop();
+        var index = temp_hand.indexOf(low);
+        temp_discarded_card = temp_hand.splice(index, 1);
                
     }
     
