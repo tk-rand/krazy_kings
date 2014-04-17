@@ -55,10 +55,6 @@ function player(){
 		return results;
 	};
 	
-	this.laydown_to_win = function(){
-		
-	};
-	
 	//helper methods
 	this.sort_player_cards = function(){
 		
