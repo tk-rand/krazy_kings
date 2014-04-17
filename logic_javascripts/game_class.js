@@ -156,6 +156,7 @@ Game.prototype.handle_events = function(event, _game, round_constants){
      * not just being stored into _current_player
     */
 	var _current_player = _game.players[_game.current_player];
+	
 	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
 	if(event.target.id == '' && event.target.id != 'playing_deck'){
 		var element_data = event.target.parentElement.getAttribute('data-element');	
