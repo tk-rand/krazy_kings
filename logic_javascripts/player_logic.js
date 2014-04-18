@@ -60,8 +60,13 @@ function player(){
 		
 	};
 	
-	this.running_score_total = function(){
-	
+	this.running_score_total = function(cards_laid_down){
+	   var num_of_cards_laid_down = 0;
+	   for(var c in cards_laid_down){
+	       if(cards_laid_down.hasOwnProperty(c)){
+	           num_of_cards_laid_down += cards_laid_down[c].length;
+	       }
+	   }
 	};
 	
 	this.end_turn = function(_game){

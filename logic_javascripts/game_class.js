@@ -57,6 +57,10 @@ function round() {
     this.get_round = function(cur_round){
         return ++cur_round;
     };
+    this.round_ending = {
+        is_ending: false,
+        player_out: null
+    };
 }
 
 Game.prototype.draw_game = function(round_constants){
@@ -185,6 +189,7 @@ Game.prototype.handle_events = function(event, _game, round_constants){
             }
             case 'end_turn':{
             	_game.current_player = _current_player.end_turn(_game);
+            	
             	break;
             }
             case 'lay_down':{
@@ -192,12 +197,24 @@ Game.prototype.handle_events = function(event, _game, round_constants){
             	for(var k in result){
             		if(result.hasOwnProperty(k)){
             			if(result[k].length >= 3){
-            				alert(_current_player.name + " Has laid down their hand.");
+            				alert(_current_player.name + " Has laid down their hand.");            			    
             				break;
             			}
             		}
             	}
+            	if(this.round.round_ending.is_ending == false){
+            	    this.round.round_ending.is_ending = true;
+                    this.round.round_ending.player_out = _game.current_player;
+                    _current_player.running_score_total(result);  
+            	}else{
+            	    _current_player.running_score_total(result);
+            	}
+
+            	_game.current_player = _current_player.end_turn(_game);
             	break;	
+            }
+            case 'end_round':{
+                break;
             }
         }
     }
