@@ -238,10 +238,9 @@ function player(){
 				}
 			}
 		};
-
-		if(runs.length == 2 && wilds.length > 0){
-		    console.log("inside the wilds check for runs");
-		    runs.push(wilds.pop());
+		
+		if(typeof runs[0] != 'undefined' && (runs[0].length == 2 && wilds.length > 0)){
+		    runs[0].push(wilds.pop());
 		}
 		var results = {
 		    r_sets: sets,

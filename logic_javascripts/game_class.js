@@ -189,7 +189,14 @@ Game.prototype.handle_events = function(event, _game, round_constants){
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
-            	console.log(result);
+            	for(var k in result){
+            		if(result.hasOwnProperty(k)){
+            			if(result[k].length >= 3){
+            				alert(_current_player.name + " Has laid down their hand.");
+            				break;
+            			}
+            		}
+            	}
             	break;	
             }
         }
