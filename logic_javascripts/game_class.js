@@ -14,20 +14,20 @@ function Game(){
             this.players[i].hand_area = 'player_'+i+'_hand';
 
         }
-        this.deck = deck_instance.build_deck();
-
+        
         return 	{'deck_instance': deck_instance, 'round_instance': round_instance};
     };
 
     this.new_round = function(game_constants){
         var _deck_instance = game_constants.deck_instance;
-        var _round = game_constants.round || 0;
         var _round_instance = game_constants.round_instance;
+        
         var _discard_pile = [];
         var deal_return = [];
 
+		this.deck = _deck_instance.build_deck();
         this.deck = _deck_instance.shuffle(this.deck);
-        _round = _round_instance.get_round(_round);
+        var _round = _round_instance.get_round();
 
         for(var i = 0; i < this.players.length; i++){
             if(i == 0){
@@ -37,10 +37,13 @@ function Game(){
             }
             this.players[i].hand = deal_return.hand;
         }
+        _round_instance.round_ending = {
+        	is_ending: false,
+        	player_out: null
+        };
         //turn over the first card of the game
         //this will always be the zero index of the discard pile
         _discard_pile[0] = deal_return.deck_ref.pop();
-
         return {'round_instance': _round_instance, 'round': _round, 'deck_instance': _deck_instance, 'discard_pile': _discard_pile};
     };
 
@@ -54,8 +57,9 @@ function Game(){
 
 
 function round() {
-    this.get_round = function(cur_round){
-        return ++cur_round;
+	this.round = 0;
+    this.get_round = function(){
+        return ++this.round;
     };
     this.round_ending = {
         is_ending: false,
@@ -83,9 +87,17 @@ Game.prototype.draw_game = function(round_constants){
     _deck.setAttribute('class', "cards back");
     _deck.setAttribute('data-element', 'deck');
 
+	deck_area.innerHTML = '';
+
     deck_area.appendChild(_deck);
     deck_area.appendChild(discard);
-
+    
+    player_1_area.innerHTML = '';
+	player_2_area.innerHTML = '';
+	player_3_area.innerHTML = '';
+	player_4_area.innerHTML = '';
+	
+	
     //TODO This needs to be cleaned up I am sure there is a better way to determine how many hands need to be shown.
     for (var i = 0; i< round_constants.round + 2; i++){
         player_1_area.innerHTML += this.players[0].hand[i].display;
@@ -97,6 +109,23 @@ Game.prototype.draw_game = function(round_constants){
             }
         }
     }
+    this.draw_player_scores();
+};
+
+Game.prototype.draw_player_scores = function(){
+	var player_1_score = id('player_1_score');
+	var player_2_score = id('player_2_score');
+	var player_3_score = id('player_3_score');
+	var player_4_score = id('player_4_score');
+	
+	player_1_score.innerHTML = this.players[0].name + ' ' +this.players[0].score;
+	player_2_score.innerHTML = this.players[1].name + ' ' +this.players[1].score;
+	if(this.players.length > 2){
+		player_3_score.innerHTML = this.players[2].name + ' ' +this.players[2].score;
+		if(this.players.length > 3){
+			player_4_score.innerHTML = this.players[3].name + ' ' +this.players[3].score;
+		}
+	}
 };
 
 Game.prototype.draw_current_players_hand = function(_game){
@@ -159,16 +188,19 @@ Game.prototype.handle_events = function(event, _game, round_constants){
      * which is why it's being used as a lookup index, 
      * not just being stored into _current_player
     */
+   	var round = round_constants.round_instance;
 	var _current_player = _game.players[_game.current_player];
-	
+	var element_data = null;
 	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
-	if(event.target.id == '' && event.target.id != 'playing_deck'){
-		var element_data = event.target.parentElement.getAttribute('data-element');	
+	if(typeof event == 'string'){
+		element_data = event;	
+	}else if(event.target.id == '' && event.target.id != 'playing_deck'){
+		element_data = event.target.parentElement.getAttribute('data-element');	
 	}else{
-		var element_data = event.target.getAttribute('data-element');
+		element_data = event.target.getAttribute('data-element');
 	}
 
-    if(_current_player.can_player_move(element_data)){ 
+    if(_current_player.can_player_move(element_data) || element_data == 'end_round'){ 
         switch(element_data){
             case 'deck':{
                 _current_player.draw_from_deck_or_discard(_game.deck, 'deck');
@@ -189,31 +221,43 @@ Game.prototype.handle_events = function(event, _game, round_constants){
             }
             case 'end_turn':{
             	_game.current_player = _current_player.end_turn(_game);
-            	
+            	if(round.round_ending.is_ending == true && _game.current_player == round.round_ending.player_out){
+            		this.handle_events('end_round', _game, round_constants);
+            		if(_current_player.has_been_scored != true){
+            			_current_player.running_score_total(0);	
+            		}
+            		//reset the scored action, for each player as they end their turn and the round is ending
+					_current_player.has_been_scored = false;
+            	}else if(round.round_ending.is_ending == true && _game.current_player != round.round_ending.player_out){
+            		if(_current_player.has_been_scored != true){
+            			_curren_player.running_score_total(0);	
+            		}
+            		//reset like above
+					_current_player.has_been_scored = false;
+            	}
             	break;
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
             	for(var k in result){
             		if(result.hasOwnProperty(k)){
-            			if(result[k].length >= 3){
+            			if(typeof result[k][0] != 'undefined' && result[k][0].length >= 3){
             				alert(_current_player.name + " Has laid down their hand.");            			    
-            				break;
             			}
             		}
             	}
-            	if(this.round.round_ending.is_ending == false){
-            	    this.round.round_ending.is_ending = true;
-                    this.round.round_ending.player_out = _game.current_player;
+            	if(round.round_ending.is_ending == false){
+            	    round.round_ending.is_ending = true;
+                    round.round_ending.player_out = _game.current_player;
                     _current_player.running_score_total(result);  
             	}else{
             	    _current_player.running_score_total(result);
             	}
-
-            	_game.current_player = _current_player.end_turn(_game);
+            	this.handle_events('end_turn', _game, round_constants);
             	break;	
             }
             case 'end_round':{
+            	Main();
                 break;
             }
         }

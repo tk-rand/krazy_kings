@@ -1,30 +1,27 @@
 //Main Game class creates a new game
 //Also starts the game which deals the first round to each player
+var game_started = false;
+var game_constants = null;
+var _game = new Game();
 function Main(){
-    var player_names = get_number_of_players_and_player_names();
-    var _game = new Game();
-
-    var _constants = _game.initialize_game(player_names.length, player_names);
-    var round = _game.new_round(_constants);
+	if(game_started == false){		
+		game_constants = init(_game);
+	}
+	var round = _game.new_round(game_constants);
     _game.draw_game(round);
-    assign_event_listeners(_game, round);
+    assign_event_listeners(_game, round);	
+
+
     
 }
 
-// function handle_turns(_game, number_of_players){
-	// if(_game.current_player >= number_of_players-1){
-		// _game.current_player = 0;
-	// }
-// 	
-	// var current_player = _game.players[_game.current_player];
-// 	
-	// if(current_player.actions_taken.length == 2){
-		// _game.current_player = _game.current_player + 1;
-		// current_player.clear_actions();
-		// current_player = _game.players[_game.current_player];
-		// alert("It's " + current_player.name + ' turn');
-	// }
-// }
+function init(_game){
+	var player_names = get_number_of_players_and_player_names();
+	var _constants = _game.initialize_game(player_names.length, player_names);
+    
+    game_started = true;
+    return _constants;
+}
 
 
 function assign_event_listeners(_game, round){

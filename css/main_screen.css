@@ -36,3 +36,10 @@
 	position: absolute;
 	top: 470px;
 }
+.player_scores{
+	margin-left: 680px;
+}
+.player_scores div{
+	display: inline-block;
+	width: 80px;
+}

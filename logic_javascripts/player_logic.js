@@ -7,6 +7,7 @@ function player(){
 	this.score = 0;
 	this.hand_area = '';
     this.actions_taken = [];
+    this.has_been_scored = false;
 	
 	this.deal = function(deck_ref, round){
 		var _hand = [];
@@ -62,11 +63,38 @@ function player(){
 	
 	this.running_score_total = function(cards_laid_down){
 	   var num_of_cards_laid_down = 0;
-	   for(var c in cards_laid_down){
-	       if(cards_laid_down.hasOwnProperty(c)){
-	           num_of_cards_laid_down += cards_laid_down[c].length;
-	       }
+	   var temp_hand = [];
+	   
+	   for(var i = 0; i < this.hand.length; i++){
+	   		temp_hand[i] = this.hand[i];
 	   }
+	   if(cards_laid_down != 0){
+	   		for(var c in cards_laid_down){
+	       		if(cards_laid_down.hasOwnProperty(c)){
+	       			if(cards_laid_down[c] != []){
+						num_of_cards_laid_down += cards_laid_down[c][0].length;
+						popped:
+						for(var i = 0; i < num_of_cards_laid_down; i++){
+							for(var j = 0; j < temp_hand.length; j++){
+								if(cards_laid_down[c][0][i].value == temp_hand[j].value && cards_laid_down[c][0][i].suit == temp_hand[j].suit){
+									temp_hand.pop();
+									continue popped;
+								}
+							}
+						}		
+	       			}
+	       		}
+	   		}
+	   }
+
+	   if(num_of_cards_laid_down == this.hand.length){
+	   		this.score += 0;
+	   }else{
+	   		for(var i = 0; i < temp_hand.length; i++){
+	   			this.score += temp_hand.value;
+	   		}
+	   }
+	   this.has_been_scored = true;
 	};
 	
 	this.end_turn = function(_game){
@@ -124,7 +152,12 @@ function player(){
         		break;
         	}
         	case 'lay_down':{
-				return true;	
+				return true;
+				break;	
+        	}
+        	default:{
+        		return false;
+        		break;
         	}
         } 
     };
@@ -175,6 +208,13 @@ function player(){
                     buckets[i].forEach(function(card){
                         sets.push(card);   
                     });
+                } else if(buckets[i].length == 1 && wilds.length >= 2){
+                	buckets[i].forEach(function(card){
+                		sets.push(card);
+                	});
+                	for(var c = 0; c < 2; c++){
+                		sets.push(wilds.pop);
+                	}
                 }
             }
         }
@@ -248,7 +288,7 @@ function player(){
 		    runs[0].push(wilds.pop());
 		}
 		var results = {
-		    r_sets: sets,
+		    r_sets: [sets],
 		    r_runs: runs
 		};
 		return results;	
