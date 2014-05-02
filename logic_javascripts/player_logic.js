@@ -71,7 +71,7 @@ function player(){
 	   if(cards_laid_down != 0){
 	   		for(var c in cards_laid_down){
 	       		if(cards_laid_down.hasOwnProperty(c)){
-	       			if(cards_laid_down[c] != []){
+	       			if(cards_laid_down[c][0] != undefined){
 						num_of_cards_laid_down += cards_laid_down[c][0].length;
 						popped:
 						for(var i = 0; i < num_of_cards_laid_down; i++){
@@ -213,7 +213,7 @@ function player(){
                 		sets.push(card);
                 	});
                 	for(var c = 0; c < 2; c++){
-                		sets.push(wilds.pop);
+                		sets.push(wilds.pop());
                 	}
                 }
             }
