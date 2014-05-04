@@ -131,43 +131,44 @@ Game.prototype.draw_player_scores = function(){
 Game.prototype.draw_current_players_hand = function(_game){
 	var player = _game.players[_game.current_player];
 	var position = player.hand_area;
-			
+    var hand = '';
+
 	switch(position){
 		case 'player_0_hand':
 		{
-			var hand = id('player_1_hand');
-			hand.innerHTML = ''; 
+			hand = id('player_1_hand');
+			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;	
+				hand.innerHTML += player.hand[i].display;
 			}
-			break;		
-		}		
+			break;
+		}
 		case 'player_1_hand':
 		{
-			var hand = id('player_2_hand');
-			hand.innerHTML = ''; 
+			hand = id('player_2_hand');
+			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;	
+				hand.innerHTML += player.hand[i].display;
 			}
-			break;		
-		}		
+			break;
+		}
 		case 'player_2_hand':
 		{
-			var hand = id('player_3_hand');
-			hand.innerHTML = ''; 
+			hand = id('player_3_hand');
+			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;	
+				hand.innerHTML += player.hand[i].display;
 			}
-			break;		
-		}		
+			break;
+		}
 		case 'player_3_hand':
 		{
-			var hand = id('player_4_hand');
-			hand.innerHTML = ''; 
+			hand = id('player_4_hand');
+			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;	
+				hand.innerHTML += player.hand[i].display;
 			}
-			break;		
+			break;
 		}
 	}
 };
@@ -191,6 +192,7 @@ Game.prototype.handle_events = function(event, _game, round_constants){
    	var round = round_constants.round_instance;
 	var _current_player = _game.players[_game.current_player];
 	var element_data = null;
+
 	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
 	if(typeof event == 'string'){
 		element_data = event;	
@@ -222,15 +224,15 @@ Game.prototype.handle_events = function(event, _game, round_constants){
             case 'end_turn':{
             	_game.current_player = _current_player.end_turn(_game);
             	if(round.round_ending.is_ending == true && _game.current_player == round.round_ending.player_out){
-            		this.handle_events('end_round', _game, round_constants);
             		if(_current_player.has_been_scored != true){
             			_current_player.running_score_total(0);	
             		}
             		//reset the scored action, for each player as they end their turn and the round is ending
 					_current_player.has_been_scored = false;
+                    this.handle_events('end_round', _game, round_constants);
             	}else if(round.round_ending.is_ending == true && _game.current_player != round.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
-            			_curren_player.running_score_total(0);	
+            			_current_player.running_score_total(0);
             		}
             		//reset like above
 					_current_player.has_been_scored = false;

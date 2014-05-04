@@ -91,7 +91,7 @@ function player(){
 	   		this.score += 0;
 	   }else{
 	   		for(var i = 0; i < temp_hand.length; i++){
-	   			this.score += temp_hand.value;
+	   			this.score += temp_hand[i].value;
 	   		}
 	   }
 	   this.has_been_scored = true;

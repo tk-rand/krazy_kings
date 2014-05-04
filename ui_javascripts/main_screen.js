@@ -9,10 +9,12 @@ function Main(){
 	}
 	var round = _game.new_round(game_constants);
     _game.draw_game(round);
-    assign_event_listeners(_game, round);	
+    assign_event_listeners(_game, round);
 
-
-    
+    //this stops it from returning to the handle events function in the game class
+    //important because it will return to the old reference of round_constants if
+    //it's not stopped.
+    event.stopPropagation();
 }
 
 function init(_game){
@@ -25,7 +27,6 @@ function init(_game){
 
 
 function assign_event_listeners(_game, round){
-    var cards = cls('card');
     var deck = id('playing_deck');
     var discard_pile = id('discard_pile');
     var player_1 = id('player_1_hand');
@@ -35,16 +36,18 @@ function assign_event_listeners(_game, round){
     var end_turn = id('end_turn');
     var lay_down = id('lay_down');
 
-    for(var i = 0; i < cards.length; i++){
-        //cards[i].addEventListener('click', function(){_game.handle_events(event, _game, round)}, false);
+    //these only need to be assigned once, but the deck and discard pile are recreated every round so need new
+    //listeners attached to them.
+    if(round.round == 1){
+        player_1.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+        player_2.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+        player_3.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+        player_4.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+        end_turn.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+        lay_down.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
     }
     deck.addEventListener("click", function(){_game.handle_events(event, _game, round);}, false);
-	discard_pile.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
-	player_1.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
-	player_2.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
-	player_3.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
-	player_4.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
-	end_turn.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
-	lay_down.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+    discard_pile.addEventListener('click', function(){_game.handle_events(event, _game, round);}, false);
+
 }
 
