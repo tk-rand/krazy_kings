@@ -1,5 +1,10 @@
 .menu li{
-	list-style: none;	
+	list-style: none;
+    cursor: pointer;
+}
+.home_screen .menu li.player_btn{
+    display: block;
+    margin: 10px 0;
 }
 
 .player_btn{
@@ -7,6 +12,7 @@
 	width: 140px;
 	height: 22px;
 	border-radius: 10px;
+    margin: 0 5px;
 	text-align: center;
 	background-color: blue;
 	-webkit-box-shadow: 3px 4px 0px 0px #1564ad;

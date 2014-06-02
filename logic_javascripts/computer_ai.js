@@ -2,7 +2,7 @@
 //computer ai class
 //computer is a subclass of player 
 function Computer(){
-    player.apply();
+    Player.apply();
   
     this.card_values = {
         1: 100, //1 is the value assigned to Joker, which is always wild. 
@@ -144,4 +144,4 @@ Computer.prototype.evaluate_to_discard = function(current_hand_points){
     }  
 };
 
-Computer.prototype = new player;
+Computer.prototype = new Player();

@@ -4,7 +4,7 @@
     background-image:url('../assets/cards5suits.png');
     height: 98px;
     width: 72px;
-    cursor: move;
+    cursor: pointer;
     display:inline-block;
 }
 .card.over{
@@ -15,7 +15,7 @@
     background-image: url('../assets/svg-z-cards.png');
     height: 98px;
     width: 72px;
-    cursor: move;
+    cursor: pointer;
     display:inline-block;
 }
 

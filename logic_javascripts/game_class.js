@@ -9,7 +9,7 @@ function Game(){
         var deck_instance = new deck;
         var round_instance = new round;
         for(var i = 0; i< num_of_players; i++){
-            this.players[i] = new player;
+            this.players[i] = new Player();
             this.players[i].name = name_of_players[i];
             this.players[i].hand_area = 'player_'+i+'_hand';
 
