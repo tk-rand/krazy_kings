@@ -7,9 +7,9 @@ function Main(){
 	if(game_started == false){		
 		game_constants = init(_game);
 	}
-	var round = _game.new_round(game_constants);
-    _game.draw_game(round);
-    assign_event_listeners(_game, round);
+	var round_constants = _game.new_round(game_constants);
+    _game.draw_game(round_constants);
+    assign_event_listeners(_game, round_constants);
 
     //this stops it from returning to the handle events function in the game class
     //important because it will return to the old reference of round_constants if

@@ -67,6 +67,10 @@ function round() {
     };
 }
 
+Game.prototype.reset_variables = function(){
+
+}
+
 Game.prototype.draw_game = function(round_constants){
     var screen = id("main_screen");
     var deck_area = id("deck_and_discard");
@@ -175,10 +179,9 @@ Game.prototype.draw_current_players_hand = function(_game){
 
 Game.prototype.draw_discard_pile = function(round_constants){
     var visual_discard_pile = id("discard_pile");
-	var discard_pile = round_constants.discard_pile;
-	
-	if(discard_pile.length > 0){
-	    visual_discard_pile.innerHTML = discard_pile[discard_pile.length - 1].display;	
+	console.log(round_constants);
+	if(round_constants.discard_pile.length > 0){
+	    visual_discard_pile.innerHTML = round_constants.discard_pile[round_constants.discard_pile.length - 1].display;
 	}else{
 		visual_discard_pile.innerHTML = '';
 	}
@@ -190,7 +193,7 @@ Game.prototype.handle_events = function(event, _game, round_constants){
      * not just being stored into _current_player
     */
    	var round = round_constants.round_instance;
-	var _current_player = _game.players[_game.current_player];
+	var _current_player = this.players[this.current_player];
 	var element_data = null;
 
 	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
@@ -210,13 +213,13 @@ Game.prototype.handle_events = function(event, _game, round_constants){
                 break;
             }
             case 'discard':{
-            	_current_player.draw_from_deck_or_discard(round_constants.discard_pile, 'discard');
+            	_current_player.draw_from_deck_or_discard(round_constants, 'discard');
             	this.draw_current_players_hand(_game);
             	this.draw_discard_pile(round_constants);
             	break;
             }
             case _current_player.hand_area:{
-				round_constants.discard_pile = _current_player.discard(event.target, round_constants.discard_pile);
+                _current_player.discard(event.target, round_constants);
 				this.draw_current_players_hand(_game);
 				this.draw_discard_pile(round_constants);
 				break;

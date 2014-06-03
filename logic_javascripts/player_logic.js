@@ -21,13 +21,12 @@ Player.prototype.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc){
         this.actions_taken.push('drew');
         return deck_and_dc;
     }else if(d_or_dc == 'discard'){
-        this.hand.push(deck_and_dc.pop());
+        this.hand.push(d_or_dc.pop());
         this.actions_taken.push('drew');
-        return deck_and_dc;
     }
 };
 
-Player.prototype.discard = function(card_to_discard, discard_pile){
+Player.prototype.discard = function(card_to_discard, round_constants){
     var card_name = '';
     var element_data = card_to_discard.getAttribute('data-element');
 
@@ -36,8 +35,7 @@ Player.prototype.discard = function(card_to_discard, discard_pile){
         if(element_data == card_name){
             var discarded_card = this.hand.splice(i,1);
             this.actions_taken.push('discarded');
-            discard_pile.push(discarded_card[0]); //splice returns an array, facepalm
-            return discard_pile;
+            round_constants.discard_pile.push(discarded_card[0]); //splice returns an array, facepalm
         }
     }
 };
