@@ -21,7 +21,7 @@ Player.prototype.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc){
         this.actions_taken.push('drew');
         return deck_and_dc;
     }else if(d_or_dc == 'discard'){
-        this.hand.push(d_or_dc.pop());
+        this.hand.push(deck_and_dc.discard_pile.pop());
         this.actions_taken.push('drew');
     }
 };
