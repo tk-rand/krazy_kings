@@ -41,8 +41,8 @@ Game.prototype.new_round = function(game_constants){
         this.players[i].hand = deal_return.hand;
     }
 
-    //reset the discard pile and round ending vars before re assigning them.
-    if(_round.round > 1){
+    //reset the discard pile and round ending vars before re-assigning them.
+    if(_round > 1){
         this.reset_constants();
     }
 
@@ -61,7 +61,7 @@ Game.prototype.new_round = function(game_constants){
 
 Game.prototype.reset_constants = function(){
     this.round_constants.discard_pile = [];
-    console.log(this.round_constants);
+
     this.round_constants.round_instance.round_ending = {
         is_ending: false,
         player_out: null
@@ -267,6 +267,7 @@ Game.prototype.handle_events = function(event){
     }
 };
 
+//Round Class
 function Round() {
     this.round = 0;
     this.get_round = function(){
