@@ -1,6 +1,6 @@
 
 //deck class
-function deck(){
+function Deck(){
 
     this.create_card = function(value, name, is_wild, suite, display) {
         var card = {
