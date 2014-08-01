@@ -184,7 +184,7 @@ Player.prototype.evaluate_cards = function(hand){
                 delete buckets[k];
             }
         }
-    };
+    }
 
     /* This for loop evaluates for sets.
      * The reason that it's here before the cards are seperated into suits
@@ -226,7 +226,7 @@ Player.prototype.evaluate_cards = function(hand){
                 suites[buckets[b][0].suite].push(buckets[b][0]);
             }
         }
-    };
+    }
 
     //deletes empty suites
     for(var s in suites){
@@ -235,7 +235,7 @@ Player.prototype.evaluate_cards = function(hand){
                 delete suites[s];
             }
         }
-    };
+    }
 
     //determins runs
     for(var s in suites ){
@@ -257,7 +257,6 @@ Player.prototype.evaluate_cards = function(hand){
                     if(suites[s][i].value == low + 1){
                         low = low + 1;
                         count++;
-                        continue;
                     }else if(suites[s][i].value <= low + wilds.length){
                         var run = [];
                         if(low + wilds.length < suites[s].length){
@@ -278,7 +277,7 @@ Player.prototype.evaluate_cards = function(hand){
                 }
             }
         }
-    };
+    }
 
     if(typeof runs[0] != 'undefined' && (runs[0].length == 2 && wilds.length > 0)){
         runs[0].push(wilds.pop());
@@ -288,4 +287,4 @@ Player.prototype.evaluate_cards = function(hand){
         r_runs: runs
     };
     return results;
-}
+};

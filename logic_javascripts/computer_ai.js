@@ -24,10 +24,10 @@ function Computer(){
 
 Computer.prototype.initial_hand_value = function(round_constants){
     var initial_hand_points = 0;
-    var wild_card_value = round_constants.round + 2; //add 2 cause round starts at one but card values start at 3
+    this.wild_card_value = round_constants.round + 2; //add 2 cause round starts at one but card values start at 3
     
     //make whatever card that is wild this round worth 100
-    this.card_values[wild_card_value] = 100;
+    this.card_values[this.wild_card_value] = 100;
     
     for(var c in this.hand){
         if(this.hand.hasOwnProperty(c)){
@@ -41,9 +41,7 @@ Computer.prototype.calculate_new_hand_value = function(hand){
             
 };
 
-/*
- * Thoughts: I can go one of 2 ways: Either I can check to see if the value and suite of the card on the discard 
- * match any of the cards in the computers hand, OR I can evaluate, add the discard card and evaluate again to see 
+/* OR I can evaluate, add the discard card and evaluate again to see
  * if I get a bigger set or run.
  * I believe that I need to go with the second one because the first one wouldn't work for runs, which means no matter
  * what I have to evaluate the cards.
@@ -81,7 +79,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     drawn_card_value = this.card_values[top_card_on_dc_pile];
     
     this.create_partial_sets_runs = function(){
-        sets_and_runs = this.evaluate_hand(temp_hand);
+        sets_and_runs = this.evaluate_cards(temp_hand);
         
         sets_and_runs.r_sets.forEach(function(card){
             partial_sets.push(card); 
@@ -113,7 +111,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
             temp_hand_with_discard.push(top_card_on_dc_pile);
             
             if(tried_dc_pile == false){
-                _this.create_partial_sets_run(); 
+                _this.create_partial_sets_runs();
                 tried_dc_pile = true;
             }else{
                 if(drawn_card_value > low){
@@ -139,7 +137,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
 
 Computer.prototype.evaluate_to_discard = function(current_hand_points){  
     //this means they have a perfect score
-    if(current_hand_points == wild_card_value * 100){
+    if(current_hand_points == this.wild_card_value * 100){
         this.lay_down(this.hand);
     }  
 };
