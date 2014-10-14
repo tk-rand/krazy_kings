@@ -73,5 +73,19 @@ function Deck(){
     };
 
     //helper methods
+    this.compare = function(card1, card2){
+        var index = 0;
+        if(card1[index] != undefined){
+            if(card1[index] == card2[index]){
+                delete card1[index];
+                delete card2[index];
+                this.compare(card1, card2);
+            }else{
+                return false;
+            }
+        }else{
+            return true;
+        }
 
+    }
 }

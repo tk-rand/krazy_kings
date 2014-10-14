@@ -119,7 +119,6 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
                     _this.draw_current_players_hand(_game);
                     _this.draw_discard_pile(round_constants);
                 }else{
-                    
                     drawn_card_value = _this.card_values[top_card_on_deck];
                 }
             }
