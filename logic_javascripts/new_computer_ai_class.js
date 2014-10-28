@@ -55,61 +55,57 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     var deck_length = _game.deck.length;
     var top_card_on_deck = _game.deck[deck_length - 1];
 
-    this.hand.forEach(function(card){
+    this.hand.forEach(function (card) {
         temp_hand_with_discard_card.push(card);
         temp_hand_with_deck_card.push(card);
     });
     temp_hand_with_discard_card.push(top_card_on_dc_pile);
 
-    this.create_partial_sets_runs = function(){
+    this.create_partial_sets_runs = function () {
         sets_and_runs = _this.evaluate_cards(temp_hand_with_discard_card);
-        if(sets_and_runs.r_sets.length == 0 && sets_and_runs.r_sets.length == 0 ){
+        if (sets_and_runs.r_sets.length == 0 && sets_and_runs.r_sets.length == 0) {
             temp_hand_with_deck_card.push(top_card_on_deck);
-        }else{
+        } else {
             _this.determin_possible_discards();
         }
     }
 
-    this.determin_possible_discards = function(){
-        if(sets_and_runs.r_sets.length != 0){
-            var partial_set = {}
-            sets_and_runs.r_sets.forEach(function(card){
+    this.determin_possible_discards = function () {
+        if (sets_and_runs.r_sets.length != 0) {
+            var partial_set = {};
+            sets_and_runs.r_sets.forEach(function (card) {
                 partial_set.push(card);
             });
-            for(var v in temp_hand_with_discard_card){
-                if(temp_hand_with_discard_card.hasOwnProperty(v)){
-                    var index_of_v = temp_hand_with_discard_card.indexOf(v);
-                    for(var i = 0; i < partial_set.length; i++){
-                        if(_game.deck.compare(temp_hand_with_discard_card[v], partial_set[i])){
-                            temp_hand.push(temp_hand_with_deck_card.slice(index_of_v, 1));
-                        }else{
-                            possible_discards.push(temp_hand_with_discard_card.slice(index_of_v,1));
-                        }
+            temp_hand_with_discard_card.forEach(function (card) {
+                var index_of_card = temp_hand_with_discard_card.indexOf(card);
+                for (var i = 0; i < partial_set.length; i++) {
+                    if (_game.deck.compare(temp_hand_with_discard_card[card], partial_set[i])) {
+                        temp_hand.push(temp_hand_with_deck_card.slice(index_of_card, 1));
+                    } else {
+                        possible_discards.push(temp_hand_with_discard_card.slice(index_of_card, 1));
                     }
                 }
-            }
+            });
         }
-        //in it's own if so that it's always checked because a hand can contain both a set and a run. Can't assume it's one or the other.
-        if(sets_and_runs.r_runs.length != 0){
-            var partial_run = {}
-            sets_and_runs.r_runs.forEach(function(card){
+        //duplicate if, so that it's always checked because a hand can contain both a set and a run. Can't assume it's one or the other.
+        if (sets_and_runs.r_runs.length != 0) {
+            var partial_run = {};
+            sets_and_runs.r_runs.forEach(function (card) {
                 partial_run.push(card);
             });
-            for(var v in temp_hand_with_discard_card){
-                if(temp_hand_with_discard_card.hasOwnProperty(v)){
-                    var index_of_v = temp_hand_with_discard_card.indexOf(v);
-                    for(var i = 0; i < partial_run.length; i++){
-                        if(_game.deck.compare(temp_hand_with_discard_card[v], partial_run[i])){
-                            temp_hand.push(temp_hand_with_deck_card.slice(index_of_v, 1));
-                        }else{
-                            possible_discards.push(temp_hand_with_discard_card.slice(index_of_v,1));
-                        }
+            temp_hand_with_discard_card.forEach(function (card) {
+                var index_of_card = temp_hand_with_discard_card.indexOf(card);
+                for (var i = 0; i < partial_run.length; i++) {
+                    if (_game.deck.compare(temp_hand_with_discard_card[card], partial_run[i])) {
+                        temp_hand.push(temp_hand_with_deck_card.slice(index_of_card, 1));
+                    } else {
+                        possible_discards.push(temp_hand_with_discard_card.slice(index_of_card, 1));
                     }
                 }
-            }
+            });
         }
     }
-};
+}
 
 Computer.prototype.evaluate_to_discard = function(current_hand_points){
     //this means they have a perfect score

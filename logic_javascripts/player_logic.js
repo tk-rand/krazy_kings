@@ -186,35 +186,6 @@ Player.prototype.evaluate_cards = function(hand){
         }
     }
 
-    /* This for loop evaluates for sets.
-     * The reason that it's here before the cards are seperated into suits
-     * is so that if all the cards are used for a set, it doesn't have to go though
-     * the run logic. This should work for the first 3 rounds,
-     * TODO add extra logic for handling multiple sets/run
-     * TODO make sets return an array of sets/partial sets like runs do
-     */
-    for (var i in buckets) {
-        if (buckets.hasOwnProperty(i)) {
-            if (buckets[i].length == 2 && wilds.length > 0) {
-                buckets[i].forEach(function(card){
-                    sets.push(card);
-                });
-                sets.push(wilds.pop());
-            } else if (buckets[i].length > 2) {
-                buckets[i].forEach(function(card){
-                    sets.push(card);
-                });
-            } else if(buckets[i].length == 1 && wilds.length >= 2){
-                buckets[i].forEach(function(card){
-                    sets.push(card);
-                });
-                for(var c = 0; c < 2; c++){
-                    sets.push(wilds.pop());
-                }
-            }
-        }
-    }
-
     //pushes cards into suites
     for(var b in buckets){
         if(buckets.hasOwnProperty(b)){
@@ -268,12 +239,34 @@ Player.prototype.evaluate_cards = function(hand){
                                 low = low + wilds.length;
                                 wilds.length--;
                             }while(low > suites[s].length);
-                                if(count > 2 || 0 + low > 3){
-                                    run.push(suites[s].splice(0, low));
-                                }
+                            if(count > 2 || 0 + low > 3){
+                                run.push(suites[s].splice(0, low));
+                            }
                         }
                         runs.push(run[0]); //splice returns an array
                     }
+                }
+            }
+        }
+    }
+
+    for (var i in buckets) {
+        if (buckets.hasOwnProperty(i)) {
+            if (buckets[i].length == 2 && wilds.length > 0) {
+                buckets[i].forEach(function(card){
+                    sets.push(card);
+                });
+                sets.push(wilds.pop());
+            } else if (buckets[i].length > 2) {
+                buckets[i].forEach(function(card){
+                    sets.push(card);
+                });
+            } else if(buckets[i].length == 1 && wilds.length >= 2){
+                buckets[i].forEach(function(card){
+                    sets.push(card);
+                });
+                for(var c = 0; c < 2; c++){
+                    sets.push(wilds.pop());
                 }
             }
         }
