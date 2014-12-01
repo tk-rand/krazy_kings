@@ -264,6 +264,8 @@ Game.prototype.handle_events = function(event){
                 break;
             }
         }
+    }else{
+        alert('You can not do that action yet!');
     }
 };
 

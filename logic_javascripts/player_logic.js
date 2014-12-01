@@ -57,41 +57,76 @@ Player.prototype.sort_player_cards = function(){
 
 };
 
-Player.prototype.running_score_total = function(cards_laid_down){
-   var num_of_cards_laid_down = 0;
-   var temp_hand = [];
+// Player.prototype.running_score_total = function(cards_laid_down){
+   // var num_of_cards_laid_down = 0;
+   // var temp_hand = [];
+// 
+   // for(var i = 0; i < this.hand.length; i++){
+        // temp_hand[i] = this.hand[i];
+   // }
+   // if(cards_laid_down != 0){
+        // for(var c in cards_laid_down){
+            // if(cards_laid_down.hasOwnProperty(c)){
+                // if(cards_laid_down[c][0] != undefined){
+                    // num_of_cards_laid_down += cards_laid_down[c][0].length;
+                    // popped:
+                    // for(var i = 0; i < num_of_cards_laid_down; i++){
+                        // for(var j = 0; j < temp_hand.length; j++){
+                            // if(cards_laid_down[c][0][i].value == temp_hand[j].value && cards_laid_down[c][0][i].suit == temp_hand[j].suit){
+                                // temp_hand.pop();
+                                // continue popped;
+                            // }
+                        // }
+                    // }
+                // }
+            // }
+        // }
+   // }
+   // if(num_of_cards_laid_down == this.hand.length){
+        // this.score += 0;
+   // }else{
+        // for(var i = 0; i < temp_hand.length; i++){
+            // this.score += temp_hand[i].value;
+        // }
+   // }
+   // this.has_been_scored = true;
+// };
+
+Player.prototype.running_score_total = function(cards_laid_down){   
+    var temp_hand = [];
 
    for(var i = 0; i < this.hand.length; i++){
         temp_hand[i] = this.hand[i];
    }
    if(cards_laid_down != 0){
-        for(var c in cards_laid_down){
-            if(cards_laid_down.hasOwnProperty(c)){
-                if(cards_laid_down[c][0] != undefined){
-                    num_of_cards_laid_down += cards_laid_down[c][0].length;
-                    popped:
-                    for(var i = 0; i < num_of_cards_laid_down; i++){
-                        for(var j = 0; j < temp_hand.length; j++){
-                            if(cards_laid_down[c][0][i].value == temp_hand[j].value && cards_laid_down[c][0][i].suit == temp_hand[j].suit){
-                                temp_hand.pop();
-                                continue popped;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+       for(var key in cards_laid_down){
+           if(cards_laid_down.hasOwnProperty(key)){
+               var sub_array = cards_laid_down[key];
+               if(sub_array.length != 0){
+                   sub_array.forEach(function(card){
+                       for(var i = 0; i < temp_hand.length; i++){
+                           if(card.value = temp_hand[i].value || temp_hand[i].is_wild){
+                               temp_hand.splice(i,1, 'empty');
+                           }
+                       }
+                   });
+               } 
+           }
+       }
    }
 
-   if(num_of_cards_laid_down == this.hand.length){
-        this.score += 0;
+   if(temp_hand.length == 0){
+       this.score += 0;
    }else{
-        for(var i = 0; i < temp_hand.length; i++){
-            this.score += temp_hand[i].value;
-        }
+       for(var i = 0; i < temp_hand.length; i++){
+           if(temp_hand[i] != 'empty'){
+               this.score += temp_hand[i].value;
+           }
+       }
    }
    this.has_been_scored = true;
 };
+
 
 Player.prototype.end_turn = function(_game){
     if(_game.current_player < _game.players.length - 1 ){
@@ -148,7 +183,12 @@ Player.prototype.can_player_move = function(element){
             break;
         }
         case 'lay_down':{
-            return true;
+            if(this.actions_taken.indexOf('discarded') != -1){
+                return true;
+            }else{
+                return false;
+            }
+            
             break;
         }
         default:{
