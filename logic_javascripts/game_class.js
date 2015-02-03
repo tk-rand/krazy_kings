@@ -242,22 +242,24 @@ Game.prototype.handle_events = function(event){
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
-            	for(var k in result){
-            		if(result.hasOwnProperty(k)){
-            			if(typeof result[k][0] != 'undefined' && result[k][0].length >= 3){
-            				alert(_current_player.name + " Has laid down their hand.");            			    
-            			}
-            		}
-            	}
+            	console.log(result, this);
             	if(round_instance.round_ending.is_ending == false){
-            	    round_instance.round_ending.is_ending = true;
-                    round_instance.round_ending.player_out = this.current_player;
-                    _current_player.running_score_total(result);  
+                	if(result.message == "full laydown"){
+                	    alert(_current_player.name + " is laying down their hand!");
+                	    round_instance.round_ending.is_ending = true;
+                        round_instance.round_ending.player_out = this.current_player;
+                        delete result.message; //so the message screws with the scoring function, so once we know what it is we delete it.
+                        _current_player.running_score_total(result);  
+                	}else if(result.message == "partial laydown" || result.message == "can't laydown"){
+                	    alert("You don't have the cards to do that right now!");
+                	}  
             	}else{
+            	    delete result.message;
             	    _current_player.running_score_total(result);
             	}
             	this.handle_events('end_turn');
-            	break;	
+                break;
+            		
             }
             case 'end_round':{
             	Main();

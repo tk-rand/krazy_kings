@@ -30,3 +30,10 @@
 	position:relative;
  	top:1px;	
 }
+.popup {
+	display: none;
+}
+.rules_modal{
+	width: 500px;
+	overflow-y: scroll;
+}

@@ -22,7 +22,7 @@ function Deck(){
         var is_wild = false;
         for(var i = 0; i < card_values.length; i++){
             for(var j = 0; j < 10; j++){
-                if(i == 0){
+                if(i == game_constants.round_instance.round){
                     is_wild = true;
                 }else{
                     is_wild = false;
@@ -87,5 +87,5 @@ function Deck(){
             return true;
         }
 
-    }
+    };
 }

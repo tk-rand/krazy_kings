@@ -42,12 +42,36 @@ Player.prototype.discard = function(card_to_discard, round_constants){
 
 Player.prototype.lay_down = function(){
     var temp_hand = [];
+    var non_empty_key = {};
+    var total_cards_laid_down = 0;
 
     for(var i = 0; i < this.hand.length; i++){
         temp_hand[i] = this.hand[i];
     }
 
     var results = this.evaluate_cards(temp_hand);
+    
+    for(var k in results){
+        if(results.hasOwnProperty(k)){
+            if(typeof results[k][0] != 'undefined' && results[k][0].length >= 3){
+                non_empty_key[k] = results[k][0].length;                         
+            }
+        }
+    }
+    
+    for(var k in non_empty_key){
+        if(non_empty_key.hasOwnProperty(k)){
+            total_cards_laid_down += non_empty_key[k];
+        }
+    }
+    
+    if(total_cards_laid_down != this.hand.length && total_cards_laid_down > 0){
+        results.message = "partial laydown";
+    }else if(total_cards_laid_down == this.hand.length){
+        results.message = "full laydown";
+    }else{
+        results.message = "can't laydown";
+    }
 
     return results;
 };
@@ -56,41 +80,6 @@ Player.prototype.lay_down = function(){
 Player.prototype.sort_player_cards = function(){
 
 };
-
-// Player.prototype.running_score_total = function(cards_laid_down){
-   // var num_of_cards_laid_down = 0;
-   // var temp_hand = [];
-// 
-   // for(var i = 0; i < this.hand.length; i++){
-        // temp_hand[i] = this.hand[i];
-   // }
-   // if(cards_laid_down != 0){
-        // for(var c in cards_laid_down){
-            // if(cards_laid_down.hasOwnProperty(c)){
-                // if(cards_laid_down[c][0] != undefined){
-                    // num_of_cards_laid_down += cards_laid_down[c][0].length;
-                    // popped:
-                    // for(var i = 0; i < num_of_cards_laid_down; i++){
-                        // for(var j = 0; j < temp_hand.length; j++){
-                            // if(cards_laid_down[c][0][i].value == temp_hand[j].value && cards_laid_down[c][0][i].suit == temp_hand[j].suit){
-                                // temp_hand.pop();
-                                // continue popped;
-                            // }
-                        // }
-                    // }
-                // }
-            // }
-        // }
-   // }
-   // if(num_of_cards_laid_down == this.hand.length){
-        // this.score += 0;
-   // }else{
-        // for(var i = 0; i < temp_hand.length; i++){
-            // this.score += temp_hand[i].value;
-        // }
-   // }
-   // this.has_been_scored = true;
-// };
 
 Player.prototype.running_score_total = function(cards_laid_down){   
     var temp_hand = [];
@@ -305,9 +294,9 @@ Player.prototype.evaluate_cards = function(hand){
                 buckets[i].forEach(function(card){
                     sets.push(card);
                 });
-                for(var c = 0; c < 2; c++){
+            }
+            for(var c = 0; c < wilds.length; c++){
                     sets.push(wilds.pop());
-                }
             }
         }
     }
