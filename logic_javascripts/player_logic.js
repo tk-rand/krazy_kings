@@ -81,39 +81,70 @@ Player.prototype.sort_player_cards = function(){
 
 };
 
-Player.prototype.running_score_total = function(cards_laid_down){   
-    var temp_hand = [];
 
-   for(var i = 0; i < this.hand.length; i++){
-        temp_hand[i] = this.hand[i];
-   }
-   if(cards_laid_down != 0){
-       for(var key in cards_laid_down){
-           if(cards_laid_down.hasOwnProperty(key)){
-               var sub_array = cards_laid_down[key];
-               if(sub_array.length != 0){
-                   sub_array.forEach(function(card){
-                       for(var i = 0; i < temp_hand.length; i++){
-                           if(card.value = temp_hand[i].value || temp_hand[i].is_wild){
-                               temp_hand.splice(i,1, 'empty');
-                           }
-                       }
-                   });
-               } 
-           }
-       }
-   }
+// Player.prototype.running_score_total = function(cards_laid_down){   
+    // var temp_hand = [];
+// 
+   // for(var i = 0; i < this.hand.length; i++){
+        // temp_hand[i] = this.hand[i];
+   // }
+   // if(cards_laid_down != 0){
+       // for(var key in cards_laid_down){
+           // if(cards_laid_down.hasOwnProperty(key)){
+               // var sub_array = cards_laid_down[key];
+               // if(sub_array.length != 0){
+                   // sub_array.forEach(function(card){
+                       // for(var i = 0; i < temp_hand.length; i++){
+                           // if(card.value = temp_hand[i].value || temp_hand[i].is_wild){
+                               // temp_hand.splice(i,1, 'empty');
+                           // }
+                       // }
+                   // });
+               // } 
+           // }
+       // }
+   // }
+// 
+   // if(temp_hand.length == 0){
+       // this.score += 0;
+   // }else{
+       // for(var i = 0; i < temp_hand.length; i++){
+           // if(temp_hand[i] != 'empty'){
+               // this.score += temp_hand[i].value;
+           // }
+       // }
+   // }
+   // this.has_been_scored = true;
+// };
 
-   if(temp_hand.length == 0){
-       this.score += 0;
-   }else{
-       for(var i = 0; i < temp_hand.length; i++){
-           if(temp_hand[i] != 'empty'){
-               this.score += temp_hand[i].value;
-           }
-       }
-   }
-   this.has_been_scored = true;
+Player.prototype.running_score_total = function(cards_laid_down){
+    var cards_not_laid_down = [];
+    var compare = _game.round_constants.deck_instance.compare;
+    if(cards_laid_down != 0 && cards_laid_down != undefined){
+        for(var key in cards_laid_down){
+            if(cards_laid_down.hasOwnProperty(key)){
+                var sub_array = cards_laid_down[key];
+                popped:
+                for(var i = 0; i < this.hand.length; i++){
+                    for(var j = 0; j < sub_array.length; j++){
+                        if(compare(this.hand[i], sub_array[j])){
+                            continue popped;
+                        }else if(j == sub_array.lengh -1){
+                            cards_not_laid_down.push(this.hand[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(cards_not_laid_down.length == 0){
+        this.score += 0;
+    }else{
+        for(var i = 0; i < cards_not_laid_down.lengh; i++){
+            this.score += cards_not_laid_down[i].value;
+        }
+    }
+    this.has_been_scored = true;
 };
 
 
@@ -278,6 +309,10 @@ Player.prototype.evaluate_cards = function(hand){
             }
         }
     }
+    
+    if(typeof runs[0] != 'undefined' && (runs[0].length == 2 && wilds.length > 0)){
+        runs[0].push(wilds.pop());
+    }
 
     for (var i in buckets) {
         if (buckets.hasOwnProperty(i)) {
@@ -301,9 +336,6 @@ Player.prototype.evaluate_cards = function(hand){
         }
     }
 
-    if(typeof runs[0] != 'undefined' && (runs[0].length == 2 && wilds.length > 0)){
-        runs[0].push(wilds.pop());
-    }
     var results = {
         r_sets: [sets],
         r_runs: runs

@@ -74,18 +74,19 @@ function Deck(){
 
     //helper methods
     this.compare = function(card1, card2){
-        var index = 0;
-        if(card1[index] != undefined){
-            if(card1[index] == card2[index]){
-                delete card1[index];
-                delete card2[index];
-                this.compare(card1, card2);
-            }else{
-                return false;
+        if(Object.keys(card1).length != 0){
+            for(var key in card1){
+                if(card1.hasOwnProperty(key)){
+                    if(card1[key] == card2[key]){
+                        delete card1[key];
+                        delete card2[key];
+                    }else{
+                        return false;
+                    }
+                }
             }
         }else{
             return true;
         }
-
     };
 }
