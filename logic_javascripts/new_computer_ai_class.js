@@ -68,7 +68,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
         } else {
             _this.determin_possible_discards();
         }
-    }
+    };
 
     this.determin_possible_discards = function () {
         if (sets_and_runs.r_sets.length != 0) {
@@ -104,8 +104,8 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
                 }
             });
         }
-    }
-}
+    };
+};
 
 Computer.prototype.evaluate_to_discard = function(current_hand_points){
     //this means they have a perfect score

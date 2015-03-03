@@ -1,3 +1,36 @@
 .main_screen{
 	display: none;
 }
+
+.home_screen{
+	margin: 25% auto;
+	width: 25%;
+	background-color: blue;
+	height: 480px;
+}
+.home_screen_header{
+	margin: 0 auto;
+	width: 100%;
+	font-size: x-large;
+	background-color: lightblue;
+}
+.home_screen h4{
+	margin: 20px auto;
+	width: 50%;
+	padding: 10px;
+}
+.home_screen .main_menu{
+	margin: 0 auto;
+	width: 85%;
+}
+.home_screen_footer{
+	margin: 0 auto;
+	width: 100%;
+	font-size: x-large;
+	background-color: lightblue;
+}
+.home_screen_footer h4{
+	margin: 20px auto;
+	width: 50%;
+	padding: 23px;
+}

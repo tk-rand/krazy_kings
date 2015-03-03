@@ -242,7 +242,7 @@ Game.prototype.handle_events = function(event){
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
-            	console.log(result, this);
+            	console.log(result.message);
             	if(round_instance.round_ending.is_ending == false){
                 	if(result.message == "full laydown"){
                 	    alert(_current_player.name + " is laying down their hand!");
@@ -254,8 +254,12 @@ Game.prototype.handle_events = function(event){
                 	    alert("You don't have the cards to do that right now!");
                 	}  
             	}else{
-            	    delete result.message;
-            	    _current_player.running_score_total(result);
+            	    if(result.message == "full laydown" || result.message == "partial laydown"){
+            	        delete result.message;
+                        _current_player.running_score_total(result); //tally the score now if not let end turn handle it, it will pass a 0 which means no laydown.
+            	    } else{
+            	        delete result.message;
+            	    }
             	}
             	this.handle_events('end_turn');
                 break;

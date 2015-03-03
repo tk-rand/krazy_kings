@@ -80,6 +80,7 @@ function Deck(){
                     if(card1[key] == card2[key]){
                         delete card1[key];
                         delete card2[key];
+                        this.compare(card1, card2);
                     }else{
                         return false;
                     }
