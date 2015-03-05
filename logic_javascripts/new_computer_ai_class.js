@@ -62,7 +62,8 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     temp_hand_with_discard_card.push(top_card_on_dc_pile);
 
     this.create_partial_sets_runs = function () {
-        sets_and_runs = _this.evaluate_cards(temp_hand_with_discard_card);
+        //TODO make this work with running either sets or runs first for later hands
+        sets_and_runs = _this.evaluate_cards(temp_hand_with_discard_card); 
         if (sets_and_runs.r_sets.length == 0 && sets_and_runs.r_sets.length == 0) {
             temp_hand_with_deck_card.push(top_card_on_deck);
         } else {

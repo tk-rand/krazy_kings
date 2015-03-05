@@ -49,24 +49,53 @@ Player.prototype.lay_down = function() {
     var temp_hand = [];
     var non_empty_key = {};
     var total_cards_laid_down = 0;
+    var second_results = {};
+    var evaluated = false;
 
     for (var i = 0; i < this.hand.length; i++) {
         temp_hand[i] = this.hand[i];
     }
 
-    var results = this.evaluate_cards(temp_hand);
-
-    for (var k in results) {
-        if (results.hasOwnProperty(k)) {
-            if ( typeof results[k][0] != 'undefined' && results[k][0].length >= 3) {
-                non_empty_key[k] = results[k][0].length;
+    var results = this.evaluate_cards(temp_hand, false);
+    
+    this.determin_number_laid_down = function(the_results){
+        for (var k in the_results) {
+            if (the_results.hasOwnProperty(k)) {
+                non_empty_key[k] = 0;
+                the_results[k].forEach(function(an_array){
+                    if(typeof an_array != undefined && an_array.length >= 3){
+                        non_empty_key[k] += an_array.length;
+                    }
+                });
             }
         }
+    
+        for (var k in non_empty_key) {
+            if (non_empty_key.hasOwnProperty(k)) {
+                total_cards_laid_down += non_empty_key[k];
+            }
+        }
+    };
+    
+    if(evaluated == false){
+        this.determin_number_laid_down(results);
+        evaluated = true;
     }
-
-    for (var k in non_empty_key) {
-        if (non_empty_key.hasOwnProperty(k)) {
-            total_cards_laid_down += non_empty_key[k];
+    
+    
+    if(game_constants.round_instance.round >= 2 && total_cards_laid_down != this.hand.length){
+        var save_num_laid_down = total_cards_laid_down;
+        //reset for vars used in determin_number_laid_down closure
+        total_cards_laid_down = 0;
+        non_empty_key = {};
+        
+        second_results = this.evaluate_cards(temp_hand, true);
+        this.determin_number_laid_down(second_results);
+        
+        if(total_cards_laid_down > save_num_laid_down){
+            results = second_results;
+        }else{
+            total_cards_laid_down = save_num_laid_down;
         }
     }
 
@@ -93,7 +122,8 @@ Player.prototype.running_score_total = function(cards_laid_down) {
         temp_hand[i] = this.hand[i];
     }
     
-    if(cards_laid_down != 0){ // I am passing a zero from end turn if they haven't been scored yet. Means they haven't been able to lay down at all
+    // I am passing a zero from end turn if they haven't been scored yet. Means they haven't been able to lay down at all
+    if(cards_laid_down != 0){ 
         for (var key in cards_laid_down) {
             if (cards_laid_down.hasOwnProperty(key)) {
                 var sub_array = cards_laid_down[key];
@@ -195,7 +225,8 @@ Player.prototype.can_player_move = function(element) {
 //The reason hand is being passed instead of using `this.hand`
 //is because we don't want to be poping cards off of the players hand
 //so the hand being passed is a temp copy of their actual hand.
-Player.prototype.evaluate_cards = function(hand) { //TODO fix bug where partial hand can be set down which could be a set or a run. 
+//TODO fix bug where partial hand can be set down which could be a set or a run. 
+Player.prototype.evaluate_cards = function(hand, r_first) { 
     var suites = {
         'clubs' : [],
         'diamonds' : [],
@@ -221,6 +252,7 @@ Player.prototype.evaluate_cards = function(hand) { //TODO fix bug where partial 
     var sets = [];
     var r_num = -1; //starts at -1 so ++ will give 0 index
     var s_num = -1;
+    var has_been_evaluated = false;
 
     hand.forEach(function(card) {
         if (card.is_wild) {
@@ -260,76 +292,113 @@ Player.prototype.evaluate_cards = function(hand) { //TODO fix bug where partial 
             }
         }
     }
-
-    //determins runs 
-    for (var s in suites){
-        if(suites.hasOwnProperty(s)){
-            var suite_length = suites[s].length;
-            if(suite_length >= 2){
-                var range = suites[s][suite_length - 1].value - suites[s][0].value;
-                r_num++;
-                runs[r_num] = [];
-                
-                if( (range - 1) >= wilds.length && (range - 1) == suite_length){
-                    suites[s].forEach(function(card){
-                        runs[r_num].push(card);
+    
+    this.determin_sets = function(){
+        for (var c in buckets) {
+            if (buckets.hasOwnProperty(c)) {
+                if(buckets[c].length >= 2 ){
+                    /* The following 2 lines are inside the each if statement cause we don't want a set consisting 
+                     * of just one card if a bucket only has one card in it, but it's easier to use wilds
+                     * in sets then it is in runs so if there are lots of wilds I do make valid sets out 
+                     * buckets with just one card in them. So I only initilize a new "set" if I can actually make one.
+                     */
+                    s_num++; 
+                    sets[s_num] = [];
+               
+                    if (buckets[c].length == 2 && wilds.length > 0) {
+                        buckets[c].forEach(function(card) {
+                            sets[s_num].push(card);
+                            //next 2 lines remove the card from the suite it was in so it can't be used in a run.
+                            var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+                            suites[card.suite].splice(index, 1);
+                        });
+                        sets[s_num].push(wilds.pop());
+                    } else if (buckets[c].length > 2) {
+                        buckets[c].forEach(function(card) {
+                            sets[s_num].push(card);
+                            var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+                            suites[card.suite].splice(index, 1);
+                        });
+                    }      
+                }else if (buckets[c].length == 1 && wilds.length >= 2) {
+                    s_num++; 
+                    sets[s_num] = [];
+                    
+                    buckets[c].forEach(function(card) {
+                        sets[s_num].push(card);
+                        var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+                        suites[card.suite].splice(index, 1);
                     });
-                    while(runs[r_num].length <= (range + 1) && wilds.length != 0){
-                        runs[r_num].push(wilds.pop());
-                    }
-               }else if(range == 1 && wilds.length >= 1){
-                    suites[s].forEach(function(card){
-                        runs[r_num].push(card);
-                    });
-                    runs[r_num].push(wilds.pop()); 
-                }else if( range == suite_length && wilds.length >= 1){
-                    suites[s].forEach(function(card){
-                        runs[r_num].push(card);
-                    });
-                    runs[r_num].push(wilds.pop());
-                }else if( (range + 1) == suite_length){
-                    suites[s].forEach(function(card){
-                        runs[r_num].push(card);
-                    });
+                    //yes I'm repeating myself here it makes a set and that's how human players think about it.
+                    sets[s_num].push(wilds.pop());
+                    sets[s_num].push(wilds.pop()); 
                 }
             }
         }
+    };
+
+
+    this.determin_runs = function(){
+        for (var s in suites){
+            if(suites.hasOwnProperty(s)){
+                var suite_length = suites[s].length;
+                if(suite_length >= 2){
+                    var range = suites[s][suite_length - 1].value - suites[s][0].value;
+                    r_num++;
+                    runs[r_num] = [];
+                    
+                    if( (range - 1) >= wilds.length && (range - 1) == suite_length){
+                        suites[s].forEach(function(card){
+                            runs[r_num].push(card);
+                        });
+                        while(runs[r_num].length <= (range + 1) && wilds.length != 0){
+                            runs[r_num].push(wilds.pop());
+                        }
+                   }else if(range == 1 && wilds.length >= 1){
+                        suites[s].forEach(function(card){
+                            runs[r_num].push(card);
+                        });
+                        runs[r_num].push(wilds.pop()); 
+                    }else if( range == suite_length && wilds.length >= 1){
+                        suites[s].forEach(function(card){
+                            runs[r_num].push(card);
+                        });
+                        runs[r_num].push(wilds.pop());
+                    }else if( (range + 1) == suite_length){
+                        suites[s].forEach(function(card){
+                            runs[r_num].push(card);
+                        });
+                    }
+                }
+            }
+        } 
+    };
+    
+    if(has_been_evaluated == false){
+        if(r_first){
+            this.determin_runs();
+            this.determin_sets();
+        }else{
+            this.determin_sets();
+            this.determin_runs();
+        }
+        has_been_evaluated = true;
     }
 
-    //determins sets
-    for (var i in buckets) {
-        if (buckets.hasOwnProperty(i)) {
-            s_num++;
-            sets[s_num] = [];
-       
-            if (buckets[i].length == 2 && wilds.length > 0) {
-                buckets[i].forEach(function(card) {
-                    sets[s_num].push(card);
-                });
-                sets[s_num].push(wilds.pop());
-            } else if (buckets[i].length > 2) {
-                buckets[i].forEach(function(card) {
-                    sets[s_num].push(card);
-                });
-            } else if (buckets[i].length == 1 && wilds.length >= 2) {
-                buckets[i].forEach(function(card) {
-                    sets[s_num].push(card);
-                });
-                sets[s_num].push(wilds.pop());
-                sets[s_num].push(wilds.pop()); //yes I'm repeating myself here it makes a set and that's how human players think about it.
-            }
-        }
-    }
-    
+
+    //if I have any extra wilds throw them on where I can
     if(wilds.length != 0){
         while(wilds.length != 0){
-            if(runs[0].length != 0){
+            if(runs[0] != undefined && runs[0].length != 0){
                 runs[0].push(wilds.pop());
-            }else if(sets[0].length != 0){
+            }else if(sets[0]!= undefined && sets[0].length != 0){
+                sets[0].push(wilds.pop());
+            }else if(wilds.length >= 3){ //This last case takes care of hands that are all wild by treating them like a set.
+                sets[0] = [];
                 sets[0].push(wilds.pop());
             }
         }
-    }//if I have any extra wilds throw them on where I can
+    }
 
     var results = {
         r_sets : sets,

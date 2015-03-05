@@ -79,6 +79,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     drawn_card_value = this.card_values[top_card_on_dc_pile];
     
     this.create_partial_sets_runs = function(){
+        //TODO make this work with running either sets or runs first for later hands
         sets_and_runs = this.evaluate_cards(temp_hand);
         
         sets_and_runs.r_sets.forEach(function(card){

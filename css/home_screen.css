@@ -1,10 +1,19 @@
+body{
+	height: inherit;
+	width: inherit;
+	margin: 0;
+	padding: 0;
+	background: url('../assets/table_top.jpg') no-repeat;
+}
 .main_screen{
 	display: none;
+	position: relative;
+	height: 480px;
 }
 
 .home_screen{
-	margin: 25% auto;
-	width: 25%;
+	margin: 0% auto;
+	width: 30%;
 	background-color: blue;
 	height: 480px;
 }
