@@ -3,128 +3,170 @@
 	<head>
 		<title>I don't think I need a title</title>
 
-        <script type="text/javascript" src="../logic_javascripts/deck_class.js"></script>
-        <script type="text/javascript" src="../logic_javascripts/game_class.js"></script>
+		<script type="text/javascript" src="../logic_javascripts/deck_class.js"></script>
+		<script type="text/javascript" src="../logic_javascripts/game_class.js"></script>
 		<script type="text/javascript" src="../logic_javascripts/player_logic.js"></script>
 		<script type="text/javascript" src="../logic_javascripts/computer_ai.js"></script>
 
-        <link rel='stylesheet' type="text/css" href="../css/cards.css" />
+		<link rel='stylesheet' type="text/css" href="../css/cards.css" />
 		<link rel='stylesheet' type="text/css" href="../css/home_screen.css" />
 		<link rel='stylesheet' type="text/css" href="../css/modals.css" />
 		<link rel='stylesheet' type="text/css" href="../css/menu.css" />
-        <link rel="stylesheet" type="text/css" href="../css/main_screen.css" />
+		<link rel="stylesheet" type="text/css" href="../css/main_screen.css" />
 	</head>
 	<body style="background-color:grey;">
-		
-        <div id="home_screen" class="home_screen screen">
+
+		<div id="home_screen" class="home_screen screen">
 			<header class="home_screen_header">
-            	<h4>Krazy Kings!</h4>
-        	</header>
-        	<div id="menu" class="main_menu partial">
-        		<ul class="menu navigation">
-        			<li class="player_btn" value="main_screen" onclick="navigation(this);">New Game</li>
-        			<li class="player_btn" value="options_screen" onclick="navigation(this);">Options</li>
-        			<li class="player_btn" value="score" onclick="navigation(this);">High Scores</li>
-        			<li class="player_btn" value="exit" onclick="navigation(this);">Exit</li>
-        		</ul>
-        	</div>
+				<h4>Krazy Kings!</h4>
+			</header>
+			<div id="menu" class="main_menu partial">
+				<ul class="menu navigation">
+					<li class="player_btn" value="main_screen" onclick="navigation(this);">
+						New Game
+					</li>
+					<li class="player_btn" value="popup_modal" onclick="navigation(this);">
+						Rules
+					</li>
+					<li class="player_btn" value="score" onclick="navigation(this);">
+						Best Scores
+					</li>
+					<li class="player_btn" value="exit" onclick="navigation(this);">
+						Exit
+					</li>
+				</ul>
+			</div>
 
-        	<div id="score" class="score_screen partial">
-        		
-        	</div>
-        	
+			<div id="score" class="score_screen partial">
+
+			</div>
+
 			<footer class="home_screen_footer">
-            	<h4>Krazy Kings!</h4>
-        	</footer>
-        </div>
+				<h4>Krazy Kings!</h4>
+			</footer>
+		</div>
 
-        <div id="options_screen" class="options_screen screen">
-        	
-        </div>
-        
-        <div id="main_screen" class="main_screen screen">
-            <div id="deck_and_discard">
+		<div id="options_screen" class="options_screen screen">
 
-            </div>
-            <div id="player_1_score"> </div>
-            <div id="player_1_hand" data-element="player_0_hand"> </div>
-            
-            <div id="player_2_score"> </div>
-            <div id="player_2_hand" data-element="player_1_hand"> </div>
-            
-            <div id="player_3_score"> </div>
-            <div id="player_3_hand" data-element="player_2_hand"> </div>
-            
-            <div id="player_4_score"> </div>
-            <div id="player_4_hand" data-element="player_3_hand">
+		</div>
 
-            </div>
-            <div class="player_menu">
-                <ul class="menu navigation">
-            		<li id="end_turn" class="player_btn" data-element="end_turn">End Turn</li>
-            		<li id="lay_down" class="player_btn" data-element="lay_down">Lay Down</li>
-            		<li value="home_screen" class="player_btn" onclick="navigation(this);">End Game</li>		
-        		</ul>	
-            </div>
-        </div>
-        
-        <div id="popup_modal" class="popup modal">
-        	<header>
-        		<h4>Welcome to Krazy Kings</h4>
-        	</header>
-        	<div class="rules_modal" id="rules_modal">
-        		<h6>Krazy Kings is a simple card game with lots of depth and stratigic descisions. </h6>
-        		<div class="rules">
-        			<span>There are just a few rules you need to know before getting started.</span>
-        			<ul>
-        				<li>
-        					Game Setup:
-        						The game will start with a 2 special Krazy Kings decks shuffled togeather and each player delt 3 cards.
-        						In the middle of the play area will be the deck and discard piles, with the actions a player can take located
-        						at the bottom of the screen.
-        						A Krazy King deck consists of 5 suits, the standard 4 plus Stars, there are also 3 jokers in each deck which are always wild.
-        				</li>
-        				<li>
-        					1. The goal of each round is to be the first one to lay down all your cards.
-        				</li>
-        				<li>
-        					2. The first round each player starts with 3 cards and each subsequent round you are delt 1 extra card.
-        						- There are 11 rounds in total so in your final hand you'll have a whooping 13 cards to manage!
-        						- Wilds: As stated above jokers are always wild, however there are other wilds in the game and these change each round.
-        						These corrispond to how many cards are in your hand. So in round 1 you have 3 cards in your hand and 3's are wild. Round 2
-        						you have 4 cards in your hand and 4's are wild and so on until round 11 when you have 13 cards in your hand and kings are wild!
-        				</li>
-        				<li>
-        					3. The only way to lay down your cards is to fit them into Sets or Runs. Both of which have a 3 card minimum.
-        						- A Set consists of a minimum of any 3 cards that have the same Value. It doesn't matter if there suite 
-        						(the shape on the card, i.e. hearts, starts, clubs) doesn't match all that matters is the number on the card.
-        						- A Run also consists of a minimum of 3 cards, however in a Run suite does matter. In a run you need 3 cards 
-        						with consecutive Values in the same suite. An example from the first round: 5 hearts, 6 hearts, and 7 hearts.
-        				</li>
-        				<li>
-        					4. Each turn you take during a round you will preform 3 actions:
-        						- You will draw a card from either the deck or the discard pile.
-        						- Analize your cards and decide what to discard.
-        						- Finally after you discard you will either end your turn OR if you can lay down your hand. 
-        				</li>
-        				<li>
-        					5. The end of a round happens when a player has layed down their hand and all the other players have had 1 more turn.
-        						- These turns are normal except that during this turn players are allowed to lay down partial hands.
-        				</li>
-        				<li>
-        					Scoring: At the end of the round any cards left in a players hand have their value added up and this sum is added to their total.
-        					The player with the lowest score wins. Example: in round 3 I have 5 cards in my hand I am able to lay down 3 of them in a set but am left
-        					with a Queen and a Jack left in my hand these would add up to 23 (12 for the queen 11 for the jack) and this sum would be added to my total.
-        				</li>
-        			</ul>
-        		</div>
-        		
-        	</div>
-        </div>
+		<div id="main_screen" class="main_screen screen">
+			<div id="deck_and_discard">
+
+			</div>
+			<div id="player_1_score"></div>
+			<div id="player_1_hand" data-element="player_0_hand"></div>
+
+			<div id="player_2_score"></div>
+			<div id="player_2_hand" data-element="player_1_hand"></div>
+
+			<div id="player_3_score"></div>
+			<div id="player_3_hand" data-element="player_2_hand"></div>
+
+			<div id="player_4_score"></div>
+			<div id="player_4_hand" data-element="player_3_hand">
+
+			</div>
+			<div class="player_menu">
+				<ul class="menu navigation">
+					<li id="end_turn" class="player_btn" data-element="end_turn">
+						End Turn
+					</li>
+					<li id="lay_down" class="player_btn" data-element="lay_down">
+						Lay Down
+					</li>
+					<li value="home_screen" class="player_btn" onclick="navigation(this);">
+						End Game
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="popup_modal" class="popup modal">
+			<li class="player_btn" value="home_screen" onclick="navigation(this);">
+				Back
+			</li>
+			<header>
+				<h2>Welcome to Krazy Kings</h2>
+			</header>
+			<div class="rules_modal" id="rules_modal">
+				<h4>Krazy Kings is a simple card game with lots of depth and strategic decisions. </h4>
+				<div class="rules">
+					<span>There are just a few rules you need to know before getting started.</span>
+					<ul>
+						<li>
+							Game Setup:
+							The game will start with a 2 special Krazy Kings decks shuffled together and each player dealt 3 cards.
+							In the middle of the play area will be the deck and discard piles, with the actions a player can take located
+							at the bottom of the screen.
+							A Krazy King deck consists of 5 suits, the standard 4 plus Stars, there are also 3 jokers in each deck which are always wild.
+						</li>
+						<li>
+							The goal of each round is to be the first one to lay down all your cards.
+						</li>
+						<li>
+							The first round each player starts with 3 cards and each subsequent round you are dealt 1 extra card.
+							<ul>
+								<li>
+									There are 11 rounds in total so in your final hand you'll have a whooping 13 cards to manage!
+								</li>
+								<li>
+									Wilds: As stated above jokers are always wild, however there are other wilds in the game and these change each round.
+								</li>
+							</ul>
+							These correspond to how many cards are in your hand. So in round 1 you have 3 cards in your hand and 3's are wild. Round 2
+							you have 4 cards in your hand and 4's are wild and so on until round 11 when you have 13 cards in your hand and kings are wild!
+						</li>
+						<li>
+							The only way to lay down your cards is to fit them into Sets or Runs. Both of which have a 3 card minimum.
+							<ul>
+								<li>
+									A Set consists of a minimum of any 3 cards that have the same Value. It doesn't matter if they're suite
+									(the shape on the card, i.e. hearts, starts, clubs) doesn't match all that matters is the number on the card.
+								</li>
+								<li>
+									A Run also consists of a minimum of 3 cards, however in a Run suite does matter. In a run you need 3 cards
+									with consecutive Values in the same suite. An example from the first round: 5 hearts, 6 hearts, and 7 hearts.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Each turn you take during a round you will preform 3 actions:
+							<ul>
+								<li>
+									You will draw a card from either the deck or the discard pile.
+								</li>
+								<li>
+									Analyze your cards and decide what to discard.
+								</li>
+								<li>
+									Finally after you discard you will either end your turn OR if you can lay down your hand.
+								</li>
+							</ul>
+						</li>
+						<li>
+							The end of a round happens when a player has laid down their hand and all the other players have had 1 more turn.
+							<ul>
+								<li>
+									These turns are normal except that during this turn players are allowed to lay down partial hands.
+								</li>
+							</ul>
+						</li>
+						<li>
+							Scoring: At the end of the round any cards left in a players hand have their value added up and this sum is added to their total.
+							The player with the lowest score wins. Example: in round 3 I have 5 cards in my hand I am able to lay down 3 of them in a set but am left
+							with a Queen and a Jack left in my hand these would add up to 23 (12 for the queen 11 for the jack) and this sum would be added to my total.
+						</li>
+
+					</ul>
+				</div>
+
+			</div>
+		</div>
 
 	</body>
-    <script type="text/javascript" src="../ui_javascripts/navigation.js"></script>
-    <script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
+	<script type="text/javascript" src="../ui_javascripts/navigation.js"></script>
+	<script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
 	<script type="text/javascript" src="../ui_javascripts/home_screen.js"></script>
-    <script type="text/javascript" src="../ui_javascripts/main_screen.js"></script>
+	<script type="text/javascript" src="../ui_javascripts/main_screen.js"></script>
 </html>

@@ -9,10 +9,19 @@ function navigation(screen_name){
     screen_index = new_screen;
 
     if(screen_index =='main_screen' ){
-       var current_game_instance = Main();
+       Main();
     }
-    if(screen_index == 'home_screen' && current_game_instance != null){
-    	delete(current_game_instance);
+
+    if(screen_index == 'home_screen'){
+    	if(game_started !== false){
+    	    game_started = false;
+    	    _game.undraw_game();
+    	    delete(game_constants);
+            delete(_game);
+            game_constants = null;
+            _game = new Game();   
+    	};    	
+
     }
 
 }

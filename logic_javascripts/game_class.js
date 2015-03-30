@@ -112,6 +112,22 @@ Game.prototype.draw_game = function(){
     this.draw_player_scores();
 };
 
+
+Game.prototype.undraw_game = function(){
+    var deck_area = id("deck_and_discard");
+    var player_1_area = id("player_1_hand");
+    var player_2_area = id("player_2_hand");
+    var player_3_area = id("player_3_hand");
+    var player_4_area = id("player_4_hand");
+    
+    deck_area.innerHTML = '';
+    
+    player_1_area.innerHTML = '';
+    player_2_area.innerHTML = '';
+    player_3_area.innerHTML = '';
+    player_4_area.innerHTML = '';   
+};
+
 Game.prototype.draw_player_scores = function(){
 	var player_1_score = id('player_1_score');
 	var player_2_score = id('player_2_score');
@@ -195,9 +211,10 @@ Game.prototype.handle_events = function(event){
 	var element_data = null;
 
 	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
+	console.log(event);
 	if(typeof event == 'string'){
 		element_data = event;	
-	}else if(event.target.id == '' && event.target.id != 'playing_deck'){
+	}else if(event.target.id == ''){
 		element_data = event.target.parentElement.getAttribute('data-element');	
 	}else{
 		element_data = event.target.getAttribute('data-element');
