@@ -39,15 +39,21 @@ function assign_event_listeners(round_constants){
     //these only need to be assigned once, but the deck and discard pile are recreated every round so need new
     //listeners attached to them.
     if(round_constants.round == 1){
-        player_1.addEventListener('click', function(){_game.handle_events(event);}, false);
-        player_2.addEventListener('click', function(){_game.handle_events(event);}, false);
-        player_3.addEventListener('click', function(){_game.handle_events(event);}, false);
-        player_4.addEventListener('click', function(){_game.handle_events(event);}, false);
-        end_turn.addEventListener('click', function(){_game.handle_events(event);}, false);
-        lay_down.addEventListener('click', function(){_game.handle_events(event);}, false);
+        player_1.addEventListener('click', named_event_listener, false);
+        player_2.addEventListener('click', named_event_listener, false);
+        player_3.addEventListener('click', named_event_listener, false);
+        player_4.addEventListener('click', named_event_listener, false);
+        end_turn.addEventListener('click', named_event_listener, false);
+        lay_down.addEventListener('click', named_event_listener, false);
     }
     deck.addEventListener("click", function(){_game.handle_events(event);}, false);
     discard_pile.addEventListener('click', function(){_game.handle_events(event);}, false);
 
+}
+
+// This is needed so that I can mass de-assign event listeners when starting a new game, otherwise my event listeners 
+// hold on to an old copy of the _game instance
+function named_event_listener(event){
+    _game.handle_events(event);
 }
 

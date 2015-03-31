@@ -211,7 +211,6 @@ Game.prototype.handle_events = function(event){
 	var element_data = null;
 
 	//Need to get the parent element, because cards don't have id's, so the initial click on the discard pile is on a card and not the 'discard pile',  	
-	console.log(event);
 	if(typeof event == 'string'){
 		element_data = event;	
 	}else if(event.target.id == ''){
