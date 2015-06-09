@@ -14,7 +14,8 @@ Game.prototype.initialize_game = function(num_of_players, name_of_players){
     for(var i = 0; i< num_of_players; i++){
         this.players[i] = new Player();
         this.players[i].name = name_of_players[i];
-        this.players[i].hand_area = 'player_'+i+'_hand';
+        var hand_num = i + 1;
+        this.players[i].hand_area = 'player_'+hand_num+'_hand';
 
     }
 
@@ -61,6 +62,10 @@ Game.prototype.new_round = function(game_constants){
 
 Game.prototype.reset_constants = function(){
     this.round_constants.discard_pile = [];
+
+    for(var i = 0; i < this.players.length; i++){
+        this.players[i].has_been_scored = false;
+    }
 
     this.round_constants.round_instance.round_ending = {
         is_ending: false,
@@ -110,6 +115,8 @@ Game.prototype.draw_game = function(){
         }
     }
     this.draw_player_scores();
+    
+    this.rotate_players_cards_beginning_game(this.players[this.current_player]);
 };
 
 
@@ -144,13 +151,90 @@ Game.prototype.draw_player_scores = function(){
 	}
 };
 
+Game.prototype.rotate_players_cards_beginning_game = function(_current_player){
+    var hand_areas = [].slice.call(document.querySelectorAll('.hand_area'));
+    console.log(_current_player);
+    hand_areas.forEach(function(area){
+       if(area.getAttribute('id') !== _current_player.hand_area){
+           var cards = [].slice.call(area.querySelectorAll('div'));
+           cards.forEach(function(card){
+               card.classList.add('no_transition');
+               if(card.getAttribute('data-element') == 'joker1'){
+                   card.classList.remove('joker');
+               }else{
+                  card.classList.add('cards');
+                  card.classList.remove('card'); 
+               }
+               card.classList.add('back');
+               card.classList.add('no_transition');
+           });
+       }
+    });
+};
+
+
+Game.prototype.rotate_players_cards = function(_current_player){
+    var hand_area = id(_current_player.hand_area);
+    var next_player = this.current_player + 1;
+    var next_hand_area = id('player_'+next_player+'_hand');
+    var cards = [].slice.call(hand_area.querySelectorAll('div'));
+    var next_players_cards = [].slice.call(next_hand_area.querySelectorAll('div'));
+    
+    cards.forEach(function(card){
+        card.classList.add('rotated_90');
+    });
+    window.setTimeout(function(){
+        cards.forEach(function(card){
+            if(card.getAttribute('data-element') == 'joker1'){
+                card.classList.remove('joker');
+            }else{
+               card.classList.add('cards');
+               card.classList.remove('card'); 
+            }
+            card.classList.add('back');
+            card.classList.add('no_transition');
+
+        });
+        window.setTimeout(function(){
+            cards.forEach(function(card){
+                card.classList.remove('no_transition');
+                card.classList.remove('rotated_90');
+            });            
+        },20);
+    }, 1001);
+    window.setTimeout(function(){
+        next_players_cards.forEach(function(card){
+            card.classList.remove('no_transition');
+            card.classList.add('rotated_90');
+        });
+        window.setTimeout(function(){
+            next_players_cards.forEach(function(card){
+                if(card.getAttribute('data-element') == 'joker1'){
+                    card.classList.add('joker');
+                }else{
+                    card.classList.remove('cards');
+                    card.classList.add('card');
+                }
+                card.classList.remove('back');
+                card.classList.add('no_transition');  
+            });
+            window.setTimeout(function(){
+                next_players_cards.forEach(function(card){
+                    card.classList.remove('no_transition');
+                    card.classList.remove('rotated_90');
+                });                
+            },20);  
+        },1001);
+    },1050);
+};
+
 Game.prototype.draw_current_players_hand = function(){
 	var player = this.players[this.current_player];
 	var position = player.hand_area;
     var hand = '';
 
 	switch(position){
-		case 'player_0_hand':
+		case 'player_1_hand':
 		{
 			hand = id('player_1_hand');
 			hand.innerHTML = '';
@@ -159,7 +243,7 @@ Game.prototype.draw_current_players_hand = function(){
 			}
 			break;
 		}
-		case 'player_1_hand':
+		case 'player_2_hand':
 		{
 			hand = id('player_2_hand');
 			hand.innerHTML = '';
@@ -168,7 +252,7 @@ Game.prototype.draw_current_players_hand = function(){
 			}
 			break;
 		}
-		case 'player_2_hand':
+		case 'player_3_hand':
 		{
 			hand = id('player_3_hand');
 			hand.innerHTML = '';
@@ -177,7 +261,7 @@ Game.prototype.draw_current_players_hand = function(){
 			}
 			break;
 		}
-		case 'player_3_hand':
+		case 'player_4_hand':
 		{
 			hand = id('player_4_hand');
 			hand.innerHTML = '';
@@ -244,16 +328,17 @@ Game.prototype.handle_events = function(event){
             		if(_current_player.has_been_scored != true){
             			_current_player.running_score_total(0);	
             		}
-            		//reset the scored action, for each player as they end their turn and the round is ending
-					_current_player.has_been_scored = false;
                     this.handle_events('end_round');
             	}else if(round_instance.round_ending.is_ending == true && this.current_player != round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
             			_current_player.running_score_total(0);
             		}
-            		//reset like above
-					_current_player.has_been_scored = false;
+            		this.rotate_players_cards(_current_player);
             	}
+            	if(round_instance.round_ending.is_ending == false){
+            	    this.rotate_players_cards(_current_player);
+            	}
+            	
             	break;
             }
             case 'lay_down':{

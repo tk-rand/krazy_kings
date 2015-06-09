@@ -253,6 +253,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
     var r_num = -1; //starts at -1 so ++ will give 0 index
     var s_num = -1;
     var has_been_evaluated = false;
+    var breadth_search = false;
 
     hand.forEach(function(card) {
         if (card.is_wild) {
@@ -294,7 +295,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
     }
     
     this.determin_sets = function(){
-        for (var c in buckets) {
+        for (var c in buckets) {//TODO: BUG with 7+ cards it looks liek I end up with 2 many sets. 
             if (buckets.hasOwnProperty(c)) {
                 if(buckets[c].length >= 2 ){
                     /* The following 2 lines are inside the each if statement cause we don't want a set consisting 
@@ -321,20 +322,26 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                         });
                     }      
                 }else if (buckets[c].length == 1 && wilds.length >= 2) {
-                    s_num++; 
-                    sets[s_num] = [];
-                    
-                    buckets[c].forEach(function(card) {
-                        sets[s_num].push(card);
-                        var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
-                        suites[card.suite].splice(index, 1);
-                    });
-                    //yes I'm repeating myself here it makes a set and that's how human players think about it.
-                    sets[s_num].push(wilds.pop());
-                    sets[s_num].push(wilds.pop()); 
+                    if(breadth_search){
+                        s_num++; 
+                        sets[s_num] = [];
+                        
+                        buckets[c].forEach(function(card) {
+                            sets[s_num].push(card);
+                            var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+                            suites[card.suite].splice(index, 1);
+                        });
+                        //yes I'm repeating myself here it makes a set and that's how human players think about it.
+                        sets[s_num].push(wilds.pop());
+                        sets[s_num].push(wilds.pop());     
+                    }
                 }
             }
         }
+        if(!breadth_search && wilds.length >= 2){
+            breadth_search = true;
+            this.determin_sets();
+        } 
     };
 
 
@@ -371,7 +378,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                     }
                 }
             }
-        } 
+        }
     };
     
     if(has_been_evaluated == false){
