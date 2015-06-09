@@ -5,8 +5,10 @@ function id(ele_id){
 }
 
 function cls(class_name){
-    return document.getElementsByClassName(class_name);
+    return Array.prototype.slice.call(document.querySelectorAll(class_name));
 }
+
+
 
 function get_number_of_players_and_player_names(){
     var num_of_players =  prompt("Enter number of players desired (up to 4).");
