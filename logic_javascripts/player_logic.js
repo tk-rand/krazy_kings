@@ -115,6 +115,22 @@ Player.prototype.sort_player_cards = function() {
 
 };
 
+Player.prototype.compare_cards = function(card1, card2){
+    for(var key in card1){
+        if(card1.hasOwnProperty(key)){
+            if(!card2.hasOwnProperty(key)){
+                return false;
+            }
+            if(card1[key] == card2[key]){
+                continue;
+            }else{
+                return false;
+            }
+        }
+    }
+    return true;
+};
+
 Player.prototype.running_score_total = function(cards_laid_down) {
     
     if(!this.has_been_scored){
@@ -240,18 +256,19 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
         'stars' : []
     };
     var wilds = [];
+    //in decending order because that makes hand recognition with partial laydowns always take the highest value sets
     var buckets = {
-        3 : [],
-        4 : [],
-        5 : [],
-        6 : [],
-        7 : [],
-        8 : [],
-        9 : [],
-        10 : [],
-        11 : [],
+        13 : [],
         12 : [],
-        13 : []
+        11 : [],
+        10 : [],
+        9 : [],
+        8 : [],
+        7 : [],
+        6 : [],
+        5 : [],
+        4 : [],
+        3 : []
     };
     var runs = [];
     var sets = [];
@@ -260,6 +277,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
     var has_been_evaluated = false;
     var breadth_search = false;
     var buckets_used_for_sets = [];
+    var self = this;
 
     hand.forEach(function(card) {
         if (card.is_wild) {
@@ -355,6 +373,25 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
 
 
     this.determin_runs = function(){
+        //remove duplicates first so range comparison will work properly
+        for(var suite in suites){
+            if(suites.hasOwnProperty(suite)){
+                if(suites[suite].length > 1){
+                    var card_count = 0;
+                    suites[suite].forEach(function(card){
+                        card_count++; 
+                        if(card_count < suites[suite].length){
+                            for(var i = suites[suite].length - 1; i >= card_count; i-- ){
+                                if(self.compare_cards(card, suites[suite][i])){
+                                    suites[suite].splice(i, 1);
+                                }
+                            } 
+                        }
+                    });
+                }
+            }
+        }
+        
         for (var s in suites){
             if(suites.hasOwnProperty(s)){
                 var suite_length = suites[s].length;
@@ -363,7 +400,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                     r_num++;
                     runs[r_num] = [];
                     
-                    if( (range - 1) >= wilds.length && (range - 1) == suite_length){
+                    if((range - 1) == wilds.length && (range - 1) == suite_length){
                         suites[s].forEach(function(card){
                             runs[r_num].push(card);
                             var index = buckets[card.value].map(function(a){return a.value;}).indexOf(card.value);
@@ -391,7 +428,6 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                             runs[r_num].push(card);
                             var index = buckets[card.value].map(function(a){return a.value;}).indexOf(card.value);
                             buckets[card.value].splice(index, 1);
-                            
                         });
                     }
                 }
@@ -417,7 +453,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
             if(runs[0] != undefined && runs[0].length != 0){
                 runs[0].push(wilds.pop());
             }else if(sets[0]!= undefined && sets[0].length != 0){
-                sets[0].push(wilds.pop());
+                sets[sets.length -1].push(wilds.pop());
             }else if(wilds.length >= 3){ //This last case takes care of hands that are all wild by treating them like a set.
                 sets[0] = [];
                 sets[0].push(wilds.pop());

@@ -71,23 +71,4 @@ function Deck(){
         }
         return deck;
     };
-
-    //helper methods
-    this.compare = function(card1, card2){
-        if(Object.keys(card1).length != 0){
-            for(var key in card1){
-                if(card1.hasOwnProperty(key)){
-                    if(card1[key] == card2[key]){
-                        delete card1[key];
-                        delete card2[key];
-                        this.compare(card1, card2);
-                    }else{
-                        return false;
-                    }
-                }
-            }
-        }else{
-            return true;
-        }
-    };
 }
