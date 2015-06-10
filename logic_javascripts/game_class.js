@@ -28,11 +28,16 @@ Game.prototype.new_round = function(game_constants){
 
     var _discard_pile = [];
     var deal_return = [];
-
+    
     this.deck = _deck_instance.build_deck();
     this.deck = _deck_instance.shuffle(this.deck);
     var _round = _round_instance.get_round();
-
+    
+    //reset the discard pile and round ending vars before re-assigning them.
+    if(_round > 1){
+        this.reset_constants();
+    }
+    
     for(var i = 0; i < this.players.length; i++){
         if(i == 0){
             deal_return	= this.players[i].deal(this.deck, _round);
@@ -40,11 +45,6 @@ Game.prototype.new_round = function(game_constants){
             deal_return = this.players[i].deal(deal_return.deck_ref, _round);
         }
         this.players[i].hand = deal_return.hand;
-    }
-
-    //reset the discard pile and round ending vars before re-assigning them.
-    if(_round > 1){
-        this.reset_constants();
     }
 
     //turn over the first card of the game
@@ -153,7 +153,7 @@ Game.prototype.draw_player_scores = function(){
 
 Game.prototype.rotate_players_cards_beginning_game = function(_current_player){
     var hand_areas = [].slice.call(document.querySelectorAll('.hand_area'));
-    console.log(_current_player);
+
     hand_areas.forEach(function(area){
        if(area.getAttribute('id') !== _current_player.hand_area){
            var cards = [].slice.call(area.querySelectorAll('div'));
@@ -329,11 +329,13 @@ Game.prototype.handle_events = function(event){
             			_current_player.running_score_total(0);	
             		}
                     this.handle_events('end_round');
+                    break;
             	}else if(round_instance.round_ending.is_ending == true && this.current_player != round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
             			_current_player.running_score_total(0);
             		}
             		this.rotate_players_cards(_current_player);
+            		break;            	
             	}
             	if(round_instance.round_ending.is_ending == false){
             	    this.rotate_players_cards(_current_player);
@@ -343,7 +345,7 @@ Game.prototype.handle_events = function(event){
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
-            	console.log(result.message);
+
             	if(round_instance.round_ending.is_ending == false){
                 	if(result.message == "full laydown"){
                 	    alert(_current_player.name + " is laying down their hand!");

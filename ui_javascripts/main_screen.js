@@ -46,8 +46,8 @@ function assign_event_listeners(round_constants){
         end_turn.addEventListener('click', named_event_listener, false);
         lay_down.addEventListener('click', named_event_listener, false);
     }
-    deck.addEventListener("click", function(){_game.handle_events(event);}, false);
-    discard_pile.addEventListener('click', function(){_game.handle_events(event);}, false);
+    deck.addEventListener("click", named_event_listener, false);
+    discard_pile.addEventListener('click', named_event_listener, false);
 
 }
 
