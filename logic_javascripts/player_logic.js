@@ -1,3 +1,5 @@
+/* global game_constants */
+
 //player class
 function Player() {
     this.hand = [];

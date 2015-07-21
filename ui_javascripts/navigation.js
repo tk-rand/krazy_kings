@@ -26,7 +26,6 @@ function navigation(screen_name){
 }
 
 function remove_event_listeners(){
-    console.log('hello');
     var deck = id('playing_deck');
     var discard_pile = id('discard_pile');
     var player_1 = id('player_1_hand');
