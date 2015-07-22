@@ -1,4 +1,4 @@
-Player.prototype.evaluate_cards = function(hand, r_first) { 
+function evaluate_cards(hand) { 
     var suites = {
         'clubs' : [],
         'diamonds' : [],
@@ -83,7 +83,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                 
             }else if(hand_length < 5 && s_length >= 3){
             
-				//see if the run all the cards we have
+				//see if the run is all the cards we have
 				if(s_length === hand_length){
 					var range = suite_array[s_length - 1] - suite_array[0];
 					
@@ -114,9 +114,9 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                         var temp_suite = suite_array.remove_dupes();
                         var range = temp_suite[s_length - 1] - temp_suite[0];
                         
-                        //all cases involving wilds in hands with less then 5 cards go here
+                        //cases involving wilds and runs and only one suite in hands with less then 5 cards go here
                         if(wilds.length > 0){
-                            //valid run of wilds and run with no possiblity of sets
+                            //valid run of wilds and suite with no possiblity of sets
                             if(range === temp_suite.length || range === 1 || (range + 1) === temp_suite.length){
                                 if( (wilds.length + temp_suite.length) >= 3 ){
                                     r_num++;
@@ -129,9 +129,92 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
                                 }
                             }
                         }
+                    }else{ //there are some possible sets
+                        poss_sets.forEach(function(value){
+                            //valid set without wilds to begin with
+                            if(buckets[value].length >= 3){
+                                s_num++;
+                                buckets[value].forEach(function(card){
+                                    sets[s_num].push(card);
+                                });
+                                //if we only have 1 or 2 cards left and any happen to be wild toss them on the set
+                                if(hand_length - sets[s_num].length <= 2 && wilds.length > 0 ){
+                                    wilds.forEach(function(card){
+                                        sets[s_num].push(card);
+                                    })
+                                }
+                            }else { //had some duplicates but not enough to make a set by themselves
+                                //can only do something with these if we have some wilds
+                                if(wilds.length > 0){
+                                    var temp_suite = suite_array.remove_dupes();
+                                    var run_total = 0;
+                                    var set_total = 0;
+                                    
+                                    for(var i = 0; i < temp_suite.length; i++){
+                                        run_total += temp_suite[i].value
+                                    }
+                                    for(var j = 0; j < buckets[value].length; j++){
+                                        set_total += buckets[value][j].value;
+                                    }
+                                    //run is more valuable partial laydown then set
+                                    if(run_total >= set_total){
+                                        r_num++;
+                                        suite_array.forEach(function(card){
+                                            runs[r_num].push(card);    
+                                        });
+                                        wilds.forEach(function(card){
+                                            runs[r_num].push(card);
+                                        });
+                                    }else{ //set is worth more then run in partial laydown
+                                        s_num++;
+                                        buckets[value].forEach(function(card){
+                                            sets[s_num].push(card);    
+                                        });
+                                        wilds.forEach(function(card){
+                                            sets[s_num].push(card); 
+                                        });
+                                    }
+                                }
+                            }
+                        });
                     } 
                 }
 			}
 		}
 	}
 };
+
+function test_hand_evaluation(){
+    // test case: [3,3,3 5,6,7,8, 13,13,13] with 3,5,6,7,8,13 (one of 3 and 13) being in the same suite
+	//fail run test: [3,4,4,5]
+	//pass run test: [3,4,5,6]
+    //partial laydown tests: [3,3,4,w] = 3 LO, [3,4,4,w] = 3 LO, [3,3,4,5,w] = 3 LO
+	
+    var test_hands = {
+        'one': [
+            {
+                value: 4,
+                suite: 'clubs',
+                is_wild: false
+            },
+            {
+                value: 3,
+                suite: 'clubs',
+                is_wild: false
+            },
+            {
+                value: 5,
+                suite: 'clubs',
+                is_wild: false
+            },
+            {
+                value: 6,
+                suite: 'clubs',
+                is_wild: false
+            }
+        ]
+    }
+    
+    var test_results = evaluate_cards(test_hands.one);
+    console.log(test_results);
+}
