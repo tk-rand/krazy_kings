@@ -6,6 +6,10 @@
     width: 72px;
     cursor: pointer;
     display:inline-block;
+    -webkit-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 .card.over{
     border: 2px dashed #000;
@@ -17,6 +21,18 @@
     width: 72px;
     cursor: pointer;
     display:inline-block;
+    -webkit-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+
+}
+.no_transition{
+	-webkit-transition: none;
+    transition: none;
+}
+.rotated_90 {
+	transform: rotateY(90deg);
 }
 
 /*suit of hearts */

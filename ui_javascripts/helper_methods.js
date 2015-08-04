@@ -12,8 +12,9 @@ function get_number_of_players_and_player_names(){
     var num_of_players =  prompt("Enter number of players desired (up to 4).");
     var name_of_players = [];
 
-    for(var i = 1; i <= num_of_players; i++){
-        name_of_players[i] = prompt("Enter the name of player "+ i);
+    for(var i = 0; i < num_of_players; i++){
+        var player_num = i +1;
+        name_of_players[i] = prompt("Enter the name of player "+ player_num);
     }
 
     return name_of_players;
