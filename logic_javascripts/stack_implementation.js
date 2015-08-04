@@ -1,40 +1,62 @@
 Player.prototype.evaluate_cards = function(hand){
-	var matrix = {
-		'clubs'    :   {3 : 0, 4 : 0, 5 : 0, 6 : 0, 7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0},
-        'diamonds' :   {3 : 0, 4 : 0, 5 : 0, 6 : 0, 7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0},
-        'hearts'   :   {3 : 0, 4 : 0, 5 : 0, 6 : 0, 7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0},
-        'spades'   :   {3 : 0, 4 : 0, 5 : 0, 6 : 0, 7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0},
-        'stars'    :   {3 : 0, 4 : 0, 5 : 0, 6 : 0, 7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0}
+	function Evaluated_hand(hand){
+		var matrix = [[0,0,0,0,0,0,0,0,0,0,0],  //clubs
+					  [0,0,0,0,0,0,0,0,0,0,0],  //diamonds
+					  [0,0,0,0,0,0,0,0,0,0,0],  //hearts
+					  [0,0,0,0,0,0,0,0,0,0,0],  //spades
+					  [0,0,0,0,0,0,0,0,0,0,0]]; //stars
+		var wilds = 0;
+		var melds = [];
+		var value = this.leftover_value();
+		var round = game_constants.round_instance.round;
+		
+		hand.forEach(function(card){
+			if(card.is_wild){
+				wilds++;
+			}else{
+				switch (card.suite){
+					case 'clubs':{
+						matrix[0][card.value]++;
+						break;
+					}
+					case 'diamonds':{
+						matrix[1][card.value]++;
+						break;
+					}
+					case 'hearts':{
+						matrix[2][card.value]++;
+						break;
+					}
+					case 'spades':{
+						matrix[3][card.value]++;
+						break;
+					}
+					case 'stars':{
+						matrix[4][card.value]++;
+						break;
+					}
+				}
+			}
+		});
 	}
-	var wilds = 0;
-	var melds = [];
-	var value = this.leftover_value();
 	
-	hand.forEach(function(card){
-		if(card.is_wild){
-			wilds++;
-		}else{
-			matrix[card.suite][card.value]++;
-		}
-	});
-	
-	this.find_melds = function(suite, num, multi){
-		if(suite == undefined || num == undefined || multi == undefined){
-			suite = num = multi = 0;
+	Evaluated_hand.prototype.find_melds = function(suite, num){
+		if(suite == undefined || num == undefined){
+			suite = num = 0;
 		}
 		
-		if(wilds > 2){
-			for(var i = 0; i < wilds; i++){
-				//recrusion s == suite, n == num, m == multi
-				melds.push({s: -1, n: -1, m: -1});
+		if(this.wilds > 2){
+			for(var i = 0; i < this.wilds; i++){
+				//recrusion s == suite, n == num
+				this.melds.push({suite: -1, num: -1});
 			}
+			 this.value -= 25 * this.wilds - (22 - this.round) * this.wilds;
 		}
 		
 		//search until laydown or final value is found
-		while(value > 0){
+		while(this.value > 0){
 			//find the next card in matrix
-			while(matrix[suite][num] <= multi){
-				multi = 0;
+			while(num > 10 || this.matrix[suite][num] == 0){
 				if(++num > 10){
 					num = 0;
 					if(++suite > 4){
@@ -43,16 +65,75 @@ Player.prototype.evaluate_cards = function(hand){
 				}
 			}
 			
-			//t == type, type is reserved
-			for(var t = 0; t < 2; t++){
+			for(var meld_type = 0; meld_type < 2; meld_type++){
 				//find a set or run at current matrix position
-				var meld = t ? this.find_set(suite, num, multi) : this.find_run(suite, num, multi);
+				var meld = meld_type ? this.find_set(suite, num) : this.find_run(suite, num);
 				
 				//try different lengths for long sets or runs
 				for(var len = 3; len <= meld.length; len++){
+					var test = new Evaluated_hand(hand)
+					this.remove_cards(meld.slice(0, len));
 					
+					meld_type ? this.find_melds(suite, num) : this.find_melds(0,0);
+					
+					if(test.value < this.value){
+						this.value = test.value;
+						this.melds.length = 0;
+						this.melds = [].concat(meld.slice(0, len), test.melds);
+					}
 				}
 			}
+			num++;
 		}
 	};
+	
+	Evaluated_hand.prototype.find_run = function(suite, num){
+		var run = [];
+		var wilds = this.wilds;
+		while(num < 11){
+			if(this.matrix[suite][num] > 0){
+				run.push({suite: suite, num: num});
+			}else if(wilds > 0){
+				run.push({suite: -1, num: -1});
+				wilds --;
+			}else{
+				break;
+			}
+			num++;
+		}
+		
+		while(wilds-- > 0){
+			run.push({suite: -1, num: -1});
+		}
+		return run;	
+	};
+	
+	Evaluated_hand.prototype.find_set = function(suite, num){
+		var set = [];
+		while(suite < 5){
+			for(var i = 0; i < this.matrix[suite][num]; i++){
+				set.push({suite: suite, num: num});
+			}
+			suite++;
+		}
+		
+		for(var i = 0; i < this.wilds; i++){
+			set.push({suite: -1, num: -1});
+		}
+		return set;
+	};
+	
+	Evaluated_hand.prototype.leftover_value = function(){
+		var leftover = 0;
+		for(var i = 0; i < 5; i++){
+			for(var j = 0; j < 11; j++){
+				leftover += this.matrix[i][j] * (j + 3);
+			}
+		}
+		return leftover + 25 * this.wilds - (22 - this.round) * (this.wilds);	
+	};
+	
+	var results = new Evaluated_hand(hand);
+	results.find_melds();
+	console.log("melds:", results.melds, "\n value: ", results.value);
 }

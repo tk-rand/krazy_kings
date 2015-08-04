@@ -218,3 +218,183 @@ function test_hand_evaluation(){
     var test_results = evaluate_cards(test_hands.one);
     console.log(test_results);
 }
+
+//old evaluate code
+// var suites = {
+//         'clubs' : [],
+//         'diamonds' : [],
+//         'hearts' : [],
+//         'spades' : [],
+//         'stars' : []
+//     };
+//     var wilds = [];
+//     var buckets = {
+//         3 : [],
+//         4 : [],
+//         5 : [],
+//         6 : [],
+//         7 : [],
+//         8 : [],
+//         9 : [],
+//         10 : [],
+//         11 : [],
+//         12 : [],
+//         13 : []
+//     };
+//     var runs = [];
+//     var sets = [];
+//     var r_num = -1; //starts at -1 so ++ will give 0 index
+//     var s_num = -1;
+//     var has_been_evaluated = false;
+
+//     hand.forEach(function(card) {
+//         if (card.is_wild) {
+//             wilds.push(card);
+//         } else {
+//             buckets[card.value].push(card);
+//         }
+//     });
+
+//     //deletes empty buckets
+//     for (var k in buckets) {
+//         if (buckets.hasOwnProperty(k)) {
+//             if (buckets[k].length == 0) {
+//                 delete buckets[k];
+//             }
+//         }
+//     }
+
+//     //pushes cards into suites
+//     for (var b in buckets) {
+//         if (buckets.hasOwnProperty(b)) {
+//             if (buckets[b].length > 1) {
+//                 buckets[b].forEach(function(card) {
+//                     suites[card.suite].push(card);
+//                 });
+//             } else {
+//                 suites[buckets[b][0].suite].push(buckets[b][0]);
+//             }
+//         }
+//     }
+
+//     //deletes empty suites
+//     for (var s in suites) {
+//         if (suites.hasOwnProperty(s)) {
+//             if (suites[s].length == 0) {
+//                 delete suites[s];
+//             }
+//         }
+//     }
+    
+//     this.determin_sets = function(){
+//         for (var c in buckets) {
+//             if (buckets.hasOwnProperty(c)) {
+//                 if(buckets[c].length >= 2 ){
+//                     /* The following 2 lines are inside the each if statement cause we don't want a set consisting 
+//                      * of just one card if a bucket only has one card in it, but it's easier to use wilds
+//                      * in sets then it is in runs so if there are lots of wilds I do make valid sets out 
+//                      * buckets with just one card in them. So I only initilize a new "set" if I can actually make one.
+//                      */
+//                     s_num++; 
+//                     sets[s_num] = [];
+               
+//                     if (buckets[c].length == 2 && wilds.length > 0) {
+//                         buckets[c].forEach(function(card) {
+//                             sets[s_num].push(card);
+//                             //next 2 lines remove the card from the suite it was in so it can't be used in a run.
+//                             var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+//                             suites[card.suite].splice(index, 1);
+//                         });
+//                         sets[s_num].push(wilds.pop());
+//                     } else if (buckets[c].length > 2) {
+//                         buckets[c].forEach(function(card) {
+//                             sets[s_num].push(card);
+//                             var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+//                             suites[card.suite].splice(index, 1);
+//                         });
+//                     }      
+//                 }else if (buckets[c].length == 1 && wilds.length >= 2) {
+//                     s_num++; 
+//                     sets[s_num] = [];
+                    
+//                     buckets[c].forEach(function(card) {
+//                         sets[s_num].push(card);
+//                         var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
+//                         suites[card.suite].splice(index, 1);
+//                     });
+//                     //yes I'm repeating myself here it makes a set and that's how human players think about it.
+//                     sets[s_num].push(wilds.pop());
+//                     sets[s_num].push(wilds.pop()); 
+//                 }
+//             }
+//         }
+//     };
+
+
+//     this.determin_runs = function(){
+//         for (var s in suites){
+//             if(suites.hasOwnProperty(s)){
+//                 var suite_length = suites[s].length;
+//                 if(suite_length >= 2){
+//                     var range = suites[s][suite_length - 1].value - suites[s][0].value;
+//                     r_num++;
+//                     runs[r_num] = [];
+                    
+//                     if( (range - 1) >= wilds.length && (range - 1) == suite_length){
+//                         suites[s].forEach(function(card){
+//                             runs[r_num].push(card);
+//                         });
+//                         while(runs[r_num].length <= (range + 1) && wilds.length != 0){
+//                             runs[r_num].push(wilds.pop());
+//                         }
+//                    }else if(range == 1 && wilds.length >= 1){
+//                         suites[s].forEach(function(card){
+//                             runs[r_num].push(card);
+//                         });
+//                         runs[r_num].push(wilds.pop()); 
+//                     }else if( range == suite_length && wilds.length >= 1){
+//                         suites[s].forEach(function(card){
+//                             runs[r_num].push(card);
+//                         });
+//                         runs[r_num].push(wilds.pop());
+//                     }else if( (range + 1) == suite_length){
+//                         suites[s].forEach(function(card){
+//                             runs[r_num].push(card);
+//                         });
+//                     }
+//                 }
+//             }
+//         } 
+//     };
+    
+//     if(has_been_evaluated == false){
+//         if(r_first){
+//             this.determin_runs();
+//             this.determin_sets();
+//         }else{
+//             this.determin_sets();
+//             this.determin_runs();
+//         }
+//         has_been_evaluated = true;
+//     }
+
+
+//     //if I have any extra wilds throw them on where I can
+//     if(wilds.length != 0){
+//         while(wilds.length != 0){
+//             if(runs[0] != undefined && runs[0].length != 0){
+//                 runs[0].push(wilds.pop());
+//             }else if(sets[0]!= undefined && sets[0].length != 0){
+//                 sets[0].push(wilds.pop());
+//             }else if(wilds.length >= 3){ //This last case takes care of hands that are all wild by treating them like a set.
+//                 sets[0] = [];
+//                 sets[0].push(wilds.pop());
+//             }
+//         }
+//     }
+
+//     var results = {
+//         r_sets : sets,
+//         r_runs : runs
+//     };
+//     return results;

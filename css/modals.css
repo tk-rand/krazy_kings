@@ -1,0 +1,28 @@
+.popup {
+	display: none;
+	margin: 0 auto;
+	width: 56%;
+	background-color: #663300;
+	color: #ffffff;
+}
+.rules_modal {
+	width: 500px;
+	overflow-y: auto;
+	margin-left: 15px;
+}
+.popup header {
+	margin: 15px auto 0;
+	width: 55%;
+	float: left;
+	text-align: center;
+}
+.popup ul li {
+	margin-bottom: 10px;
+}
+
+.popup .player_btn {
+	float: left;
+	width: 75px;
+	line-height: 30px;
+	margin-top: 10px;
+}
