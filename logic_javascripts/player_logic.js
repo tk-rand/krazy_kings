@@ -47,65 +47,12 @@ Player.prototype.discard = function(card_to_discard, round_constants) {
 
 Player.prototype.lay_down = function() {
     var temp_hand = [];
-    var non_empty_key = {};
-    var total_cards_laid_down = 0;
-    var second_results = {};
-    var evaluated = false;
 
     for (var i = 0; i < this.hand.length; i++) {
         temp_hand[i] = this.hand[i];
     }
 
     var results = this.evaluate_cards(temp_hand);
-    
-    // this.determin_number_laid_down = function(the_results){
-    //     for (var k in the_results) {
-    //         if (the_results.hasOwnProperty(k)) {
-    //             non_empty_key[k] = 0;
-    //             the_results[k].forEach(function(an_array){
-    //                 if(typeof an_array != undefined && an_array.length >= 3){
-    //                     non_empty_key[k] += an_array.length;
-    //                 }
-    //             });
-    //         }
-    //     }
-    
-    //     for (var k in non_empty_key) {
-    //         if (non_empty_key.hasOwnProperty(k)) {
-    //             total_cards_laid_down += non_empty_key[k];
-    //         }
-    //     }
-    // };
-    
-    // if(evaluated == false){
-    //     this.determin_number_laid_down(results);
-    //     evaluated = true;
-    // }
-    
-    
-    // if(game_constants.round_instance.round >= 2 && total_cards_laid_down != this.hand.length){
-    //     var save_num_laid_down = total_cards_laid_down;
-    //     //reset for vars used in determin_number_laid_down closure
-    //     total_cards_laid_down = 0;
-    //     non_empty_key = {};
-        
-    //     second_results = this.evaluate_cards(temp_hand, true);
-    //     this.determin_number_laid_down(second_results);
-        
-    //     if(total_cards_laid_down > save_num_laid_down){
-    //         results = second_results;
-    //     }else{
-    //         total_cards_laid_down = save_num_laid_down;
-    //     }
-    // }
-
-    // if (total_cards_laid_down != this.hand.length && total_cards_laid_down > 2) {
-    //     results.message = "partial laydown";
-    // } else if (total_cards_laid_down == this.hand.length) {
-    //     results.message = "full laydown";
-    // } else {
-    //     results.message = "can't laydown";
-    // }
 
     return results;
 };
@@ -131,44 +78,10 @@ Player.prototype.compare_cards = function(card1, card2){
     return true;
 };
 
-Player.prototype.running_score_total = function(cards_laid_down) {
+Player.prototype.running_score_total = function(result) {
     
     if(!this.has_been_scored){
-        var temp_hand = [];
-    
-        for (var i = 0; i < this.hand.length; i++) {
-            temp_hand[i] = this.hand[i];
-        }
-        
-        // I am passing a zero from end turn if they haven't been scored yet. Means they haven't been able to lay down at all
-        if(cards_laid_down != 0){ 
-            for (var key in cards_laid_down) {
-                if (cards_laid_down.hasOwnProperty(key)) {
-                    var sub_array = cards_laid_down[key];
-                    if (sub_array.length != 0) {
-                        for(var i = 0; i < sub_array.length; i++){
-                            sub_array[i].forEach(function(card) {
-                                for (var j = 0; j < temp_hand.length; j++) {
-                                    if (card.value == temp_hand[j].value || temp_hand[j].is_wild) {
-                                        temp_hand.splice(j, 1, 'empty');
-                                    }
-                                }
-                            });   
-                        }
-                    }
-                }
-            }
-        }
-    
-        if (temp_hand.length == 0) {
-            this.score += 0;
-        } else {
-            for (var i = 0; i < temp_hand.length; i++) {
-                if (temp_hand[i] != 'empty') {
-                    this.score += temp_hand[i].value;
-                }
-            }
-        }
+        this.score += result;
         this.has_been_scored = true;    
     }
 };

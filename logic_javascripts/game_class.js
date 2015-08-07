@@ -326,13 +326,15 @@ Game.prototype.handle_events = function(event){
             	this.current_player = _current_player.end_turn(this);
             	if(round_instance.round_ending.is_ending == true && this.current_player == round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
-            			_current_player.running_score_total(0);	
+                        var result = _current_player.lay_down(_current_player.hand)
+            			_current_player.running_score_total(result);	
             		}
                     this.handle_events('end_round');
                     break;
             	}else if(round_instance.round_ending.is_ending == true && this.current_player != round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
-            			_current_player.running_score_total(0);
+                        var result = _current_player.lay_down(_current_player.hand)
+            			_current_player.running_score_total(result);
             		}
             		this.rotate_players_cards(_current_player);
             		break;            	
