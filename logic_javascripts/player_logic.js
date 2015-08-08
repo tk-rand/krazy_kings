@@ -59,7 +59,41 @@ Player.prototype.lay_down = function() {
 
 //helper methods
 Player.prototype.sort_player_cards = function() {
-
+    var suites = {
+        'clubs' : [],
+        'diamonds' : [],
+        'hearts' : [],
+        'spades' : [],
+        'stars' : []
+    };
+    var wilds = [];
+    var sorted_hand = [];
+    var settings =  window.localStorage.getItem('settings');
+    var sort_type = JSON.parse(settings).sort_type;
+    
+    if(sort_type == 'suite'){
+        this.hand.forEach(function(card){
+            if(card.is_wild){
+                wilds.push(card);
+            }else{
+                suites[card.suite].push(card);
+            }
+        });
+        
+        for(var suite in suites){
+            if(suites.hasOwnProperty(suite)){
+                if(suites[suite].length == 0){
+                    delete suites[suite];
+                }else{
+                    suites[suite].sort(function(a, b){
+                        return a.value - b.value;
+                    });
+                   sorted_hand = sorted_hand.concat(suites[suite]); 
+                }
+            }
+        }
+    } //end if sort_type == suite
+    this.hand = sorted_hand.concat(wilds);
 };
 
 Player.prototype.compare_cards = function(card1, card2){

@@ -231,7 +231,7 @@ Game.prototype.rotate_players_cards = function(_current_player){
 Game.prototype.draw_current_players_hand = function(){
 	var player = this.players[this.current_player];
 	var position = player.hand_area;
-    var hand = '';
+    var hand = null;
 
 	switch(position){
 		case 'player_1_hand':
