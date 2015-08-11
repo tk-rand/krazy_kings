@@ -196,11 +196,10 @@ Player.prototype.can_player_move = function(element) {
     }
 };
 
-//The reason hand is being passed instead of using `this.hand`
-//is because we don't want to be poping cards off of the players hand
-//so the hand being passed is a temp copy of their actual hand.
-//TODO: BUG - returns partial runs and shoudn't
-Player.prototype.evaluate_cards = function(hand, r_first) {
+//Passing a copy of hand instead of using this.hand since this function
+//could mess with the players hand
+
+Player.prototype.evaluate_cards = function(hand) {
 	//@copy bool says whether or not this is a recursive copy being constructed
     function Evaluated_hand(hand, wilds, copy){
 		this.matrix = [[0,0,0,0,0,0,0,0,0,0,0],  //clubs
@@ -365,7 +364,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
         return b;
     };
 	
-	var results = new Evaluated_hand(hand, 0);
+	var results = new Evaluated_hand(hand, 0, false);
 	results.find_melds();
 	return results.value;
 };
