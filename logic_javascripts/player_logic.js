@@ -47,72 +47,59 @@ Player.prototype.discard = function(card_to_discard, round_constants) {
 
 Player.prototype.lay_down = function() {
     var temp_hand = [];
-    var non_empty_key = {};
-    var total_cards_laid_down = 0;
-    var second_results = {};
-    var evaluated = false;
 
     for (var i = 0; i < this.hand.length; i++) {
         temp_hand[i] = this.hand[i];
     }
 
-    var results = this.evaluate_cards(temp_hand, false);
-    
-    this.determin_number_laid_down = function(the_results){
-        for (var k in the_results) {
-            if (the_results.hasOwnProperty(k)) {
-                non_empty_key[k] = 0;
-                the_results[k].forEach(function(an_array){
-                    if(typeof an_array != undefined && an_array.length >= 3){
-                        non_empty_key[k] += an_array.length;
-                    }
-                });
-            }
-        }
-    
-        for (var k in non_empty_key) {
-            if (non_empty_key.hasOwnProperty(k)) {
-                total_cards_laid_down += non_empty_key[k];
-            }
-        }
-    };
-    
-    if(evaluated == false){
-        this.determin_number_laid_down(results);
-        evaluated = true;
-    }
-    
-    
-    if(game_constants.round_instance.round >= 2 && total_cards_laid_down != this.hand.length){
-        var save_num_laid_down = total_cards_laid_down;
-        //reset for vars used in determin_number_laid_down closure
-        total_cards_laid_down = 0;
-        non_empty_key = {};
-        
-        second_results = this.evaluate_cards(temp_hand, true);
-        this.determin_number_laid_down(second_results);
-        
-        if(total_cards_laid_down > save_num_laid_down){
-            results = second_results;
-        }else{
-            total_cards_laid_down = save_num_laid_down;
-        }
-    }
-
-    if (total_cards_laid_down != this.hand.length && total_cards_laid_down > 2) {
-        results.message = "partial laydown";
-    } else if (total_cards_laid_down == this.hand.length) {
-        results.message = "full laydown";
-    } else {
-        results.message = "can't laydown";
-    }
+    var results = this.evaluate_cards(temp_hand);
 
     return results;
 };
 
 //helper methods
 Player.prototype.sort_player_cards = function() {
-
+    var suites = {
+            'clubs' : [],
+            'diamonds' : [],
+            'hearts' : [],
+            'spades' : [],
+            'stars' : []
+    };
+    var wilds = [];
+    var sorted_hand = [];
+    var settings =  window.localStorage.getItem('settings');
+    var sort_type = JSON.parse(settings).sort_type;
+    
+    if(sort_type == 'suite'){
+        this.hand.forEach(function(card){
+            if(card.is_wild){
+                wilds.push(card);
+            }else{
+                suites[card.suite].push(card);
+            }
+        });
+        
+        for(var suite in suites){
+            if(suites.hasOwnProperty(suite)){
+                if(suites[suite].length == 0){
+                    delete suites[suite];
+                }else{
+                    suites[suite].sort(function(a, b){
+                        return a.value - b.value;
+                    });
+                   sorted_hand = sorted_hand.concat(suites[suite]); 
+                }
+            }
+        }
+        
+        this.hand = sorted_hand.concat(wilds);
+        
+    }else if(sort_type == 'value'){
+        this.hand.sort(function(a, b) {
+           return a.value - b.value; 
+        });
+    }
 };
 
 Player.prototype.compare_cards = function(card1, card2){
@@ -131,44 +118,10 @@ Player.prototype.compare_cards = function(card1, card2){
     return true;
 };
 
-Player.prototype.running_score_total = function(cards_laid_down) {
+Player.prototype.running_score_total = function(result) {
     
     if(!this.has_been_scored){
-        var temp_hand = [];
-    
-        for (var i = 0; i < this.hand.length; i++) {
-            temp_hand[i] = this.hand[i];
-        }
-        
-        // I am passing a zero from end turn if they haven't been scored yet. Means they haven't been able to lay down at all
-        if(cards_laid_down != 0){ 
-            for (var key in cards_laid_down) {
-                if (cards_laid_down.hasOwnProperty(key)) {
-                    var sub_array = cards_laid_down[key];
-                    if (sub_array.length != 0) {
-                        for(var i = 0; i < sub_array.length; i++){
-                            sub_array[i].forEach(function(card) {
-                                for (var j = 0; j < temp_hand.length; j++) {
-                                    if (card.value == temp_hand[j].value || temp_hand[j].is_wild) {
-                                        temp_hand.splice(j, 1, 'empty');
-                                    }
-                                }
-                            });   
-                        }
-                    }
-                }
-            }
-        }
-    
-        if (temp_hand.length == 0) {
-            this.score += 0;
-        } else {
-            for (var i = 0; i < temp_hand.length; i++) {
-                if (temp_hand[i] != 'empty') {
-                    this.score += temp_hand[i].value;
-                }
-            }
-        }
+        this.score += result;
         this.has_been_scored = true;    
     }
 };
@@ -247,223 +200,172 @@ Player.prototype.can_player_move = function(element) {
 //is because we don't want to be poping cards off of the players hand
 //so the hand being passed is a temp copy of their actual hand.
 //TODO: BUG - returns partial runs and shoudn't
-Player.prototype.evaluate_cards = function(hand, r_first) { 
-    var suites = {
-        'clubs' : [],
-        'diamonds' : [],
-        'hearts' : [],
-        'spades' : [],
-        'stars' : []
-    };
-    var wilds = [];
-    //in decending order because that makes hand recognition with partial laydowns always take the highest value sets
-    var buckets = {
-        13 : [],
-        12 : [],
-        11 : [],
-        10 : [],
-        9 : [],
-        8 : [],
-        7 : [],
-        6 : [],
-        5 : [],
-        4 : [],
-        3 : []
-    };
-    var runs = [];
-    var sets = [];
-    var r_num = -1; //starts at -1 so ++ will give 0 index
-    var s_num = -1;
-    var has_been_evaluated = false;
-    var breadth_search = false;
-    var buckets_used_for_sets = [];
-    var self = this;
-
-    hand.forEach(function(card) {
-        if (card.is_wild) {
-            wilds.push(card);
-        } else {
-            buckets[card.value].push(card);
-        }
-    });
-
-    //deletes empty buckets
-    for (var k in buckets) {
-        if (buckets.hasOwnProperty(k)) {
-            if (buckets[k].length == 0) {
-                delete buckets[k];
-            }
-        }
-    }
-
-    //pushes cards into suites
-    for (var b in buckets) {
-        if (buckets.hasOwnProperty(b)) {
-            if (buckets[b].length > 1) {
-                buckets[b].forEach(function(card) {
-                    suites[card.suite].push(card);
-                });
-            } else {
-                suites[buckets[b][0].suite].push(buckets[b][0]);
-            }
-        }
-    }
-
-    //deletes empty suites
-    for (var s in suites) {
-        if (suites.hasOwnProperty(s)) {
-            if (suites[s].length == 0) {
-                delete suites[s];
-            }
-        }
-    }
-        /* The following 2 lines are inside the each if statement cause we don't want a set consisting 
-     * of just one card if a bucket only has one card in it, but it's easier to use wilds
-     * in sets then it is in runs so if there are lots of wilds I do make valid sets out 
-     * buckets with just one card in them. So I only initilize a new "set" if I can actually make one.
-     * 
-     * s_num++; 
-     * sets[s_num] = []; */
-    this.determin_sets = function(){
-        for (var c in buckets) {
-            if (buckets.hasOwnProperty(c)) {
-                if(buckets[c].length >= 2 ){
-                    if(buckets_used_for_sets.indexOf(c) == -1){
-                        s_num++; 
-                        sets[s_num] = [];
-                        buckets_used_for_sets.push(c);
-                        if (buckets[c].length == 2 && wilds.length > 0) {
-                            buckets[c].forEach(function(card) {
-                                sets[s_num].push(card);
-                                //next 2 lines remove the card from the suite it was in so it can't be used in a run.
-                                var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
-                                suites[card.suite].splice(index, 1);
-                            });
-                            sets[s_num].push(wilds.pop());
-                        } else if (buckets[c].length > 2) {
-                            buckets[c].forEach(function(card) {
-                                sets[s_num].push(card);
-                                var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
-                                suites[card.suite].splice(index, 1);
-                            });
-                        }     
-                    }
-                }else if (buckets[c].length == 1 && wilds.length >= 2) {
-                    if(breadth_search){
-                        s_num++; 
-                        sets[s_num] = [];
-                        
-                        buckets[c].forEach(function(card) {
-                            sets[s_num].push(card);
-                            var index = suites[card.suite].map(function(a){return a.value;}).indexOf(card.value);
-                            suites[card.suite].splice(index, 1);
-                        });
-                        //yes I'm repeating myself here it makes a set and that's how human players think about it.
-                        sets[s_num].push(wilds.pop());
-                        sets[s_num].push(wilds.pop());     
-                    }
-                }
-            }
-        }
-        if(!breadth_search && wilds.length >= 2){
-            breadth_search = true;
-            this.determin_sets();
-        } 
-    };
-
-
-    this.determin_runs = function(){
-        //remove duplicates first so range comparison will work properly
-        for(var suite in suites){
-            if(suites.hasOwnProperty(suite)){
-                if(suites[suite].length > 1){
-                    var card_count = 0;
-                    suites[suite].forEach(function(card){
-                        card_count++; 
-                        if(card_count < suites[suite].length){
-                            for(var i = suites[suite].length - 1; i >= card_count; i-- ){
-                                if(self.compare_cards(card, suites[suite][i])){
-                                    suites[suite].splice(i, 1);
-                                }
-                            } 
-                        }
-                    });
-                }
-            }
-        }
+Player.prototype.evaluate_cards = function(hand, r_first) {
+	//@copy bool says whether or not this is a recursive copy being constructed
+    function Evaluated_hand(hand, wilds, copy){
+		this.matrix = [[0,0,0,0,0,0,0,0,0,0,0],  //clubs
+					  [0,0,0,0,0,0,0,0,0,0,0],  //diamonds
+					  [0,0,0,0,0,0,0,0,0,0,0],  //hearts
+					  [0,0,0,0,0,0,0,0,0,0,0],  //spades
+					  [0,0,0,0,0,0,0,0,0,0,0]]; //stars
+		this.wilds = wilds || 0;
+		this.melds = [];
+		this.round = game_constants.round_instance.round - 1;
+        var self = this;
+		var loc_wilds = 0;
         
-        for (var s in suites){
-            if(suites.hasOwnProperty(s)){
-                var suite_length = suites[s].length;
-                if(suite_length >= 2){
-                    var range = suites[s][suite_length - 1].value - suites[s][0].value;
-                    r_num++;
-                    runs[r_num] = [];
-                    
-                    if((range - 1) == wilds.length && (range - 1) == suite_length){
-                        suites[s].forEach(function(card){
-                            runs[r_num].push(card);
-                            var index = buckets[card.value].map(function(a){return a.value;}).indexOf(card.value);
-                            buckets[card.value].splice(index, 1);
-                        });
-                        while(runs[r_num].length <= (range + 1) && wilds.length != 0){
-                            runs[r_num].push(wilds.pop());
-                        }
-                   }else if(range == 1 && wilds.length >= 1){
-                        suites[s].forEach(function(card){
-                            runs[r_num].push(card);
-                            var index = buckets[card.value].map(function(a){return a.value;}).indexOf(card.value);
-                            buckets[card.value].splice(index, 1);
-                        });
-                        runs[r_num].push(wilds.pop()); 
-                    }else if( range == suite_length && wilds.length >= 1){
-                        suites[s].forEach(function(card){
-                            runs[r_num].push(card);
-                            var index = buckets[card.value].map(function(a){return a.value;}).indexOf(card.value);
-                            buckets[card.value].splice(index, 1);
-                        });
-                        runs[r_num].push(wilds.pop());
-                    }else if( (range + 1) == suite_length){
-                        suites[s].forEach(function(card){
-                            runs[r_num].push(card);
-                            var index = buckets[card.value].map(function(a){return a.value;}).indexOf(card.value);
-                            buckets[card.value].splice(index, 1);
-                        });
-                    }
-                }
-            }
-        }
-    };
-    
-    if(has_been_evaluated == false){
-        if(r_first){
-            this.determin_runs();
-            this.determin_sets();
+		if(!copy){
+            hand.forEach(function(card){
+    			if(card.is_wild){
+    				loc_wilds++;
+    			}else{
+    				switch (card.suite){
+    					case 'clubs':{
+                            // -3 because cards start with value of 3 but array is zero based
+    						self.matrix[0][card.value - 3]++;
+    						break;
+    					}
+    					case 'diamonds':{
+    						self.matrix[1][card.value - 3]++;
+    						break;
+    					}
+    					case 'hearts':{
+    						self.matrix[2][card.value - 3]++;
+    						break;
+    					}
+    					case 'spades':{
+    						self.matrix[3][card.value - 3]++;
+    						break;
+    					}
+    					case 'stars':{
+    						self.matrix[4][card.value - 3]++;
+    						break;
+    					}
+    				}
+    			}
+    		});
         }else{
-            this.determin_sets();
-            this.determin_runs();
+            this.matrix = this.clone_matrix(hand);
         }
-        has_been_evaluated = true;
-    }
-
-
-    //if I have any extra wilds throw them on where I can
-    if(wilds.length != 0){
-        while(wilds.length != 0){
-            if(runs[0] != undefined && runs[0].length != 0){
-                runs[0].push(wilds.pop());
-            }else if(sets[0]!= undefined && sets[0].length != 0){
-                sets[sets.length -1].push(wilds.pop());
-            }else if(wilds.length >= 3){ //This last case takes care of hands that are all wild by treating them like a set.
-                sets[0] = [];
-                sets[0].push(wilds.pop());
+        if(loc_wilds > 0 && this.wilds == 0){
+            this.wilds = loc_wilds;
+        }
+           
+        this.value = this.leftover_value();
+	};
+	
+	Evaluated_hand.prototype.find_melds = function(suite, num){
+		if(suite == undefined || num == undefined){
+			suite = num = 0;
+		}
+		
+		if(this.wilds > 2){
+			for(var i = 0; i < this.wilds; i++){
+				this.melds.push({suite: -1, num: -1});
+			}
+			this.value -= 25 * this.wilds - (22 - this.round) * this.wilds;
+		}
+		
+		//search until laydown or final value is found
+		while(this.value > 0){
+			//find the next card in matrix
+			while(num > 10 || this.matrix[suite][num] == 0){
+				if(++num > 10){
+					num = 0;
+					if(++suite > 4){
+						return;
+					}
+				}
+			}
+			
+			for(var meld_type = 0; meld_type < 2; meld_type++){
+				//find a set or run at current matrix position
+				var meld = meld_type ? this.find_set(suite, num) : this.find_run(suite, num);
+				
+				//try different lengths for long sets or runs
+				for(var len = 3; len <= meld.length; len++){
+					var test = new Evaluated_hand(this.matrix, this.wilds, true);
+					test.remove_cards(meld.slice(0, len));
+					
+					meld_type ? test.find_melds(suite, num) : test.find_melds(0,0);
+					
+					if(test.value < this.value){
+						this.value = test.value;
+						this.melds.length = 0;
+						this.melds = [].concat(meld.slice(0, len), test.melds);
+					}
+				}
+			}
+			num++;
+		}
+	};
+	
+	Evaluated_hand.prototype.find_run = function(suite, num){
+		var run = [];
+		var wilds = this.wilds;
+		while(num < 11){
+			if(this.matrix[suite][num] > 0){
+				run.push({suite: suite, num: num});
+			}else if(wilds > 0){
+				run.push({suite: -1, num: -1});
+				wilds--;
+			}else{
+				break;
+			}
+			num++;
+		}
+		
+		while(wilds-- > 0){
+			run.push({suite: -1, num: -1});
+		}
+		return run;	
+	};
+	
+	Evaluated_hand.prototype.find_set = function(suite, num){
+		var set = [];
+		while(suite < 5){
+			for(var i = 0; i < this.matrix[suite][num]; i++){
+				set.push({suite: suite, num: num});
+			}
+			suite++;
+		}
+		
+		for(var i = 0; i < this.wilds; i++){
+			set.push({suite: -1, num: -1});
+		}
+		return set;
+	};
+    
+    Evaluated_hand.prototype.remove_cards = function(cards){
+        for(var i = 0; i < cards.length; i++){
+            if(cards[i].suite >= 0){
+                this.matrix[cards[i].suite][cards[i].num]--;
+            }else{
+                this.wilds--;
             }
         }
-    }
-
-    var results = {
-        r_sets : sets,
-        r_runs : runs
+        this.value = this.leftover_value();
     };
-    return results;
+	
+	Evaluated_hand.prototype.leftover_value = function(){
+		var leftover = 0;
+		for(var i = 0; i < 5; i++){
+			for(var j = 0; j < 11; j++){
+				leftover += this.matrix[i][j] * (j + 3);
+			}
+		}
+		return leftover + 25 * this.wilds - (22 - this.round) * this.wilds;	
+	};
+    
+    Evaluated_hand.prototype.clone_matrix = function(arr){
+        var b = [];
+        for(var i = 0; i < arr.length; i++){
+            b[i] = arr[i].slice();
+        }
+        return b;
+    };
+	
+	var results = new Evaluated_hand(hand, 0);
+	results.find_melds();
+	return results.value;
 };

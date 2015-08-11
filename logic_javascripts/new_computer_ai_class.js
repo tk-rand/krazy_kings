@@ -1,3 +1,4 @@
+/* global _game */
 
 //computer ai class
 //computer is a subclass of player

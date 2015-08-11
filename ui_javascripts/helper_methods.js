@@ -15,10 +15,29 @@ function get_number_of_players_and_player_names(){
     var name_of_players = [];
 
     for(var i = 0; i < num_of_players; i++){
-        name_of_players[i] = prompt("Enter the name of player "+ i);
+        var player_num = i +1;
+        name_of_players[i] = prompt("Enter the name of player "+ player_num);
     }
 
     return name_of_players;
 }
 
-
+Array.prototype.remove_dupes = function(){
+    if(this === void 0 || this === null){
+        throw new TypeError();
+    }
+    
+    var seen = {};
+    var out = [];
+    var arr = arguments[1];
+    var len = arr.length;
+    var j = 0;
+    for(var i = 0; i < len; i++){
+        var item = arr[i];
+        if(seen[item] !== 1){
+            seen[item] = 1;
+            out[j++] = item;
+        }
+    }
+    return out;
+}

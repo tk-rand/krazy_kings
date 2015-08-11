@@ -10,6 +10,14 @@ body{
 	position: relative;
 	height: 480px;
 }
+.options_screen{
+	display: none;
+	position: relative;
+	height: 480px;
+    margin: 20px auto;
+	width: 30%;
+	background-color: blue;
+}
 
 .home_screen{
 	margin: 0% auto;

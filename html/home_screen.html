@@ -28,8 +28,8 @@
 					<li class="player_btn" value="popup_modal" onclick="navigation(this);">
 						Rules
 					</li>
-					<li class="player_btn" value="score" onclick="navigation(this);">
-						Best Scores
+					<li class="player_btn" value="options_screen" onclick="navigation(this);">
+						Settings
 					</li>
 					<li class="player_btn" value="exit" onclick="navigation(this);">
 						Exit
@@ -47,7 +47,28 @@
 		</div>
 
 		<div id="options_screen" class="options_screen screen">
+			<div class="settings_container">
 
+				<div class="sort_settings">
+					<div class="switch">
+						<span>Sort Cards: </span>
+						<input id="sort_toggle" class="toggle" type="checkbox">
+						<label id="sort_toggle_label" for="sort_toggle"> </label>
+					</div>
+					<div class="switch" id="sort_type_toggle_container">
+						<span class="sort_type_header">Sort Your Cards By Either:</span>
+						<div class="sort_type_toggle_container">
+							<span>SUITE</span>
+								<input id="sort_type_toggle" class="toggle" type="checkbox">
+								<label for="sort_type_toggle"> </label>
+							<span class="value_span">VALUE</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<li class="player_btn" value="home_screen" onclick="navigation(this);">
+				Back
+			</li>
 		</div>
 
 		<div id="main_screen" class="main_screen screen">
@@ -169,4 +190,5 @@
 	<script type="text/javascript" src="../ui_javascripts/helper_methods.js"></script>
 	<script type="text/javascript" src="../ui_javascripts/home_screen.js"></script>
 	<script type="text/javascript" src="../ui_javascripts/main_screen.js"></script>
+	<script type="text/javascript" src="../ui_javascripts/settings.js"></script>
 </html>

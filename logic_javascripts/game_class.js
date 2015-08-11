@@ -82,6 +82,7 @@ Game.prototype.draw_game = function(){
 
     var _deck = document.createElement('div');
     var discard = document.createElement('div');
+    var settings = window.localStorage.getItem('settings');
     
     discard.setAttribute('id', 'discard_pile');
     discard.setAttribute('class', 'discard_pile');
@@ -105,6 +106,11 @@ Game.prototype.draw_game = function(){
 	
     //TODO This needs to be cleaned up I am sure there is a better way to determine how many hands need to be shown.
     for (var i = 0; i< this.round_constants.round + 2; i++){
+        for(var j = 0; j < this.players.length; j++){
+            if(JSON.parse(settings).sort_cards){
+                this.players[j].sort_player_cards();
+            }    
+        }
         player_1_area.innerHTML += this.players[0].hand[i].display;
         player_2_area.innerHTML += this.players[1].hand[i].display;
         if(this.players.length > 2){
@@ -113,6 +119,7 @@ Game.prototype.draw_game = function(){
                 player_4_area.innerHTML += this.players[3].hand[i].display;
             }
         }
+
     }
     this.draw_player_scores();
     
@@ -231,8 +238,13 @@ Game.prototype.rotate_players_cards = function(_current_player){
 Game.prototype.draw_current_players_hand = function(){
 	var player = this.players[this.current_player];
 	var position = player.hand_area;
-    var hand = '';
-
+    var hand = null;
+    var settings = window.localStorage.getItem('settings');
+    
+    if(JSON.parse(settings).sort_cards){
+        player.sort_player_cards();
+    }
+        
 	switch(position){
 		case 'player_1_hand':
 		{
@@ -326,43 +338,39 @@ Game.prototype.handle_events = function(event){
             	this.current_player = _current_player.end_turn(this);
             	if(round_instance.round_ending.is_ending == true && this.current_player == round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
-            			_current_player.running_score_total(0);	
+                        var result = _current_player.lay_down(_current_player.hand)
+            			_current_player.running_score_total(result);	
             		}
                     this.handle_events('end_round');
                     break;
             	}else if(round_instance.round_ending.is_ending == true && this.current_player != round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
-            			_current_player.running_score_total(0);
+                        var result = _current_player.lay_down(_current_player.hand)
+            			_current_player.running_score_total(result);
             		}
             		this.rotate_players_cards(_current_player);
             		break;            	
             	}
             	if(round_instance.round_ending.is_ending == false){
             	    this.rotate_players_cards(_current_player);
-            	}
-            	
+            	}         	
             	break;
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
 
             	if(round_instance.round_ending.is_ending == false){
-                	if(result.message == "full laydown"){
+                	if(result == 0){
                 	    alert(_current_player.name + " is laying down their hand!");
                 	    round_instance.round_ending.is_ending = true;
                         round_instance.round_ending.player_out = this.current_player;
-                        delete result.message; //so the message screws with the scoring function, so once we know what it is we delete it.
                         _current_player.running_score_total(result);  
-                	}else if(result.message == "partial laydown" || result.message == "can't laydown"){
+                	}else if(result != 0){
                 	    alert("You don't have the cards to do that right now!");
                 	}  
             	}else{
-            	    if(result.message == "full laydown" || result.message == "partial laydown"){
-            	        delete result.message;
-                        _current_player.running_score_total(result); //tally the score now if not let end turn handle it, it will pass a 0 which means no laydown.
-            	    } else{
-            	        delete result.message;
-            	    }
+                    //tally the score now if not let end turn handle it, it will pass a 0 which means no laydown.
+                    _current_player.running_score_total(result); 
             	}
             	this.handle_events('end_turn');
                 break;
