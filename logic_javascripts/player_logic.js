@@ -92,8 +92,14 @@ Player.prototype.sort_player_cards = function() {
                 }
             }
         }
-    } //end if sort_type == suite
-    this.hand = sorted_hand.concat(wilds);
+        
+        this.hand = sorted_hand.concat(wilds);
+        
+    }else if(sort_type == 'value'){
+        this.hand.sort(function(a, b) {
+           return a.value - b.value; 
+        });
+    }
 };
 
 Player.prototype.compare_cards = function(card1, card2){
@@ -195,46 +201,56 @@ Player.prototype.can_player_move = function(element) {
 //so the hand being passed is a temp copy of their actual hand.
 //TODO: BUG - returns partial runs and shoudn't
 Player.prototype.evaluate_cards = function(hand, r_first) { 
-	function Evaluated_hand(hand){
+	//@copy bool says whether or not this is a recursive copy being constructed
+    function Evaluated_hand(hand, wilds, copy){
 		this.matrix = [[0,0,0,0,0,0,0,0,0,0,0],  //clubs
 					  [0,0,0,0,0,0,0,0,0,0,0],  //diamonds
 					  [0,0,0,0,0,0,0,0,0,0,0],  //hearts
 					  [0,0,0,0,0,0,0,0,0,0,0],  //spades
 					  [0,0,0,0,0,0,0,0,0,0,0]]; //stars
-		this.wilds = 0;
+		this.wilds = wilds || 0;
 		this.melds = [];
-		this.round = game_constants.round_instance.round;
+		this.round = game_constants.round_instance.round - 1;
         var self = this;
-		
-        hand.forEach(function(card){
-			if(card.is_wild){
-				self.wilds++;
-			}else{
-				switch (card.suite){
-					case 'clubs':{
-                        // -3 because cards start with value of 3 but array is zero based
-						self.matrix[0][card.value - 3]++;
-						break;
-					}
-					case 'diamonds':{
-						self.matrix[1][card.value - 3]++;
-						break;
-					}
-					case 'hearts':{
-						self.matrix[2][card.value - 3]++;
-						break;
-					}
-					case 'spades':{
-						self.matrix[3][card.value - 3]++;
-						break;
-					}
-					case 'stars':{
-						self.matrix[4][card.value - 3]++;
-						break;
-					}
-				}
-			}
-		});
+		var loc_wilds = 0;
+		if(!copy){
+            hand.forEach(function(card){
+    			if(card.is_wild){
+    				loc_wilds++;
+    			}else{
+    				switch (card.suite){
+    					case 'clubs':{
+                            // -3 because cards start with value of 3 but array is zero based
+    						self.matrix[0][card.value - 3]++;
+    						break;
+    					}
+    					case 'diamonds':{
+    						self.matrix[1][card.value - 3]++;
+    						break;
+    					}
+    					case 'hearts':{
+    						self.matrix[2][card.value - 3]++;
+    						break;
+    					}
+    					case 'spades':{
+    						self.matrix[3][card.value - 3]++;
+    						break;
+    					}
+    					case 'stars':{
+    						self.matrix[4][card.value - 3]++;
+    						break;
+    					}
+    				}
+    			}
+    		});
+        }else{
+            this.matrix = this.clone_matrix(hand);
+        }
+
+        
+        if(loc_wilds > 0 && this.wilds == 0){
+            this.wilds = loc_wilds;
+        }
         
         this.value = this.leftover_value();
 	}
@@ -246,10 +262,9 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
 		
 		if(this.wilds > 2){
 			for(var i = 0; i < this.wilds; i++){
-				//recrusion s == suite, n == num
 				this.melds.push({suite: -1, num: -1});
 			}
-			 this.value -= 25 * this.wilds - (22 - this.round) * this.wilds;
+			this.value -= 25 * this.wilds - (22 - this.round) * this.wilds;
 		}
 		
 		//search until laydown or final value is found
@@ -270,7 +285,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
 				
 				//try different lengths for long sets or runs
 				for(var len = 3; len <= meld.length; len++){
-					var test = new Evaluated_hand(hand)
+					var test = new Evaluated_hand(this.matrix, this.wilds, true);
 					test.remove_cards(meld.slice(0, len));
 					
 					meld_type ? test.find_melds(suite, num) : test.find_melds(0,0);
@@ -294,7 +309,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
 				run.push({suite: suite, num: num});
 			}else if(wilds > 0){
 				run.push({suite: -1, num: -1});
-				wilds --;
+				wilds--;
 			}else{
 				break;
 			}
@@ -331,7 +346,7 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
             }
         }
         this.value = this.leftover_value();
-    }
+    };
 	
 	Evaluated_hand.prototype.leftover_value = function(){
 		var leftover = 0;
@@ -340,10 +355,18 @@ Player.prototype.evaluate_cards = function(hand, r_first) {
 				leftover += this.matrix[i][j] * (j + 3);
 			}
 		}
-		return leftover + 25 * this.wilds - (22 - this.round) * (this.wilds);	
+		return leftover + 25 * this.wilds - (22 - this.round) * this.wilds;	
 	};
+    
+    Evaluated_hand.prototype.clone_matrix = function(arr){
+        var b = [];
+        for(var i = 0; i < arr.length; i++){
+            b[i] = arr[i].slice();
+        }
+        return b;
+    }
 	
-	var results = new Evaluated_hand(hand);
+	var results = new Evaluated_hand(hand, 0);
 	results.find_melds();
 	return results.value;
 };

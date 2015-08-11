@@ -82,6 +82,7 @@ Game.prototype.draw_game = function(){
 
     var _deck = document.createElement('div');
     var discard = document.createElement('div');
+    var settings = window.localStorage.getItem('settings');
     
     discard.setAttribute('id', 'discard_pile');
     discard.setAttribute('class', 'discard_pile');
@@ -105,6 +106,11 @@ Game.prototype.draw_game = function(){
 	
     //TODO This needs to be cleaned up I am sure there is a better way to determine how many hands need to be shown.
     for (var i = 0; i< this.round_constants.round + 2; i++){
+        for(var j = 0; j < this.players.length; j++){
+            if(JSON.parse(settings).sort_cards){
+                this.players[j].sort_player_cards();
+            }    
+        }
         player_1_area.innerHTML += this.players[0].hand[i].display;
         player_2_area.innerHTML += this.players[1].hand[i].display;
         if(this.players.length > 2){
@@ -113,6 +119,7 @@ Game.prototype.draw_game = function(){
                 player_4_area.innerHTML += this.players[3].hand[i].display;
             }
         }
+
     }
     this.draw_player_scores();
     
@@ -232,7 +239,12 @@ Game.prototype.draw_current_players_hand = function(){
 	var player = this.players[this.current_player];
 	var position = player.hand_area;
     var hand = null;
-
+    var settings = window.localStorage.getItem('settings');
+    
+    if(JSON.parse(settings).sort_cards){
+        player.sort_player_cards();
+    }
+        
 	switch(position){
 		case 'player_1_hand':
 		{

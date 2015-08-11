@@ -33,7 +33,41 @@
 }
 
 .switch{
-	
+	width: 100%;
+	margin: 10px auto;
+	float: left;
+}
+
+.switch span{
+	color: #DDDDDD;
+    float: left;
+    margin-top: 13px;
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.switch label{
+	float: right;
+	margin-right: 5px;
+}
+
+#sort_type_toggle_container{
+	display: none;
+}
+
+.sort_type_header{
+	text-align: center;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.sort_type_toggle_container .value_span{
+	margin-left: 0px;
+}
+
+.sort_type_toggle_container label{
+	float: left;
+	margin: 0 10px;
 }
 
 .toggle{
@@ -51,11 +85,11 @@
 }
 
 input.toggle + label{
-	padding: 2px;
-	width: 120px;
-	height: 60px;
-	background-color: #dddddd;
-	border-radius: 60px;
+    padding: 2px;
+    width: 117px;
+    height: 40px;
+    background-color: #dddddd;
+    border-radius: 60px;
 }
 
 input.toggle + label:before,
@@ -70,7 +104,7 @@ input.toggle + label:after{
 
 input.toggle + label:before{
 	right: 1px;
-	background-color: #f1f1f1;
+	background-color: #da635d;
 	border-radius: 60px;
 	transition: background 0.4s;
 }
