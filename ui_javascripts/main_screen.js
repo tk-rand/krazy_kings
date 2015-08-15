@@ -4,7 +4,14 @@ var game_started = false;
 var game_constants = null;
 var _game = new Game();
 function Main(){
-	if(game_started == false){		
+	if(game_started == false){
+        if(window.localStorage.getItem('settings') == undefined){
+            var settings = {
+                sort_cards: false,
+                sort_type: 'suite'
+            }
+            window.localStorage.setItem('settings', JSON.stringify(settings));
+        }		
 		game_constants = init(_game);
 	}
 	var round_constants = _game.new_round(game_constants);
