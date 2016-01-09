@@ -296,6 +296,38 @@ Game.prototype.draw_discard_pile = function(){
 	}
 };
 
+Game.prototype.end_game = function(){
+    var winning_player = [];
+    var top_score = 950; //worst possible score in game without making a mistake 
+    var statement = null;
+        
+    for(var i = 0; i < this.players.length; i++){
+        if(this.players[i].score < top_score){
+            top_score = this.players[i].score;
+            winning_player = []; //set to empty incase there were already 2 players in here with the same score
+            winning_player[0] = i;
+        }else if(this.players[i].score === top_score){
+            //for ties
+            if(winning_player === []){
+                winning_player[0] = i;
+            }else{
+                winning_player.push(i);
+            }
+        }            
+    }
+
+    if(winning_player.length > 1){
+        statement = 'Players: '
+        for(var i = 0; i < winning_player.length; i++){
+            statement + this.players[winning_player[i]].name + ',';
+        }
+        statement + 'have won the game!';
+    }else{
+        statement = 'Player:' + this.players[winning_player[0]].name + ' has won the game!';
+    }
+    alert(statement);        
+};
+
 Game.prototype.handle_events = function(event){
     /* _game.current_player returns a numerical value, 
      * which is why it's being used as a lookup index, 
@@ -377,7 +409,11 @@ Game.prototype.handle_events = function(event){
             		
             }
             case 'end_round':{
-            	Main();
+                if(round_instance.round === 11){
+                    this.end_game();
+                }else{
+                    Main();
+                }
                 break;
             }
         }
