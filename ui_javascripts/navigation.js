@@ -14,13 +14,7 @@ function navigation(screen_name){
 
     if(screen_index == 'home_screen'){
     	if(game_started !== false){
-    	    game_started = false;
-    	    _game.undraw_game();
-    	    remove_event_listeners();
-    	    delete(game_constants);
-            delete(_game);
-            game_constants = null;
-            _game = new Game();   
+            end_game();
     	};
     }
 }
@@ -40,5 +34,13 @@ function remove_event_listeners(){
     end_turn.removeEventListener('click', named_event_listener, false);
     lay_down.removeEventListener('click', named_event_listener, false);
 
+}
+
+function end_game(){
+    game_started = false;
+    _game.undraw_game();
+    remove_event_listeners();
+    game_constants = null;
+    _game = new Game();   
 }
 

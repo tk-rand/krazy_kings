@@ -325,7 +325,8 @@ Game.prototype.end_game = function(){
     }else{
         statement = 'Player:' + this.players[winning_player[0]].name + ' has won the game!';
     }
-    alert(statement);        
+    alert(statement);
+    end_game();        
 };
 
 Game.prototype.handle_events = function(event){
