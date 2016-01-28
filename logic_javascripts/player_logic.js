@@ -1,3 +1,6 @@
+/* global _game */
+/* global game_constants */
+
 //player class
 function Player() {
     this.hand = [];
@@ -54,7 +57,7 @@ Player.prototype.lay_down = function() {
 
     var results = this.evaluate_cards(temp_hand);
 
-    return results;
+    return results.value;
 };
 
 //helper methods
@@ -146,53 +149,53 @@ Player.prototype.clear_actions = function() {
 
 Player.prototype.can_player_move = function(element) {
     switch(element) {
-    case 'deck': {
-        if (this.actions_taken.indexOf('drew') == -1) {
-            return true;
-        } else {
-            return false;
-        }
-        break;
-    }
-    case 'discard': { //This is actually to see if they can draw from the discard pile, not to discard a card.
-        if (this.actions_taken.indexOf('drew') == -1) {
-            return true;
-        } else {
-            return false;
-        }
-        break;
-    }
-    case this.hand_area: {
-        if (this.actions_taken.indexOf('drew') != -1) {
-            if (this.actions_taken.indexOf('discarded') == -1) {
+        case 'deck': {
+            if (this.actions_taken.indexOf('drew') == -1) {
                 return true;
             } else {
                 return false;
             }
+            break;
         }
-        break;
-    }
-    case 'end_turn': {
-        if (this.actions_taken.indexOf('discarded') != -1) {
-            return true;
-        } else {
-            return false;
+        case 'discard': { //This is actually to see if they can draw from the discard pile, not to discard a card.
+            if (this.actions_taken.indexOf('drew') == -1) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
         }
-        break;
-    }
-    case 'lay_down': {
-        if (this.actions_taken.indexOf('discarded') != -1) {
-            return true;
-        } else {
-            return false;
+        case this.hand_area: {
+            if (this.actions_taken.indexOf('drew') != -1) {
+                if (this.actions_taken.indexOf('discarded') == -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            break;
         }
+        case 'end_turn': {
+            if (this.actions_taken.indexOf('discarded') != -1) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+        }
+        case 'lay_down': {
+            if (this.actions_taken.indexOf('discarded') != -1) {
+                return true;
+            } else {
+                return false;
+            }
 
-        break;
-    }
-    default: {
-        return false;
-        break;
-    }
+            break;
+        }
+        default: {
+            return false;
+            break;
+        }
     }
 };
 
@@ -366,5 +369,6 @@ Player.prototype.evaluate_cards = function(hand) {
 	
 	var results = new Evaluated_hand(hand, 0, false);
 	results.find_melds();
-	return results.value;
+
+	return results;
 };

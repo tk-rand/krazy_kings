@@ -1,3 +1,6 @@
+/* global _game */
+/* global game_constants */
+
 //Game class
 function Game(){
     this.current_player = 0;
