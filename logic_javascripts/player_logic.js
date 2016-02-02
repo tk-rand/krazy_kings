@@ -22,6 +22,8 @@ Player.prototype.deal = function(deck_ref, round) {
     };
 };
 
+//@deck_and_dc, round_constants object
+//@d_or_dc, string, value is either deck or discard.
 Player.prototype.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc) {
     if (d_or_dc == 'deck') {
         this.hand.push(deck_and_dc.pop());
@@ -56,7 +58,7 @@ Player.prototype.lay_down = function() {
     }
 
     var results = this.evaluate_cards(temp_hand);
-
+    console.log(results);
     return results.value;
 };
 

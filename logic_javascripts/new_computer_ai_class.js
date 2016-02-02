@@ -43,7 +43,30 @@ Computer.prototype.calculate_new_hand_value = function(hand){
 };
 
 Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_constants) {
+    var temp_hand = [];
+    var h_length = this.hand.length;
+    for(var i = 0; i < h_length; i++){
+        temp_hand[i] = this.hand[i];
+    }
+    
+    function evaluate_with_discard(val, n){
+        temp_hand.push(round_constants.discard_pile.pop());
+        var discarded_card = temp_hand.splice(n, 1);
+        var hand_value = this.evaluate_cards(temp_hand);
+        
+        if(n < h_length){
+            if(hand_value < val){
+                return evaluate_with_discard(hand_value, n++);
+            }else{
+                return evaluate_with_discard(val, n++);
+            }
+        }else{
+            if(hand_value < val){
+                return {new_hand: temp_hand, discard: discarded_card}
+            }
+        }
 
+    }
 };
 
 Computer.prototype.evaluate_to_discard = function(current_hand_points){
