@@ -43,30 +43,41 @@ Computer.prototype.calculate_new_hand_value = function(hand){
 };
 
 Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_constants) {
-    var temp_hand = [];
     var h_length = this.hand.length;
+    var n = 0;
+    var discarded_card_index = 0;
+    var lowest_score = 0;
+    
     for(var i = 0; i < h_length; i++){
         temp_hand[i] = this.hand[i];
     }
     
-    function evaluate_with_discard(val, n){
-        temp_hand.push(round_constants.discard_pile.pop());
-        var discarded_card = temp_hand.splice(n, 1);
-        var hand_value = this.evaluate_cards(temp_hand);
+    var current_hand_score = this.eveluate_cards(temp_hand); 
+    
+    while(n < h_length){
+        var temp_hand = [];
         
-        if(n < h_length){
-            if(hand_value < val){
-                return evaluate_with_discard(hand_value, n++);
-            }else{
-                return evaluate_with_discard(val, n++);
-            }
-        }else{
-            if(hand_value < val){
-                return {new_hand: temp_hand, discard: discarded_card}
-            }
+        for(var i = 0; i < h_length; i++){
+            temp_hand[i] = this.hand[i];
         }
-
+        //can't use pop() here or it would shorten the discard pile stack
+        //so making a copy of last card on the stack instead.
+        temp_hand.push(round_constants.discard_pile[round_constants.discard_pile.length - 1]);
+        temp_hand.splice(n, 1);
+        
+        var evaluated_hand = this.evaluate_cards(temp_hand);
+        
+        if(evaluated_hand.value < current_hand_score){
+            discarded_card_index = n;
+            lowest_score = evaluated_hand.value;
+        }
+        n++;
     }
+    
+    if(lowest_score !== 0){
+        
+    }
+    
 };
 
 Computer.prototype.evaluate_to_discard = function(current_hand_points){
