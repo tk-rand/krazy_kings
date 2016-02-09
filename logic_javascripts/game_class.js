@@ -365,7 +365,8 @@ Game.prototype.handle_events = function(event){
             	break;
             }
             case _current_player.hand_area:{
-                _current_player.discard(event.target, this.round_constants);
+                var card_name = event.target.getAttribute('data-element');
+                _current_player.discard(card_name, this.round_constants);
 				this.draw_current_players_hand();
 				this.draw_discard_pile();
 				break;

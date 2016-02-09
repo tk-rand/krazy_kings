@@ -37,12 +37,10 @@ Player.prototype.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc) {
 
 Player.prototype.discard = function(card_to_discard, round_constants) {
     var card_name = '';
-    var element_data = card_to_discard.getAttribute('data-element');
-    console.log(this.hand[1].display);
-    
+
     for (var i = 0; i < this.hand.length; i++) {
         card_name = this.hand[i].suite + this.hand[i].value;
-        if (element_data == card_name) {
+        if (card_to_discard == card_name) {
             var discarded_card = this.hand.splice(i, 1);
             this.actions_taken.push('discarded');
             round_constants.discard_pile.push(discarded_card[0]); //splice returns an array, facepalm

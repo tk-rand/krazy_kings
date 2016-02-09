@@ -47,6 +47,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     var n = 0;
     var discarded_card_index = 0;
     var lowest_score = 0;
+    var temp_hand = [];
     
     for(var i = 0; i < h_length; i++){
         temp_hand[i] = this.hand[i];
@@ -55,7 +56,11 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     var current_hand_score = this.eveluate_cards(temp_hand); 
     
     while(n < h_length){
-        var temp_hand = [];
+        temp_hand = [];
+        
+        if(n === 0){
+            lowest_score = current_hand_score;
+        }
         
         for(var i = 0; i < h_length; i++){
             temp_hand[i] = this.hand[i];
@@ -67,7 +72,7 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
         
         var evaluated_hand = this.evaluate_cards(temp_hand);
         
-        if(evaluated_hand.value < current_hand_score){
+        if(evaluated_hand.value < lowest_score){
             discarded_card_index = n;
             lowest_score = evaluated_hand.value;
         }
@@ -75,16 +80,19 @@ Computer.prototype.decide_what_to_draw = function(initial_hand_points, round_con
     }
     
     if(lowest_score !== 0){
-        
+        _game.handle_events('discard');
+        var discarded_card = this.hand[n].display
+        var index = discarded_card.search('t=');
+        var card_name= discarded_card.substring(index + 3, discarded_card.length - 8);
+        this.evaluate_to_discard(card_name);
+    }else{
+        _game.handle_events('deck');
     }
     
 };
 
-Computer.prototype.evaluate_to_discard = function(current_hand_points){
-    //this means they have a perfect score
-    if(current_hand_points == this.wild_card_value * 100){
-        this.lay_down(this.hand);
-    }
+Computer.prototype.evaluate_to_discard = function(card_to_discard){
+    
 };
 
 Computer.prototype = new Player();
