@@ -3,7 +3,8 @@
 var game_started = false;
 var game_constants = null;
 var _game = new Game();
-function Main(){
+var game_mode = false;
+function Main(mode){
 	if(game_started == false){
         if(window.localStorage.getItem('settings') == undefined){
             var settings = {
@@ -11,8 +12,9 @@ function Main(){
                 sort_type: 'suite'
             }
             window.localStorage.setItem('settings', JSON.stringify(settings));
-        }		
-		game_constants = init(_game);
+        }
+        game_mode = mode || false;		
+		game_constants = init(_game, game_mode);
 	}
 	var round_constants = _game.new_round(game_constants);
     _game.draw_game();
@@ -24,14 +26,19 @@ function Main(){
     event.stopPropagation();
 }
 
-function init(_game){
-	var player_names = get_number_of_players_and_player_names();
+function init(_game, game_mode){
+    var player_names = null;
+    //true means playing with computers
+    if(game_mode){
+       player_names = get_number_of_bots_and_players_name();
+    }else{
+       player_names = get_number_of_players_and_player_names();  
+    }
 	var _constants = _game.initialize_game(player_names.length, player_names);
     
     game_started = true;
     return _constants;
 }
-
 
 function assign_event_listeners(round_constants){
     var deck = id('playing_deck');

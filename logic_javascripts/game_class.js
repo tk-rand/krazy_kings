@@ -15,7 +15,11 @@ Game.prototype.initialize_game = function(num_of_players, name_of_players){
     var deck_instance = new Deck();
     var round_instance = new Round();
     for(var i = 0; i< num_of_players; i++){
-        this.players[i] = new Player();
+        if(game_mode && i > 0){
+            this.players[i] = new Computer();
+        }else{
+            this.players[i] = new Player();
+        }
         this.players[i].name = name_of_players[i];
         var hand_num = i + 1;
         this.players[i].hand_area = 'player_'+hand_num+'_hand';
@@ -60,6 +64,9 @@ Game.prototype.new_round = function(game_constants){
         'deck_instance': _deck_instance,
         'discard_pile': _discard_pile
     };
+    
+    //make sure human player always starts
+    this.current_player = 0;
     return this.round_constants;
 };
 
@@ -332,12 +339,12 @@ Game.prototype.end_game = function(){
     end_game();        
 };
 
-Game.prototype.handle_events = function(event){
+Game.prototype.handle_events = function(event, npc_card){
     /* _game.current_player returns a numerical value, 
      * which is why it's being used as a lookup index, 
      * not just being stored into _current_player
     */
-
+    var npc_card = npc_card || null;
    	var round_instance = this.round_constants.round_instance;
 	var _current_player = this.players[this.current_player];
 	var element_data = null;
@@ -365,7 +372,12 @@ Game.prototype.handle_events = function(event){
             	break;
             }
             case _current_player.hand_area:{
-                var card_name = event.target.getAttribute('data-element');
+                var card_name = '';
+                if(!npc_card){
+                    card_name = event.target.getAttribute('data-element');
+                }else{
+                    card_name = npc_card;
+                }                
                 _current_player.discard(card_name, this.round_constants);
 				this.draw_current_players_hand();
 				this.draw_discard_pile();
@@ -386,10 +398,20 @@ Game.prototype.handle_events = function(event){
             			_current_player.running_score_total(result);
             		}
             		this.rotate_players_cards(_current_player);
+                    if(game_mode && this.current_player !== 0){
+                        window.setTimeout(function(){
+                            _current_player.decide_what_to_draw(this.round_constants);
+                        }, 1000);
+                    }
             		break;            	
             	}
             	if(round_instance.round_ending.is_ending == false){
             	    this.rotate_players_cards(_current_player);
+                    if(game_mode && this.current_player !== 0){
+                        window.setTimeout(function(){
+                            _current_player.decide_what_to_draw(this.round_constants);
+                        }, 1000);
+                    }
             	}         	
             	break;
             }

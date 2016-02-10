@@ -10,6 +10,12 @@ body{
 	position: relative;
 	height: 480px;
 }
+
+.game_type_screen{
+    display: none;
+    position: relative;
+    height: 480px;
+}
 .options_screen{
 	display: none;
 	position: relative;

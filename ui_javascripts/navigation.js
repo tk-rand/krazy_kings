@@ -8,8 +8,13 @@ function navigation(screen_name){
     }
     screen_index = new_screen;
 
-    if(screen_index =='main_screen' ){
-       Main();
+    if(screen_index == 'main_screen' ){
+        var game_type = screen_name.getAttribute('id');
+        if(game_type === 'hot_seat_mode'){
+            Main();
+        }else{
+            Main(true);
+        }
     }
 
     if(screen_index == 'home_screen'){

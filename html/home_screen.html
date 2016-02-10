@@ -6,7 +6,7 @@
 		<script type="text/javascript" src="../logic_javascripts/deck_class.js"></script>
 		<script type="text/javascript" src="../logic_javascripts/game_class.js"></script>
 		<script type="text/javascript" src="../logic_javascripts/player_logic.js"></script>
-		<script type="text/javascript" src="../logic_javascripts/computer_ai.js"></script>
+		<script type="text/javascript" src="../logic_javascripts/new_computer_ai_class.js"></script>
 
 		<link rel='stylesheet' type="text/css" href="../css/cards.css" />
 		<link rel='stylesheet' type="text/css" href="../css/home_screen.css" />
@@ -22,7 +22,7 @@
 			</header>
 			<div id="menu" class="main_menu partial">
 				<ul class="menu navigation">
-					<li class="player_btn" value="main_screen" onclick="navigation(this);">
+					<li class="player_btn" value="game_type_screen" onclick="navigation(this);">
 						New Game
 					</li>
 					<li class="player_btn" value="popup_modal" onclick="navigation(this);">
@@ -45,10 +45,25 @@
 				<h4>Krazy Kings!</h4>
 			</footer>
 		</div>
-
+        
+        <div id="game_type_screen" class="game_type_screen screen">
+            <header>
+                <h3>What game type would you like to play?</h3>
+            </header>
+            <div class="settings_container">
+                <ul class="menu navigation">
+                    <li class="player_btn" id="hot_seat_mode" value="main_screen" onclick="navigation(this);">
+                        Hot Seat
+                    </li>
+                    <li class="player_btn" id="computer_mode" value="main_screen" onclick="navigation(this);">
+                        Against Computers
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
 		<div id="options_screen" class="options_screen screen">
 			<div class="settings_container">
-
 				<div class="sort_settings">
 					<div class="switch">
 						<span>Sort Cards: </span>
@@ -72,9 +87,7 @@
 		</div>
 
 		<div id="main_screen" class="main_screen screen">
-			<div id="deck_and_discard">
-
-			</div>
+			<div id="deck_and_discard"></div>
 			<div id="player_1_score"></div>
 			<div id="player_1_hand" class="hand_area" data-element="player_1_hand"></div>
 
@@ -85,9 +98,8 @@
 			<div id="player_3_hand" class="hand_area" data-element="player_3_hand"></div>
 
 			<div id="player_4_score"></div>
-			<div id="player_4_hand" class="hand_area" data-element="player_4_hand">
-
-			</div>
+			<div id="player_4_hand" class="hand_area" data-element="player_4_hand"></div>
+            
 			<div class="player_menu">
 				<ul class="menu navigation">
 					<li id="end_turn" class="player_btn" data-element="end_turn">
