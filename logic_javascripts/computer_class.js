@@ -2,9 +2,13 @@
 
 //computer ai class
 //computer is a subclass of player
+
 function Computer(){
-    Player.apply();
+    Player.apply(this);
 }
+
+Computer.prototype = Object.create(Player.prototype);
+Computer.prototype.constructor = Computer;
 
 Computer.prototype.decide_what_to_draw = function(round_constants) {
     var h_length = this.hand.length;
@@ -16,14 +20,13 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
     for(var i = 0; i < h_length; i++){
         temp_hand[i] = this.hand[i];
     }
-    
-    var current_hand_score = this.eveluate_cards(temp_hand); 
+    var current_hand_score = this.evaluate_cards(temp_hand); 
     
     while(n < h_length){
         temp_hand = [];
         
         if(n === 0){
-            lowest_score = current_hand_score;
+            lowest_score = current_hand_score.value;
         }
         
         for(var i = 0; i < h_length; i++){
@@ -42,42 +45,63 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
         }
         n++;
     }
-    
-    if(lowest_score !== 0 && lowest_score < current_hand_score){
-        _game.handle_events('discard');
-        this.evaluate_and_discard(n)
-        this.handle_events('end_turn');
+    var self = this;
+    if(lowest_score !== 0 && lowest_score < current_hand_score.value){
+        //makes AI action not instant
+        window.setTimeout(function(){
+            _game.handle_events('discard');
+        }, 3000);
+        window.setTimeout(function(){
+            self.evaluate_and_discard(n)
+            _game.handle_events('end_turn');
+        }, 5000);
     }else if(lowest_score === 0){
-        _game.handle_events('discard');
-        this.evaluate_and_discard(n);
-        this.handle_events('lay_down');
+        window.setTimeout(function(){
+            _game.handle_events('discard');
+        }, 3000);
+        window.setTimeout(function(){
+            self.evaluate_and_discard(n)
+            _game.handle_events('lay_down');
+        }, 5000);
     }else{
-        _game.handle_events('deck');
+        window.setTimeout(function(){
+            _game.handle_events('deck');
+        }, 3000);
         n = 0;
-        lowest_score = current_hand_score;
+        var low_score = current_hand_score.value;
+        //hand is one longer now
+        h_length = this.hand.length;
         while(n < h_length){
             temp_hand = [];
             for(var i = 0; i < h_length; i++){
                 temp_hand[i] = this.hand[i];
             }
             temp_hand.splice(n, 1);
-            var evaluated_hand = this.evaluate_cards(temp_hand);
+            var eval_hand = this.evaluate_cards(temp_hand);
             
-            if(evaluated_hand.value < lowest_Score){
+            if(eval_hand.value < low_score){
                 discarded_card_index = n;
-                lowest_score = evaluated_hand.value;
+                low_score = eval_hand.value;
             }
             n++;
         }
         //if the score didn't get better or got worse get rid of card just drawn
-        if(lowest_score >= current_hand_score){
-            this.evaluate_and_discard(h_length - 1);
-        }else if(lowest_score === 0){
-            this.evaluate_and_discard(n);
-            this.handle_events('lay_down');
+        if(low_score >= current_hand_score.value){
+            window.setTimeout(function(){
+                self.evaluate_and_discard(h_length - 1);
+                _game.handle_events('end_turn');
+            },5000);
+        }else if(low_score === 0){
+            window.setTimeout(function(){
+                self.evaluate_and_discard(n);
+                _game.handle_events('lay_down');
+            },5000);
         }else{
-            this.evaluate_and_discard(n);
-            this.handle_events('end_turn');
+            window.setTimeout(function(){
+                self.evaluate_and_discard(n);
+                _game.handle_events('end_turn');
+            },5000);
+            
         }
     }
 };
@@ -88,10 +112,9 @@ Computer.prototype.evaluate_and_discard = function(card_index){
         //display is a string not a dom element
         var index = discarded_card.search('t=');
         var card_name = discarded_card.substring(index + 3, discarded_card.length - 8);
-        var current_player = "player_" + _game.current_player + 'hand';
+        var current_player = this.hand_area;
         
         //discard the bad card
         _game.handle_events(current_player, card_name);
 };
 
-Computer.prototype = new Player();

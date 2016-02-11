@@ -1,5 +1,6 @@
 /* global _game */
 /* global game_constants */
+/* global game_mode */
 
 //Game class
 function Game(){
@@ -384,6 +385,7 @@ Game.prototype.handle_events = function(event, npc_card){
 				break;
             }
             case 'end_turn':{
+                var self = this;
             	this.current_player = _current_player.end_turn(this);
             	if(round_instance.round_ending.is_ending == true && this.current_player == round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
@@ -399,18 +401,15 @@ Game.prototype.handle_events = function(event, npc_card){
             		}
             		this.rotate_players_cards(_current_player);
                     if(game_mode && this.current_player !== 0){
-                        window.setTimeout(function(){
-                            _current_player.decide_what_to_draw(this.round_constants);
-                        }, 1000);
+                        self.players[self.current_player].decide_what_to_draw(self.round_constants);
                     }
             		break;            	
             	}
             	if(round_instance.round_ending.is_ending == false){
             	    this.rotate_players_cards(_current_player);
                     if(game_mode && this.current_player !== 0){
-                        window.setTimeout(function(){
-                            _current_player.decide_what_to_draw(this.round_constants);
-                        }, 1000);
+                        var player = self.players[self.current_player];
+                        player.decide_what_to_draw(self.round_constants);
                     }
             	}         	
             	break;

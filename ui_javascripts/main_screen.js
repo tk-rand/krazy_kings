@@ -4,6 +4,7 @@ var game_started = false;
 var game_constants = null;
 var _game = new Game();
 var game_mode = false;
+
 function Main(mode){
 	if(game_started == false){
         if(window.localStorage.getItem('settings') == undefined){
@@ -14,7 +15,7 @@ function Main(mode){
             window.localStorage.setItem('settings', JSON.stringify(settings));
         }
         game_mode = mode || false;		
-		game_constants = init(_game, game_mode);
+		game_constants = init(_game);
 	}
 	var round_constants = _game.new_round(game_constants);
     _game.draw_game();
@@ -23,10 +24,10 @@ function Main(mode){
     //this stops it from returning to the handle events function in the game class
     //important because it will return to the old reference of round_constants if
     //it's not stopped.
-    event.stopPropagation();
+    //event.stopPropagation();
 }
 
-function init(_game, game_mode){
+function init(_game){
     var player_names = null;
     //true means playing with computers
     if(game_mode){

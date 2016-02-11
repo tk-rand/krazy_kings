@@ -62,6 +62,7 @@ Player.prototype.lay_down = function() {
 };
 
 //helper methods
+
 Player.prototype.sort_player_cards = function() {
     var suites = {
             'clubs' : [],
