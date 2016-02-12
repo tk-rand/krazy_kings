@@ -22,7 +22,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
     }
     var current_hand_score = this.evaluate_cards(temp_hand); 
     
-    while(n < h_length){
+    while(n <= h_length){
         temp_hand = [];
         
         if(n === 0){
@@ -32,6 +32,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
         for(var i = 0; i < h_length; i++){
             temp_hand[i] = this.hand[i];
         }
+        
         //can't use pop() here or it would shorten the discard pile stack
         //so making a copy of last card on the stack instead.
         temp_hand.push(round_constants.discard_pile[round_constants.discard_pile.length - 1]);
@@ -39,20 +40,24 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
         
         var evaluated_hand = this.evaluate_cards(temp_hand);
         
-        if(evaluated_hand.value < lowest_score){
+        if(evaluated_hand.value < lowest_score || evaluated_hand.value === 0){
             discarded_card_index = n;
             lowest_score = evaluated_hand.value;
         }
+        console.log(n);
         n++;
+        
     }
+    
     var self = this;
+    
     if(lowest_score !== 0 && lowest_score < current_hand_score.value){
         //makes AI action not instant
         window.setTimeout(function(){
             _game.handle_events('discard');
         }, 3000);
         window.setTimeout(function(){
-            self.evaluate_and_discard(n)
+            self.evaluate_and_discard(discarded_card_index + 1); //hand is run with one less then it has
             _game.handle_events('end_turn');
         }, 5000);
     }else if(lowest_score === 0){
@@ -60,45 +65,48 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             _game.handle_events('discard');
         }, 3000);
         window.setTimeout(function(){
-            self.evaluate_and_discard(n)
+            self.evaluate_and_discard(discarded_card_index + 1);
             _game.handle_events('lay_down');
         }, 5000);
     }else{
         window.setTimeout(function(){
             _game.handle_events('deck');
         }, 3000);
-        n = 0;
+        
+        var p = 0;
         var low_score = current_hand_score.value;
         //hand is one longer now
-        h_length = this.hand.length;
-        while(n < h_length){
+        var hand_length = this.hand.length;
+        var discard_card_index = 0;
+        
+        while(p <= hand_length){
             temp_hand = [];
-            for(var i = 0; i < h_length; i++){
+            for(var i = 0; i < hand_length; i++){
                 temp_hand[i] = this.hand[i];
             }
-            temp_hand.splice(n, 1);
+            temp_hand.splice(p, 1);
             var eval_hand = this.evaluate_cards(temp_hand);
             
             if(eval_hand.value < low_score){
-                discarded_card_index = n;
+                discard_card_index = p;
                 low_score = eval_hand.value;
             }
-            n++;
+            p++;
         }
         //if the score didn't get better or got worse get rid of card just drawn
-        if(low_score >= current_hand_score.value){
+        if(low_score > current_hand_score.value){
             window.setTimeout(function(){
-                self.evaluate_and_discard(h_length - 1);
+                self.evaluate_and_discard(hand_length - 2);
                 _game.handle_events('end_turn');
             },5000);
         }else if(low_score === 0){
             window.setTimeout(function(){
-                self.evaluate_and_discard(n);
+                self.evaluate_and_discard(discard_card_index + 1);
                 _game.handle_events('lay_down');
             },5000);
         }else{
             window.setTimeout(function(){
-                self.evaluate_and_discard(n);
+                self.evaluate_and_discard(discard_card_index + 1);
                 _game.handle_events('end_turn');
             },5000);
             
