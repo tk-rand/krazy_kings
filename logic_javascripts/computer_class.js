@@ -44,7 +44,6 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             discarded_card_index = n;
             lowest_score = evaluated_hand.value;
         }
-        console.log(n);
         n++;
         
     }
@@ -57,7 +56,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             _game.handle_events('discard');
         }, 3000);
         window.setTimeout(function(){
-            self.evaluate_and_discard(discarded_card_index + 1); //hand is run with one less then it has
+            self.evaluate_and_discard(discarded_card_index);
             _game.handle_events('end_turn');
         }, 5000);
     }else if(lowest_score === 0){
@@ -65,7 +64,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             _game.handle_events('discard');
         }, 3000);
         window.setTimeout(function(){
-            self.evaluate_and_discard(discarded_card_index + 1);
+            self.evaluate_and_discard(discarded_card_index);
             _game.handle_events('lay_down');
         }, 5000);
     }else{
@@ -101,12 +100,12 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             },5000);
         }else if(low_score === 0){
             window.setTimeout(function(){
-                self.evaluate_and_discard(discard_card_index + 1);
+                self.evaluate_and_discard(discard_card_index);
                 _game.handle_events('lay_down');
             },5000);
         }else{
             window.setTimeout(function(){
-                self.evaluate_and_discard(discard_card_index + 1);
+                self.evaluate_and_discard(discard_card_index);
                 _game.handle_events('end_turn');
             },5000);
             

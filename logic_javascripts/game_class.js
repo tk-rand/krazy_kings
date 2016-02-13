@@ -119,7 +119,10 @@ Game.prototype.draw_game = function(){
     for (var i = 0; i< this.round_constants.round + 2; i++){
         for(var j = 0; j < this.players.length; j++){
             if(JSON.parse(settings).sort_cards){
-                this.players[j].sort_player_cards();
+                if(this.players[j].constructor !== Computer){
+                    this.players[j].sort_player_cards();
+                }
+                
             }    
         }
         player_1_area.innerHTML += this.players[0].hand[i].display;
@@ -251,9 +254,11 @@ Game.prototype.draw_current_players_hand = function(){
 	var position = player.hand_area;
     var hand = null;
     var settings = window.localStorage.getItem('settings');
-    
+            
     if(JSON.parse(settings).sort_cards){
-        player.sort_player_cards();
+        if(player.constructor !== Computer){
+            player.sort_player_cards();
+        }
     }
         
 	switch(position){
