@@ -1,4 +1,5 @@
 /* global _game */
+/* global Player */
 
 //computer ai class
 //computer is a subclass of player
@@ -70,6 +71,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
     }else{
         var discard_card = null;
         var temp_discard = null;
+        
         window.setTimeout(function(){
             _game.handle_events('deck');
             var p = 0;
@@ -77,6 +79,8 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             //hand is one longer now
             var hand_length = self.hand.length;
             
+            //less then instead of less or equal to like above because we add 
+            //to the length outside the while loop here instead of inside it as above
             while(p < hand_length){
                 temp_hand = [];
                 for(var i = 0; i < hand_length; i++){
