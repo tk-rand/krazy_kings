@@ -54,31 +54,30 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
         //makes AI action not instant
         window.setTimeout(function(){
             _game.handle_events('discard');
+            window.setTimeout(function(){
+                self.evaluate_and_discard(discarded_card);
+                _game.handle_events('end_turn');
+            }, 3000);
         }, 3000);
-        window.setTimeout(function(){
-            self.evaluate_and_discard(discarded_card);
-            _game.handle_events('end_turn');
-        }, 5000);
     }else if(lowest_score === 0){
         window.setTimeout(function(){
             _game.handle_events('discard');
+            window.setTimeout(function(){
+                self.evaluate_and_discard(discarded_card);
+                _game.handle_events('lay_down');
+            }, 3000);
         }, 3000);
-        window.setTimeout(function(){
-            self.evaluate_and_discard(discarded_card);
-            _game.handle_events('lay_down');
-        }, 5000);
     }else{
-        var p = 0;
-        var low_score = current_hand_score.value;
-        //hand is one longer now
-        var hand_length = self.hand.length;
         var discard_card = null;
         var temp_discard = null;
-        
         window.setTimeout(function(){
             _game.handle_events('deck');
+            var p = 0;
+            var low_score = current_hand_score.value;
+            //hand is one longer now
+            var hand_length = self.hand.length;
             
-            while(p <= hand_length){
+            while(p < hand_length){
                 temp_hand = [];
                 for(var i = 0; i < hand_length; i++){
                     temp_hand[i] = self.hand[i];
@@ -91,27 +90,29 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                     low_score = eval_hand.value;
                 }
                 p++;
-            }    
+            }
+            //get rid of last card if we never set discard card.    
+            if(discard_card === null){
+                discard_card = temp_discard;
+            }
+            //if the score didn't get better or got worse get rid of card just drawn
+            if(low_score > current_hand_score.value){
+                window.setTimeout(function(){
+                    self.evaluate_and_discard(discard_card);
+                    _game.handle_events('end_turn');
+                },3000);
+            }else if(low_score === 0){
+                window.setTimeout(function(){
+                    self.evaluate_and_discard(discard_card);
+                    _game.handle_events('lay_down');
+                },3000);
+            }else{
+                window.setTimeout(function(){
+                    self.evaluate_and_discard(discard_card);
+                    _game.handle_events('end_turn');
+                },3000);
+            }
         },3000);
-        
-        //if the score didn't get better or got worse get rid of card just drawn
-        if(low_score > current_hand_score.value){
-            window.setTimeout(function(){
-                self.evaluate_and_discard(discard_card);
-                _game.handle_events('end_turn');
-            },5000);
-        }else if(low_score === 0){
-            window.setTimeout(function(){
-                self.evaluate_and_discard(discard_card);
-                _game.handle_events('lay_down');
-            },5000);
-        }else{
-            window.setTimeout(function(){
-                self.evaluate_and_discard(discard_card);
-                _game.handle_events('end_turn');
-            },5000);
-            
-        }
     }
 };
 

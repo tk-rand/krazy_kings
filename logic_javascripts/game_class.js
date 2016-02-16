@@ -339,10 +339,10 @@ Game.prototype.end_game = function(){
         }
         statement + 'have won the game!';
     }else{
-        statement = 'Player:' + this.players[winning_player[0]].name + ' has won the game!';
+        statement = 'Player: ' + this.players[winning_player[0]].name + ' has won the game!';
     }
     alert(statement);
-    end_game();        
+    navigation('home_screen');        
 };
 
 Game.prototype.handle_events = function(event, npc_card){

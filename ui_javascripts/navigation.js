@@ -1,7 +1,8 @@
 var screen_index = 'home_screen';
 
 function navigation(screen_name){
-	var new_screen = screen_name.getAttribute('value');
+    var new_screen = typeof screen_name !== "string" ? screen_name.getAttribute('value') : screen_name;
+	
     if(new_screen !== null){
         id(screen_index).style.display = 'none';
         id(new_screen).style.display = 'block';

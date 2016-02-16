@@ -57,7 +57,6 @@ Player.prototype.lay_down = function() {
     }
 
     var results = this.evaluate_cards(temp_hand);
-    console.log(results);
     return results.value;
 };
 
