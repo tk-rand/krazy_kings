@@ -1,5 +1,26 @@
+/* global id */
+
 window.onload = function(){
     add_settings_listeners();
+    
+    //sets setting to what is in local storage if they have already been set
+    if(window.localStorage.getItem('settings')){
+        var sort_toggle = id('sort_toggle');
+        var sort_type = id('sort_type_toggle');
+        var settings = window.localStorage.getItem('settings');
+        settings = JSON.parse(settings);
+        
+        if(settings.sort_cards){
+            var event = new Event('change');
+            sort_toggle.checked = true;
+            sort_toggle.dispatchEvent(event);
+            
+            if(settings.sort_type === 'value'){
+                sort_type.checked = true;
+                sort_type.dispatchEvent(event);
+            }
+        }
+    }
 };
 
 
