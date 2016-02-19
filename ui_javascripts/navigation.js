@@ -1,3 +1,6 @@
+/*global game_started */
+/*global _game */
+
 var screen_index = 'home_screen';
 
 function navigation(screen_name){
