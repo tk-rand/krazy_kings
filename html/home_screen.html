@@ -15,6 +15,7 @@
 		<link rel='stylesheet' type="text/css" href="../css/modals.css" />
 		<link rel='stylesheet' type="text/css" href="../css/menu.css" />
 		<link rel="stylesheet" type="text/css" href="../css/main_screen.css" />
+        <link rel="stylesheet" type="text/css" href="../css/third_party.css" />
 	</head>
 	<body style="background-color:grey;">
 
@@ -90,6 +91,7 @@
 
 		<div id="main_screen" class="main_screen screen">
 			<div id="deck_and_discard"></div>
+            
 			<div id="player_1_score"></div>
 			<div id="player_1_hand" class="hand_area" data-element="player_1_hand"></div>
 
@@ -116,6 +118,22 @@
 				</ul>
 			</div>
 		</div>
+        
+        <div class="input_popup">
+            <div class="alert-dialog-mask"></div>
+            <div class="alert-dialog">
+                <div class="alert-dialog-title">Alert</div>
+
+                <div class="alert-dialog-content">
+                    Hello World!
+                </div>
+
+                <div class="alert-dialog-footer">
+                    <button class="alert-dialog-button alert-dialog-button--primal">OK</button>
+                </div>
+            </div>
+        </div>
+
 
 		<div id="popup_modal" class="popup modal">
 			<li class="player_btn" value="home_screen" onclick="navigation(this);">
@@ -192,10 +210,8 @@
 							The player with the lowest score wins. Example: in round 3 I have 5 cards in my hand I am able to lay down 3 of them in a set but am left
 							with a Queen and a Jack left in my hand these would add up to 23 (12 for the queen 11 for the jack) and this sum would be added to my total.
 						</li>
-
 					</ul>
 				</div>
-
 			</div>
 		</div>
 
