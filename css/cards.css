@@ -10,13 +10,14 @@
     transition: all 1s ease-in-out;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    margin-left: -25px;
 }
 .card.over{
     border: 2px dashed #000;
 }
 
 .cards{
-    background-image: url('../assets/svg-z-cards.png');
+    background-image: url('../assets/card_back.jpg');
     height: 98px;
     width: 72px;
     cursor: pointer;
@@ -25,8 +26,9 @@
     transition: all 1s ease-in-out;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-
+    margin-left: -25px;
 }
+
 .no_transition{
 	-webkit-transition: none;
     transition: none;
@@ -212,8 +214,9 @@
 
 /* back of cards and jokers */
 .cards.back{
-    background-position: 1844px 244px;
+    background-size: contain;
 }
 .cards.joker{
+    background-image: url('../assets/svg-z-cards.png');
     background-position: 2012px 244px;
 }

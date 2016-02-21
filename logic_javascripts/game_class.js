@@ -8,6 +8,7 @@ function Game(){
     this.players = [];
     this.deck = null;
     this.round_constants = {};
+    this.current_wilds = 3;
 }
 
 //num of players and name of players must be same,
@@ -44,6 +45,7 @@ Game.prototype.new_round = function(game_constants){
     //reset the discard pile and round ending vars before re-assigning them.
     if(_round > 1){
         this.reset_constants();
+        this.current_wilds++;
     }
     
     for(var i = 0; i < this.players.length; i++){
@@ -86,6 +88,7 @@ Game.prototype.reset_constants = function(){
 
 Game.prototype.draw_game = function(){
     var deck_area = id("deck_and_discard");
+    var wilds_display = id('wilds_display');
     var player_1_area = id("player_1_hand");
     var player_2_area = id("player_2_hand");
     var player_3_area = id("player_3_hand");
@@ -105,9 +108,11 @@ Game.prototype.draw_game = function(){
     _deck.setAttribute('data-element', 'deck');
 
 	deck_area.innerHTML = '';
+    deck_area.innerHTML = '';
 
     deck_area.appendChild(_deck);
     deck_area.appendChild(discard);
+    wilds_display.innerHTML = this.current_wilds + "'s are wild";
     
     player_1_area.innerHTML = '';
 	player_2_area.innerHTML = '';
@@ -133,7 +138,6 @@ Game.prototype.draw_game = function(){
                 player_4_area.innerHTML += this.players[3].hand[i].display;
             }
         }
-
     }
     this.draw_player_scores();
     

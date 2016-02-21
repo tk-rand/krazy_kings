@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<widget xmlns = "http://www.w3.org/ns/widgets"
+		xmlns:gap = "http://phonegap.com/ns/1.0"
+		xmlns:android   = "http://schemas.android.com/apk/res/android"
+		id        = "com.3rdFloorGames.KrazyKings"
+		version	  = "0.7.0">
+		
+		<name>KrazyKings</name>
+		
+		<description> A rummy style card game with lots of wilds and crazy kings! (towords the end...). </description>
+		
+		<author email="3rdFloorGames@gmail.com">
+			Ryan Earl
+		</author>
+		
+		<preference name="orientation" value="landscape" />
+		<preference name="fullscreen" value="true" />
+		<preference name="permissions" value="none" />
+		
+		
+		<!-- Android Settings -->
+		<preference name="KeepRunning" value="false" />
+		
+	</widget>

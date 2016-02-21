@@ -60,10 +60,17 @@
 	height: 98px;
 	width: 72px;
 	display: inline-block;
+    margin-left: 25px;
 }
 
 .player_menu{
 	position: absolute;
 	top: 480px;
 	left:15%;
+}
+#wilds_display{
+    color: white;
+    position: absolute;
+    left: 545px;
+    top: 190px;
 }
