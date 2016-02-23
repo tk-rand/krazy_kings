@@ -119,17 +119,19 @@
 			</div>
 		</div>
         
-        <div class="input_popup">
+        <div id="input_popup" class="input_popup">
             <div class="alert-dialog-mask"></div>
             <div class="alert-dialog">
-                <div class="alert-dialog-title">Alert</div>
+                <div id="input_title" class="alert-dialog-title"></div>
 
                 <div class="alert-dialog-content">
-                    Hello World!
+                    <input type="text" id="player_input" />
                 </div>
-
+                <div id="input_error" class="input_error">
+                    <span>Please enter your name!</span>
+                </div>
                 <div class="alert-dialog-footer">
-                    <button class="alert-dialog-button alert-dialog-button--primal">OK</button>
+                    <button id="dialog_ok_button" class="alert-dialog-button alert-dialog-button--primal">OK!</button>
                 </div>
             </div>
         </div>
