@@ -29,16 +29,34 @@ function get_number_of_players_and_names(callback){
                 callback(player_names);
             });
         }else{
-            for(var i = 0; i < number_of_players; i++){
-                dialog_confirm('text', game_mode, function(name){
-                    player_names[i] = sanatize(name);
-                    
-                    if(player_names.length === value){
+            var i = 0;
+            dialog_confirm('text', game_mode, function(name){
+                player_names[i] = sanatize(name);
+                i++;
+                dialog_confirm('text', game_mode, function(name2){
+                    player_names[i] = sanatize(name2);
+                    i++;
+                    if(i < value){
+                        dialog_confirm('text', game_mode, function(name3){
+                            player_names[i] = sanatize(name3);
+                            i++;
+                            if(i < value){
+                                dialog_confirm('text', game_mode, function(name4){
+                                    player_names[i] = sanatize(name4);
+                                    input_popup.style.display = 'none';
+                                    callback(player_names);
+                                });
+                            }else{
+                                input_popup.style.display = 'none';
+                                callback(player_names);
+                            }
+                        });
+                    }else{
                         input_popup.style.display = 'none';
-                        callback(player_names);  
-                    }
+                        callback(player_names); 
+                    }    
                 });
-            }
+            });
         }
     });
 }
@@ -67,7 +85,7 @@ function dialog_confirm(type, computer, callback){
     }else{
         input.setAttribute('type', 'number');
         if(computer){
-            title.innerText = "Number of Computers? (between 1 - 3)";
+            title.innerText = "Number of Computers? \n (between 1 - 3)";
             input.value = 1;
             input.setAttribute('min', '1');
             input.setAttribute('max', '3');
@@ -85,6 +103,9 @@ function dialog_confirm(type, computer, callback){
     var self = this;
     
     function handle_input_button(event){
+        if(game_started){
+            return;
+        }
         if(input.value === ''){
             error.setAttribute('display', 'inline-block');
         }else{
