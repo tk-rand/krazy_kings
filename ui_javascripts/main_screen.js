@@ -15,30 +15,27 @@ function Main(mode){
             window.localStorage.setItem('settings', JSON.stringify(settings));
         }
         game_mode = mode || false;		
-		game_constants = init(_game);
-	}
-	var round_constants = _game.new_round(game_constants);
-    _game.draw_game();
-    assign_event_listeners(round_constants);
-
-    //this stops it from returning to the handle events function in the game class
-    //important because it will return to the old reference of round_constants if
-    //it's not stopped.
-    //event.stopPropagation();
+		init(_game, function(constants){
+            game_constants = constants;
+            var round_constants = _game.new_round(game_constants);
+            _game.draw_game();
+            assign_event_listeners(round_constants);
+        });
+	}else{
+        var round_constants = _game.new_round(game_constants);
+        _game.draw_game();
+        assign_event_listeners(round_constants);
+    }
 }
 
-function init(_game){
-    var player_names = null;
-    //true means playing with computers
-    if(game_mode){
-       player_names = get_number_of_bots_and_players_name();
-    }else{
-       player_names = get_number_of_players_and_player_names();  
-    }
-	var _constants = _game.initialize_game(player_names.length, player_names);
+function init(_game, callback){
     
-    game_started = true;
-    return _constants;
+    get_number_of_players_and_names(function(player_names){
+        var _constants = _game.initialize_game(player_names.length, player_names);
+    
+        game_started = true;
+        callback(_constants);
+    });
 }
 
 function assign_event_listeners(round_constants){

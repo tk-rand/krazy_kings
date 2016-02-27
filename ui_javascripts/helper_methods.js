@@ -8,42 +8,39 @@ function cls(class_name){
     return Array.prototype.slice.call(document.querySelectorAll(class_name));
 }
 
-function get_number_of_players_and_player_names(){
-    var num_of_players = prompt("Enter number of players desired (up to 4).");
-    var player_names = [];
-
-    for(var i = 0; i < num_of_players; i++){
-        var player_num = i +1;
-        player_names[i] = prompt("Enter the name of player "+ player_num);
-    }
-
-    return player_names;
-}
-
-function get_number_of_bots_and_players_name(){    
-    dialog_confirm('number', true, function(value){
-
-    });
+function get_number_of_players_and_names(callback){    
+    var input_popup = id('input_popup');
     
-    
-
-}
-
-function another_handler(value){
-        var number_of_bots = value;
-        var players_names = [];
-        var players_name = '';
+    dialog_confirm('number', game_mode, function(value){
+        console.log(value);
+        var number_of_players = value;
+        var player_names = [];
         
-        console.log(number_of_bots);
-    
-        var total_players = parseInt(number_of_bots, 10) + 1;
-    
-        players_names[0] = players_name;
-        for(var i = 1; i < total_players; i++){
-            players_names[i] = "Bot Man #" + i;
+        if(game_mode){
+            dialog_confirm('text', game_mode, function(name){
+                var n = sanatize(name)
+
+                player_names[0] = n;
+                
+                for(var i = 1; i <= value; i++){
+                    player_names[i] = "Bot Man" + i; 
+                }
+                input_popup.style.display = 'none';
+                callback(player_names);
+            });
+        }else{
+            for(var i = 0; i < number_of_players; i++){
+                dialog_confirm('text', game_mode, function(name){
+                    player_names[i] = sanatize(name);
+                    
+                    if(player_names.length === value){
+                        input_popup.style.display = 'none';
+                        callback(player_names);  
+                    }
+                });
+            }
         }
-    
-        return players_names;
+    });
 }
 
 //@type string, text or number
@@ -54,6 +51,7 @@ function dialog_confirm(type, computer, callback){
     var input = id('player_input');
     var ok_button = id('dialog_ok_button');
     var error = id('input_error');
+    this.new_callback = callback;
 
     input.value = '';
     input_popup.style.display = 'block';
@@ -84,13 +82,19 @@ function dialog_confirm(type, computer, callback){
     ok_button.removeEventListener('click', handle_input_button, false);
     ok_button.addEventListener('click', handle_input_button, false);
     
+    var self = this;
+    
     function handle_input_button(event){
         if(input.value === ''){
             error.setAttribute('display', 'inline-block');
         }else{
-            callback(input.value);
+            self.new_callback(input.value);
         }  
     } 
+}
+
+function sanatize(str){
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
 Array.prototype.remove_dupes = function(){
