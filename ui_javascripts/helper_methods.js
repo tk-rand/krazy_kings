@@ -1,4 +1,6 @@
 //helper functions
+/* global game_mode */
+/* global game_started */
 
 function id(ele_id){
    return document.getElementById(ele_id);

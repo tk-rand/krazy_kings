@@ -1,3 +1,6 @@
+/* global game_mode */
+/* global Game */
+
 //Main Game class creates a new game
 //Also starts the game which deals the first round to each player
 var game_started = false;

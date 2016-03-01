@@ -79,3 +79,17 @@
     display: none;
     color: red;
 }
+
+.small{
+    width: 75px;
+    padding: 5px;
+    height: 20px;
+    position: absolute;
+    top: 190px;
+    left: 260px;
+}
+
+.small:active{
+    position: absolute !important;
+    top: 191px !important;
+}
