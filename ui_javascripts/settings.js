@@ -2,6 +2,7 @@
 
 window.onload = function(){
     add_settings_listeners();
+    add_main_screen_sort_listener();
     
     //sets setting to what is in local storage if they have already been set
     if(window.localStorage.getItem('settings')){
@@ -22,7 +23,6 @@ window.onload = function(){
         }
     }
 };
-
 
 function add_settings_listeners(){
     var sort_toggle = id('sort_toggle');
@@ -50,5 +50,23 @@ function add_settings_listeners(){
            settings.sort_type = 'suite';
        }
        window.localStorage.setItem('settings', JSON.stringify(settings));
+    });
+}
+
+function add_main_screen_sort_listener(){
+    var sort_button = id('sort_player_cards');
+    
+    sort_button.addEventListener('click', function(){
+        var settings = JSON.parse(window.localStorage.getItem('settings'));
+        
+        if(settings.sort_type === 'value'){
+            settings.sort_type = 'suite';
+        }else{
+            settings.sort_type = 'value';
+        }
+        window.localStorage.setItem('settings', JSON.stringify(settings));
+        
+        _game.players[_game.current_player].sort_player_cards();
+        _game.draw_current_players_hand();        
     });
 }

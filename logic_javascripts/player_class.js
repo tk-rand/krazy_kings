@@ -122,8 +122,7 @@ Player.prototype.compare_cards = function(card1, card2){
     return true;
 };
 
-Player.prototype.running_score_total = function(result) {
-    
+Player.prototype.running_score_total = function(result) {   
     if(!this.has_been_scored){
         this.score += result;
         this.has_been_scored = true;    
@@ -252,8 +251,7 @@ Player.prototype.evaluate_cards = function(hand) {
         }
         if(loc_wilds > 0 && this.wilds == 0){
             this.wilds = loc_wilds;
-        }
-           
+        }           
         this.value = this.leftover_value();
 	};
 	
