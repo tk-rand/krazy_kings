@@ -12,14 +12,11 @@ function get_number_of_players_and_names(callback){
     var input_popup = id('input_popup');
     
     dialog_confirm('number', game_mode, function(value){
-        console.log(value);
-        var number_of_players = value;
         var player_names = [];
         
         if(game_mode){
             dialog_confirm('text', game_mode, function(name){
                 var n = sanatize(name)
-
                 player_names[0] = n;
                 
                 for(var i = 1; i <= value; i++){
@@ -61,7 +58,7 @@ function get_number_of_players_and_names(callback){
     });
 }
 
-//@type string, text or number
+//@type = string, value = text or number
 //@computer, bool, true = playing against bots, false = hotseat
 function dialog_confirm(type, computer, callback){
     var input_popup = id('input_popup');
@@ -69,10 +66,11 @@ function dialog_confirm(type, computer, callback){
     var input = id('player_input');
     var ok_button = id('dialog_ok_button');
     var error = id('input_error');
-    this.new_callback = callback;
+    this.new_callback = callback; //avoids the closure callback hell
 
     input.value = '';
     input_popup.style.display = 'block';
+    input.focus();
     
     if(type === 'text'){
         input.setAttribute('placeholder', "Name:");
@@ -97,21 +95,27 @@ function dialog_confirm(type, computer, callback){
         }
     }
     
+    //since this function is called multiple times don't want duplicate events added.
+    input.removeEventListener('keyup', handle_input_button, false);
     ok_button.removeEventListener('click', handle_input_button, false);
+    
     ok_button.addEventListener('click', handle_input_button, false);
+    input.addEventListener('keyup', handle_input_button, false);
     
     var self = this;
     
     function handle_input_button(event){
-        if(game_started){
-            return;
-        }
-        if(input.value === ''){
-            error.setAttribute('display', 'inline-block');
-        }else{
-            self.new_callback(input.value);
-        }  
-    } 
+        if(event.keyCode === 13 || event.type === 'click'){
+            if(game_started){
+                return;
+            }
+            if(input.value === ''){
+                error.setAttribute('display', 'inline-block');
+            }else{
+                self.new_callback(input.value);
+            }  
+        } 
+    }
 }
 
 function sanatize(str){

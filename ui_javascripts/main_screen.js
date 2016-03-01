@@ -68,4 +68,3 @@ function assign_event_listeners(round_constants){
 function named_event_listener(event){
     _game.handle_events(event);
 }
-
