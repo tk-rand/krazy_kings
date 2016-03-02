@@ -34,19 +34,27 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
         for(var i = 0; i < h_length; i++){
             temp_hand[i] = this.hand[i];
         }
+        temp_hand = this.check_for_partial_sets(temp_hand);
         
         //can't use pop() here or it would shorten the discard pile stack
         //so making a copy of last card on the stack instead.
         temp_hand.push(round_constants.discard_pile[round_constants.discard_pile.length - 1]);
+        temp_hand = this.check_for_partial_sets(temp_hand);
         temp_card = temp_hand.splice(n, 1);
         
         var evaluated_hand = this.evaluate_cards(temp_hand);
         
         if(evaluated_hand.value < lowest_score || evaluated_hand.value === 0){
-            discarded_card = temp_card;
-            lowest_score = evaluated_hand.value;
+            if(!temp_card.partial_set || evaluated_hand.value === 0){
+                discarded_card = temp_card;
+                lowest_score = evaluated_hand.value;
+            }
         }
         n++;
+        
+        if(discarded_card === null){
+            discarded_card = temp_card;
+        }
     }
     
     var self = this;
@@ -86,12 +94,15 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                 for(var i = 0; i < hand_length; i++){
                     temp_hand[i] = self.hand[i];
                 }
+                temp_hand = self.check_for_partial_sets(temp_hand);
                 temp_discard = temp_hand.splice(p, 1);
                 var eval_hand = self.evaluate_cards(temp_hand);
                 
                 if(eval_hand.value < low_score){
-                    discard_card = temp_discard;
-                    low_score = eval_hand.value;
+                    if(!temp_discard.partial_set || eval_hand.value === 0){
+                        discard_card = temp_discard;
+                        low_score = eval_hand.value;
+                    }
                 }
                 p++;
             }
@@ -120,6 +131,56 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
     }
 };
 
+Computer.prototype.check_for_partial_sets = function(tmp_hand){
+    var round_instance = _game.round_constants.round_instance;
+    var buckets = { 13 : [], 12 : [], 11 : [], 10 : [], 9 : [], 8 : [], 7 : [], 6 : [], 5 : [], 4 : [], 3 : []};
+    var wilds = [];
+    
+    if(!round_instance.round_ending.is_ending){
+        tmp_hand.forEach(function(card){
+            if(card.is_wild){
+                wilds.push(card);
+            }else{
+                buckets[card.value].push(card);
+            }
+        });
+        
+        for(var k in buckets){
+            if(buckets.hasOwnProperty(k)){
+                if(buckets[k].length === 0){
+                    delete buckets[k];
+                }
+            }
+        }
+        
+        for(var j in buckets){
+            if(buckets.hasOwnProperty(j)){
+                if(buckets[j].length > 1){
+                    buckets[j].forEach(function(card){
+                        card.partial_set = true;    
+                    });
+                }else{
+                    buckets[j].forEach(function(card){
+                        card.partial_set = false;
+                    });
+                }
+            }
+        }  
+    }else{
+        tmp_hand.forEach(function(card){
+            card.partial_set = false;
+        });
+    }
+    
+    tmp_hand.forEach(function(card){
+        if(card.is_wild){
+            card.partial_set = true;
+        }
+    });
+    
+    return tmp_hand;
+};
+
 Computer.prototype.evaluate_and_discard = function(card){
         //splice above returns an array even if there is only one element
         var discarded_card = card[0].display;
@@ -132,4 +193,3 @@ Computer.prototype.evaluate_and_discard = function(card){
         //discard the bad card
         _game.handle_events(current_player, card_name);
 };
-
