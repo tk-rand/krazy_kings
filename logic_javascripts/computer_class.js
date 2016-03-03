@@ -58,7 +58,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             window.setTimeout(function(){
                 self.evaluate_and_discard(discarded_card);
                 _game.handle_events('end_turn');
-            }, 3000);
+            }, 1000);
         }, 3000);
     }else if(lowest_score === 0){
         window.setTimeout(function(){
@@ -66,7 +66,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
             window.setTimeout(function(){
                 self.evaluate_and_discard(discarded_card);
                 _game.handle_events('lay_down');
-            }, 3000);
+            }, 1000);
         }, 3000);
     }else{
         var discard_card = null;
@@ -104,17 +104,17 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                 window.setTimeout(function(){
                     self.evaluate_and_discard(discard_card);
                     _game.handle_events('end_turn');
-                },3000);
+                },1000);
             }else if(low_score === 0){
                 window.setTimeout(function(){
                     self.evaluate_and_discard(discard_card);
                     _game.handle_events('lay_down');
-                },3000);
+                },1000);
             }else{
                 window.setTimeout(function(){
                     self.evaluate_and_discard(discard_card);
                     _game.handle_events('end_turn');
-                },3000);
+                },1000);
             }
         },3000);
     }
