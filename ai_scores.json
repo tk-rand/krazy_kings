@@ -1,0 +1,13 @@
+{
+    "AI_version_1_scores":{
+        "Single_Bot_Games":{
+            "g1": 131
+        },
+        "Multi_Bot_Games":{
+            "g1":{
+                "b1": 19,
+                "b2": 77
+            }
+        }
+    }
+}
