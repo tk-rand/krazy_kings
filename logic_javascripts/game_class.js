@@ -101,7 +101,7 @@ Game.prototype.draw_game = function(){
     discard.setAttribute('id', 'discard_pile');
     discard.setAttribute('class', 'discard_pile');
     discard.setAttribute('data-element', 'discard');
-	discard.innerHTML = this.round_constants.discard_pile[this.round_constants.discard_pile.length - 1].display;
+	discard.appendChild(this.round_constants.discard_pile[this.round_constants.discard_pile.length - 1].display);
 	
     _deck.setAttribute("id", 'playing_deck');
     _deck.setAttribute('class', "cards back");
@@ -130,12 +130,13 @@ Game.prototype.draw_game = function(){
                 
             }    
         }
-        player_1_area.innerHTML += this.players[0].hand[i].display;
-        player_2_area.innerHTML += this.players[1].hand[i].display;
+        
+        player_1_area.appendChild(this.players[0].hand[i].display);
+        player_2_area.appendChild(this.players[1].hand[i].display);
         if(this.players.length > 2){
-            player_3_area.innerHTML += this.players[2].hand[i].display;
+            player_3_area.appendChild(this.players[2].hand[i].display);
             if(this.players.length > 3){
-                player_4_area.innerHTML += this.players[3].hand[i].display;
+                player_4_area.appendChild(this.players[3].hand[i].display);
             }
         }
     }
@@ -264,6 +265,12 @@ Game.prototype.draw_current_players_hand = function(){
             player.sort_player_cards();
         }
     }
+    
+    player.hand.forEach(function(card){
+        if(card.new_card !== undefined){
+            card.display.classList.add('new_card');
+        }
+    });
         
 	switch(position){
 		case 'player_1_hand':
@@ -271,7 +278,7 @@ Game.prototype.draw_current_players_hand = function(){
 			hand = id('player_1_hand');
 			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;
+				hand.appendChild(player.hand[i].display);
 			}
 			break;
 		}
@@ -280,7 +287,7 @@ Game.prototype.draw_current_players_hand = function(){
 			hand = id('player_2_hand');
 			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;
+				hand.appendChild(player.hand[i].display);
 			}
 			break;
 		}
@@ -289,7 +296,7 @@ Game.prototype.draw_current_players_hand = function(){
 			hand = id('player_3_hand');
 			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;
+				hand.appendChild(player.hand[i].display);
 			}
 			break;
 		}
@@ -298,19 +305,29 @@ Game.prototype.draw_current_players_hand = function(){
 			hand = id('player_4_hand');
 			hand.innerHTML = '';
 			for(var i =0; i <  player.hand.length; i++){
-				hand.innerHTML += player.hand[i].display;
+				hand.appendChild(player.hand[i].display);
 			}
 			break;
 		}
 	}
+    
+    window.setTimeout(function(){
+        player.hand.forEach(function(card){
+            if(card.new_card !== undefined){
+                card.display.classList.remove('new_card');
+                delete card.new_card;
+            }
+        });
+    }, 1000);
 };
 
 Game.prototype.draw_discard_pile = function(){
     var visual_discard_pile = id("discard_pile");
     var discard_pile = this.round_constants.discard_pile;
+    visual_discard_pile.innerHTML = '';
 
 	if(this.round_constants.discard_pile.length > 0){
-	    visual_discard_pile.innerHTML = discard_pile[discard_pile.length - 1].display;
+	    visual_discard_pile.appendChild(discard_pile[discard_pile.length - 1].display);
 	}else{
 		visual_discard_pile.innerHTML = '';
 	}

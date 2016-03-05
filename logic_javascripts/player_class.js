@@ -25,12 +25,17 @@ Player.prototype.deal = function(deck_ref, round) {
 //@deck_and_dc, round_constants object
 //@d_or_dc, string, value is either deck or discard.
 Player.prototype.draw_from_deck_or_discard = function(deck_and_dc, d_or_dc) {
+    var drawn_card = {};
     if (d_or_dc == 'deck') {
-        this.hand.push(deck_and_dc.pop());
+        drawn_card = deck_and_dc.pop();
+        drawn_card.new_card = true;
+        this.hand.push(drawn_card);
         this.actions_taken.push('drew');
         return deck_and_dc;
     } else if (d_or_dc == 'discard') {
-        this.hand.push(deck_and_dc.discard_pile.pop());
+        drawn_card = deck_and_dc.discard_pile.pop();
+        drawn_card.new_card = true;
+        this.hand.push(drawn_card);
         this.actions_taken.push('drew');
     }
 };

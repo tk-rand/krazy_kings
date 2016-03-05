@@ -37,6 +37,13 @@
 	transform: rotateY(90deg);
 }
 
+.new_card{
+    top: -10px;
+    position: relative;
+    -webkit-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+
 /*suit of hearts */
 .card.hearts3{
     background-position: 852px 289px;
