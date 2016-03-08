@@ -123,10 +123,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
 Computer.prototype.evaluate_and_discard = function(card){
         //splice above returns an array even if there is only one element
         var discarded_card = card[0].display;
-        
-        //display is a string not a dom element
-        var index = discarded_card.search('t=');
-        var card_name = discarded_card.substring(index + 3, discarded_card.length - 8);
+        var card_name = discarded_card.getAttribute('data-element');    
         var current_player = this.hand_area;
         
         //discard the bad card
