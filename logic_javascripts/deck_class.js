@@ -27,37 +27,52 @@ function Deck(){
                 }else{
                     is_wild = false;
                 }
+                var card = document.createElement('div');
+                var card_name = '';
                 if( j <= 1){
                     suite = 'stars'; //and change the suite after 2 of each card in a suite is made.
-                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' data-element='"+suite + card_values[i]+"'></div>");
+                    card_name = suite + card_values[i];
+                    card.className = "card " + card_name;
+                    card.setAttribute('data-element', card_name); 
+                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite, card);
                     cc++; //increment the card count each time
                 }else if(j > 1 && j <= 3){
                     suite = 'hearts';
-                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' data-element='"+suite + card_values[i]+"'></div>");
+                    card_name = suite + card_values[i];
+                    card.className = "card " + card_name;
+                    card.setAttribute('data-element', card_name); 
+                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite, card);
                     cc++;
                 }else if(j > 3 && j <= 5){
                     suite = 'diamonds';
-                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' data-element='"+suite + card_values[i]+"'></div>");
+                    card_name = suite + card_values[i];
+                    card.className = "card " + card_name;
+                    card.setAttribute('data-element', card_name); 
+                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite, card);
                     cc++;
                 }else if (j > 5 && j <= 7){
                     suite = 'spades';
-                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+"' data-element='"+suite + card_values[i]+"'></div>");
+                    card_name = suite + card_values[i];
+                    card.className = "card " + card_name;
+                    card.setAttribute('data-element', card_name); 
+                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite, card);
                     cc++;
                 }else if(j > 7 && j <= 9){
                     suite = 'clubs';
-                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite,
-                        "<div class='card "+ suite + card_values[i]+ "' data-element='"+suite + card_values[i]+"'></div>");
+                    card_name = suite + card_values[i];
+                    card.className = "card " + card_name;
+                    card.setAttribute('data-element', card_name); 
+                    _deck[cc] = this.create_card(card_values[i], card_names[i], is_wild, suite, card);
                     cc++;
                 }
             }
         }
         //in a double deck there are 6 jokers
         for (var i = 0; i < 6; i++){
-            _deck.push(this.create_card(1,'joker', true, 'joker', "<div class='cards joker' data-element='joker1'></div>"));
+            var card = document.createElement('div');
+            card.className = "cards joker";
+            card.setAttribute('data-element', 'joker1');
+            _deck.push(this.create_card(1,'joker', true, 'joker', card));
         }
         return _deck;
     };
