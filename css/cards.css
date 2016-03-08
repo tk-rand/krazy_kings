@@ -38,7 +38,6 @@
 }
 
 .new_card{
-    top: -10px;
     position: relative;
     -webkit-transition: all 1s ease-in-out;
     transition: all 1s ease-in-out;

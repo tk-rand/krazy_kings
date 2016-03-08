@@ -112,8 +112,26 @@ Game.prototype.draw_game = function(){
 
     deck_area.appendChild(_deck);
     deck_area.appendChild(discard);
-    wilds_display.innerHTML = this.current_wilds + "'s are wild";
     
+    switch(this.current_wilds){
+        case 11:{
+            wilds_display.innerHTML = "Jacks are Wild!";
+            break;
+        }
+        case 12:{
+            wilds_display.innerHTML = "Queens are Wild!";
+            break;
+        }
+        case 13:{
+            wilds_display.innerHTML = "Kings are Wild!";
+            break;
+        }
+        default:{
+            wilds_display.innerHTML = this.current_wilds + "'s are Wild!";
+            break;
+        }
+    }
+       
     player_1_area.innerHTML = '';
 	player_2_area.innerHTML = '';
 	player_3_area.innerHTML = '';
@@ -268,7 +286,9 @@ Game.prototype.draw_current_players_hand = function(){
     
     player.hand.forEach(function(card){
         if(card.new_card !== undefined){
-            card.display.classList.add('new_card');
+            card.display.style.top = '-10px';
+            card.display.style.position = 'relative';
+            //card.display.classList.add('new_card');
         }
     });
         
@@ -314,7 +334,10 @@ Game.prototype.draw_current_players_hand = function(){
     window.setTimeout(function(){
         player.hand.forEach(function(card){
             if(card.new_card !== undefined){
-                card.display.classList.remove('new_card');
+                card.display.style.top = '0px';
+                window.setTimeout(function(){
+                    card.display.style.position = 'initial';    
+                }, 600);
                 delete card.new_card;
             }
         });

@@ -9,5 +9,10 @@
                 "b2": 77
             }
         }
+    },
+    "AI_version_2_scores":{
+        "Single_Bot_Games":{
+            "g1": 202
+        }
     }
 }
