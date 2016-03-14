@@ -14,5 +14,13 @@
         "Single_Bot_Games":{
             "g1": 202
         }
+    },
+    "AI_version_3_scores":{
+        "Single_Bot_Games":{
+            "g1": 27,
+            "g2": 57,
+            "g3": 35,
+            "g4": 135
+        }
     }
 }

@@ -18,7 +18,7 @@ Game.prototype.initialize_game = function(num_of_players, name_of_players){
     var round_instance = new Round();
     for(var i = 0; i< num_of_players; i++){
         if(game_mode && i > 0){
-            this.players[i] = new Computer();
+            this.players[i] = new MediumComputer();
         }else{
             this.players[i] = new Player();
         }
@@ -142,7 +142,7 @@ Game.prototype.draw_game = function(){
     for (var i = 0; i< this.round_constants.round + 2; i++){
         for(var j = 0; j < this.players.length; j++){
             if(JSON.parse(settings).sort_cards){
-                if(this.players[j].constructor !== Computer){
+                if(this.players[j].constructor !== MediumComputer){
                     this.players[j].sort_player_cards();
                 }
                 
@@ -279,7 +279,7 @@ Game.prototype.draw_current_players_hand = function(){
     var settings = window.localStorage.getItem('settings');
             
     if(JSON.parse(settings).sort_cards){
-        if(player.constructor !== Computer){
+        if(player.constructor !== MediumComputer){
             player.sort_player_cards();
         }
     }
