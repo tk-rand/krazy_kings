@@ -5,7 +5,7 @@
 //computer is a subclass of player
 function Computer(){
     Player.apply(this);
-    this.settings = window.localStorage.getItem('ai_level');
+    this.settings = JSON.parse(window.localStorage.getItem('ai_level'));
 }
 
 Computer.prototype = Object.create(Player.prototype);

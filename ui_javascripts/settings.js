@@ -3,6 +3,7 @@
 window.onload = function(){
     add_settings_listeners();
     add_main_screen_sort_listener();
+    add_ai_level_settings_listener();
     
     //sets setting to what is in local storage if they have already been set
     if(window.localStorage.getItem('settings')){
@@ -69,4 +70,30 @@ function add_main_screen_sort_listener(){
         _game.players[_game.current_player].sort_player_cards();
         _game.draw_current_players_hand();        
     });
+}
+
+function add_ai_level_settings_listener(){
+    var slider = id('ai_level_slider');
+    var slide = id('ai_level_bar');
+    
+    slider.addEventListener('click', change_ai_level, false);
+    slide.addEventListener('click', change_ai_level, false);
+    
+}
+
+function change_ai_level(event){
+    var slider = id('ai_level_slider');
+    console.log(event);
+    //default is easy
+    var ai_level = {
+        difficulty: 'easy'
+    };
+    
+    if(!window.localStorage.getItem('ai_level')){
+        window.localStorage.setItem('ai_level', JSON.stringify(ai_level));
+    }else{
+        ai_level = JSON.parse(window.localStorage.getItem('ai_level'));
+        
+    }
+    
 }

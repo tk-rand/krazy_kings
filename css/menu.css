@@ -32,6 +32,11 @@
  	top:1px;	
 }
 
+.options_screen .player_btn{
+    margin: 90px 20%;
+    padding-top: 5px;
+}
+
 .switch{
 	width: 100%;
 	margin: 10px auto;
@@ -123,5 +128,37 @@ input.toggle:checked + label:before{
 
 input.toggle:checked + label:after{
 	margin-left: 60px;
+}
+
+.slider{
+    color: #DDDDDD;
+    text-align: center;
+}
+
+.settings_33{
+    width: 32%;
+    display: inline-block;
+    text-align: center;
+}
+
+.ai_level_bar{
+    width: 90%;
+    height: 20px;
+    background-color: beige;
+    border-radius: 10px;
+    margin: 10px 5%;
+}
+
+.ai_level_slider{
+    width: 50px;
+    height: 20px;
+    background-color: black;
+    border-radius: 10px;
+}
+
+.sub_header{
+    font-size: 24px;
+    margin: 10px 0;
+    display: inline-block;
 }
 
