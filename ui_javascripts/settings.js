@@ -23,6 +23,28 @@ window.onload = function(){
             }
         }
     }
+    if(window.localStorage.getItem('ai_level')){
+        var slider = id('ai_level_slider');
+        var ai_level = JSON.parse(window.localStorage.getItem('ai_level'));
+        switch(ai_level.difficulty){
+            case 'easy':{
+                slider.style.marginLeft = "0px";
+                break;
+            }
+            case 'medium':{
+                slider.style.marginLeft = "100px";
+                break;
+            }
+            case 'hard':{
+                slider.style.marginLeft = "204px";
+                break;
+            }
+            default:{
+                slider.style.marginLeft = '0px';
+                break;
+            }
+        }
+    }
 };
 
 function add_settings_listeners(){
@@ -73,27 +95,43 @@ function add_main_screen_sort_listener(){
 }
 
 function add_ai_level_settings_listener(){
-    var slider = id('ai_level_slider');
     var slide = id('ai_level_bar');
     
-    slider.addEventListener('click', change_ai_level, false);
     slide.addEventListener('click', change_ai_level, false);
     
 }
 
 function change_ai_level(event){
     var slider = id('ai_level_slider');
-    console.log(event);
-    //default is easy
+
+    var bar_width = event.srcElement.clientWidth;
+    
+    var easy_click_area = Math.floor(parseFloat(bar_width * 0.33));
+    var hard_click_area = bar_width - easy_click_area;
+    var ai_level = {};
+    
+    if(window.localStorage.getItem("ai_level") !== undefined){
+        ai_level = JSON.parse(window.localStorage.getItem("ai_level"));
+    }else{
+        //default to easy
+        ai_level = {
+            difficulty: "easy"
+        };
+        
+    }
     var ai_level = {
         difficulty: 'easy'
     };
     
-    if(!window.localStorage.getItem('ai_level')){
-        window.localStorage.setItem('ai_level', JSON.stringify(ai_level));
-    }else{
-        ai_level = JSON.parse(window.localStorage.getItem('ai_level'));
+    if(event.offsetX < easy_click_area){
         
+        slider.style.marginLeft = '0px';
+    }else if(event.offsetX >= easy_click_area && event.offsetX < hard_click_area){
+        ai_level.difficulty = "medium";
+        slider.style.marginLeft = "100px";
+    }else{
+        ai_level.difficulty = "hard";
+        slider.style.marginLeft = "204px";
     }
-    
+    window.localStorage.setItem("ai_level", JSON.stringify(ai_level));
 }

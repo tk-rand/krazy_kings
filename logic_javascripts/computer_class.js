@@ -5,7 +5,13 @@
 //computer is a subclass of player
 function Computer(){
     Player.apply(this);
-    this.settings = JSON.parse(window.localStorage.getItem('ai_level'));
+    if(window.localStorage.getItem('ai_level')){
+        this.settings = JSON.parse(window.localStorage.getItem('ai_level')).difficulty;
+    }else{
+        //set default to easy if they haven't looked at settings screen
+        this.settings = 'easy';
+    }
+    
 }
 
 Computer.prototype = Object.create(Player.prototype);
@@ -20,6 +26,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
     var temp_card = null;
     var discard_pile_length = round_constants.discard_pile.length;
     var discard_pile_card = round_constants.discard_pile[discard_pile_length - 1];
+    var used_function = false;
     
     for(var i = 0; i < h_length; i++){
         temp_hand[i] = this.hand[i];
@@ -53,7 +60,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
     
     var self = this;
     
-    if(this.settings.ai_level === "medium"){
+    if(this.settings === "medium" || this.settings === "hard"){
         //This block ensures that we "gamble on choosing the deck card" if the discard
         //pile card won't help us complete a set or run.
         var hand_difference = current_hand_score.value - lowest_score;
@@ -65,7 +72,23 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
         }
     }
 
-    if((hand_difference > card_difference && !discarded_card[0].is_wild) || this.settings.ai_level === "easy"){
+    if(this.settings === "easy"){
+       drawing_from_discard_pile();
+       if(!used_function){
+           drawing_from_deck();
+       }         
+    }else if(this.settings === "medium" || this.settings === "hard"){ //currently no hard settings so send both to same place
+        if(hand_difference > card_difference && !discarded_card[0].is_wild){
+            drawing_from_discard_pile();
+            if(!used_function){
+                drawing_from_deck();
+            }
+        }else{
+            drawing_from_deck();
+        }
+    }
+
+    function drawing_from_discard_pile(){
         if(lowest_score !== 0 && lowest_score < current_hand_score.value){
             //makes AI action not instant
             window.setTimeout(function(){
@@ -74,6 +97,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                     return self.action_handler(discarded_card, 'end_turn');
                 }, 3000);
             }, 3000);
+            used_function = true;
         }else if(lowest_score === 0){
             window.setTimeout(function(){
                 _game.handle_events('discard');
@@ -81,8 +105,10 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                     return self.action_handler(discarded_card, 'lay_down');
                 }, 3000);
             }, 3000);
+            used_function = true;
         }
-    }else{
+    }
+    function drawing_from_deck(){
         var discard_card = null;
         var temp_discard = null;
         
@@ -128,7 +154,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
 };
 
 Computer.prototype.action_handler = function(card, action){
-    this.evaluate_and_discard(discard_card);
+    this.evaluate_and_discard(card);
     _game.handle_events(action);
 }
 
