@@ -108,6 +108,7 @@ function dialog_confirm(type, computer, callback){
     
     function handle_input_button(event){
         if(event.keyCode === 13 || event.type === 'click'){
+            //handles a weird event bubble I haven't tracked down yet
             if(game_started){
                 return;
             }
@@ -122,6 +123,10 @@ function dialog_confirm(type, computer, callback){
 
 function sanatize(str){
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+}
+
+function set_alert_player(title, message, callback){
+    
 }
 
 Array.prototype.remove_dupes = function(){

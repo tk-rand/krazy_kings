@@ -196,7 +196,7 @@ Game.prototype.draw_player_scores = function(){
 };
 
 Game.prototype.rotate_players_cards_beginning_game = function(_current_player){
-    var hand_areas = [].slice.call(document.querySelectorAll('.hand_area'));
+    var hand_areas = cls('.hand_area');
 
     hand_areas.forEach(function(area){
        if(area.getAttribute('id') !== _current_player.hand_area){
@@ -288,7 +288,6 @@ Game.prototype.draw_current_players_hand = function(){
         if(card.new_card !== undefined){
             card.display.style.top = '-10px';
             card.display.style.position = 'relative';
-            //card.display.classList.add('new_card');
         }
     });
         
@@ -434,7 +433,6 @@ Game.prototype.handle_events = function(event, npc_card){
 				break;
             }
             case 'end_turn':{
-                var self = this;
             	this.current_player = _current_player.end_turn(this);
             	if(round_instance.round_ending.is_ending == true && this.current_player == round_instance.round_ending.player_out){
             		if(_current_player.has_been_scored != true){
@@ -450,15 +448,15 @@ Game.prototype.handle_events = function(event, npc_card){
             		}
             		this.rotate_players_cards(_current_player);
                     if(game_mode && this.current_player !== 0){
-                        self.players[self.current_player].decide_what_to_draw(self.round_constants);
+                        this.players[this.current_player].decide_what_to_draw(this.round_constants);
                     }
             		break;            	
             	}
             	if(round_instance.round_ending.is_ending == false){
             	    this.rotate_players_cards(_current_player);
                     if(game_mode && this.current_player !== 0){
-                        var player = self.players[self.current_player];
-                        player.decide_what_to_draw(self.round_constants);
+                        var player = this.players[this.current_player];
+                        player.decide_what_to_draw(this.round_constants);
                     }
             	}         	
             	break;

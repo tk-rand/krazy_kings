@@ -78,6 +78,7 @@
 .input_error{
     display: none;
     color: red;
+    text-align: center;
 }
 
 .small{

@@ -105,7 +105,8 @@ function change_ai_level(event){
     var slider = id('ai_level_slider');
 
     var bar_width = event.srcElement.clientWidth;
-    
+    var medium_pos = Math.floor(parseInt(bar_width / 2, 10) - 25); //25 is half the width of the slider element
+    var hard_pos = Math.floor(parseInt(bar_width - 50, 10)); //50 is width of slider element
     var easy_click_area = Math.floor(parseFloat(bar_width * 0.33));
     var hard_click_area = bar_width - easy_click_area;
     var ai_level = {};
@@ -119,19 +120,15 @@ function change_ai_level(event){
         };
         
     }
-    var ai_level = {
-        difficulty: 'easy'
-    };
     
     if(event.offsetX < easy_click_area){
-        
         slider.style.marginLeft = '0px';
     }else if(event.offsetX >= easy_click_area && event.offsetX < hard_click_area){
         ai_level.difficulty = "medium";
-        slider.style.marginLeft = "100px";
+        slider.style.marginLeft = medium_pos + "px";
     }else{
         ai_level.difficulty = "hard";
-        slider.style.marginLeft = "204px";
+        slider.style.marginLeft = hard_pos + "px";
     }
     window.localStorage.setItem("ai_level", JSON.stringify(ai_level));
 }
