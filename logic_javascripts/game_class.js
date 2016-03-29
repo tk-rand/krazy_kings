@@ -384,8 +384,9 @@ Game.prototype.end_game = function(){
     }else{
         statement = 'Player: ' + this.players[winning_player[0]].name + ' has won the game!';
     }
-    alert(statement);
-    navigation('home_screen');        
+    alert_player(statement, "With a score of: " + this.players[winning_player[0]].score + "!", function(){
+        navigation('home_screen'); 
+    });
 };
 
 Game.prototype.handle_events = function(event, npc_card){
@@ -463,23 +464,28 @@ Game.prototype.handle_events = function(event, npc_card){
             }
             case 'lay_down':{
             	var result = _current_player.lay_down(_current_player.hand);
-
+                var self = this;
             	if(round_instance.round_ending.is_ending == false){
                 	if(result == 0){
-                	    alert(_current_player.name + " is laying down their hand!");
-                	    round_instance.round_ending.is_ending = true;
-                        round_instance.round_ending.player_out = this.current_player;
-                        _current_player.running_score_total(result);  
+                        round_instance.round_ending.is_ending = true;
+                        round_instance.round_ending.player_out = self.current_player;
+                        _current_player.running_score_total(result);
+                	    alert_player("Round is Ending!", _current_player.name + " is laying down their hand!", function(){  
+                            return self.handle_events('end_turn'); 
+                        });
+                        break;
                 	}else if(result != 0){
-                	    alert("You don't have the cards to do that right now!");
+                	    alert_player("Can't Laydown!", "You don't have the cards to do that right now!",function(){
+                         self.handle_events('end_turn');   
+                        });
+                        break;
                 	}  
             	}else{
                     //tally the score now if not let end turn handle it, it will pass a 0 which means no laydown.
-                    _current_player.running_score_total(result); 
+                    _current_player.running_score_total(result);
+                    this.handle_events('end_turn'); 
             	}
-            	this.handle_events('end_turn');
                 break;
-            		
             }
             case 'end_round':{
                 if(round_instance.round === 11){
@@ -491,7 +497,17 @@ Game.prototype.handle_events = function(event, npc_card){
             }
         }
     }else{
-        alert('You can not do that action yet!');
+        var bad_action = "";
+        if(element_data.indexOf('player') !== -1){
+            bad_action = "discard";
+        }else if(element_data.indexOf('deck') !== -1 || element_data.indexOf('discard') !== -1){
+            bad_action = "draw";
+        }else if(element_data.indexOf('end_turn') !== -1){
+            bad_action = "end your turn";
+        }else{
+            bad_action = "lay down";
+        }
+        alert_player("Hey You!","You can't " + bad_action + " yet!", function(){return;});
     }
 };
 

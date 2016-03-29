@@ -95,7 +95,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                 _game.handle_events('discard');
                 window.setTimeout(function(){
                     return self.action_handler(discarded_card, 'end_turn');
-                }, 3000);
+                }, 1500);
             }, 3000);
             used_function = true;
         }else if(lowest_score === 0){
@@ -103,7 +103,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                 _game.handle_events('discard');
                 window.setTimeout(function(){
                     return self.action_handler(discarded_card, 'lay_down');
-                }, 3000);
+                }, 1500);
             }, 3000);
             used_function = true;
         }
@@ -148,7 +148,7 @@ Computer.prototype.decide_what_to_draw = function(round_constants) {
                 }else{
                     return self.action_handler(discard_card, 'end_turn');
                 }    
-            },3000);
+            },1500);
         },3000);
     }
 };

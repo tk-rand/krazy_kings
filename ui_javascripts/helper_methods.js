@@ -69,7 +69,7 @@ function dialog_confirm(type, computer, callback){
     var ok_button = id('dialog_ok_button');
     var error = id('input_error');
     this.new_callback = callback; //avoids the closure callback hell
-
+    
     input.value = '';
     input_popup.style.display = 'block';
     input.focus();
@@ -107,15 +107,18 @@ function dialog_confirm(type, computer, callback){
     var self = this;
     
     function handle_input_button(event){
+        if(event.type === 'keyup' && error.style.display === 'block'){
+            error.style.display = 'none';
+        }
         if(event.keyCode === 13 || event.type === 'click'){
             //handles a weird event bubble I haven't tracked down yet
             if(game_started){
                 return;
             }
-            if(input.value === ''){
-                error.setAttribute('display', 'inline-block');
+            if(input.value === '' || input.value === undefined || input.value === null){
+                error.style.display = 'block';
             }else{
-                self.new_callback(input.value);
+                return self.new_callback(input.value);
             }  
         } 
     }
@@ -125,9 +128,27 @@ function sanatize(str){
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 }
 
-function set_alert_player(title, message, callback){
+function alert_player(title, message, callback){
+    var alert_popup = id('alert_popup');
+    var alert_title = id('alert_title');
+    var alert_content = id('alert_content');
+    var ok_bttn = id('alert_ok_button');
+    
+    alert_popup.style.display = 'block';
+    alert_title.innerText = title;
+    alert_content.innerText = message;
+    this.callback = callback;
+    
+    ok_bttn.removeEventListener('click', handle_ok_button, false);
+    ok_bttn.addEventListener('click', handle_ok_button, false);
     
 }
+
+function handle_ok_button(){
+    var alert_popup = id('alert_popup');
+    alert_popup.style.display = 'none';
+    return callback();
+}  
 
 Array.prototype.remove_dupes = function(){
     if(this === void 0 || this === null){
