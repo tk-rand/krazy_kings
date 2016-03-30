@@ -1,0 +1,135 @@
+@media(max-width: 800px) and (orientation: landscape){
+    .home_screen{
+        width: 100%;
+        background-color: transparent;
+        height: auto;
+    }
+    .home_screen h4{
+        margin: auto auto;
+        width: 22%;
+        padding: 20px;
+    }
+    .home_screen_header {
+        margin: 0 auto;
+        width: 100%;
+        font-size: x-large;
+        background-color: lightblue;
+    }
+    .home_screen .main_menu {
+        margin: -10px auto;
+        width: 40%;
+    }
+    .home_screen .menu li.player_btn {
+        display: block;
+        margin: 25px 0;
+        padding-top: 10px;
+    }
+    .home_screen_footer {
+        width: 100%;
+        font-size: x-large;
+        background-color: lightblue;
+        height: 55px;
+        top: 86%;
+        position: absolute;
+    }
+    .home_screen_footer h4 {
+        padding: 13px;
+    }
+    .game_type_screen header{
+        color: white;
+        text-align: center;
+        margin-top: 15%;
+    }
+    .game_type_screen .settings_container{
+        margin: 0 auto;
+        width: 66%;
+    }
+    
+    .options_screen {
+        position: relative;
+        margin: 20px auto;
+        width: 75%;
+        background-color: blue;
+        height: auto;
+    }
+    
+    .options_screen .sort_type_toggle_container{
+        width: 53%;
+        margin: 0 auto;
+    }
+    .options_screen .player_btn {
+        margin: 10px 32%;
+        padding-top: 5px;
+    }
+    
+    .popup {
+        margin: 0 auto;
+        width: 85%;
+        background-color: #663300;
+        color: #ffffff;
+    }
+    
+    .popup header {
+        margin: 15px auto 0;
+        width: 68%;
+        float: left;
+        text-align: center;
+    }
+    
+    .main_screen {
+        position: relative;
+        height: 375px;
+    }
+    
+    #deck_and_discard {
+        margin-left: 283px;
+        margin-top: 115px;
+        position: absolute;
+    }
+    #wilds_display {
+        color: white;
+        position: absolute;
+        left: 425px;
+        top: 145px;
+        font-size: 24px;
+    }
+    .small {
+        width: 75px;
+        padding: 5px;
+        height: 20px;
+        position: absolute;
+        top: 150px;
+        left: 10px;
+    }
+    .small:active{
+        position: absolute;
+        top: 151px !important;
+    }
+    #player_1_hand {
+        position: absolute;
+        margin-left: 270px;
+        margin-top: 230px;
+    }
+    #player_1_score {
+        position: absolute;
+        left: 21px;
+        top: 195px;
+        color: #FFFFFF;
+    }
+    #player_2_hand {
+        margin-left: 270px;
+        top: 0px;
+        position: absolute;
+    }
+    #player_2_score {
+        position: absolute;
+        left: 21px;
+        top: 120px;
+        color: #FFFFFF;
+    }
+    .player_menu {
+        position: absolute;
+        top: 321px;
+        left: 0%;
+    }
+}

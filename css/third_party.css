@@ -203,3 +203,19 @@
   bottom: 0;
   background-color: rgba(0,0,0,0.2);
 }
+
+@media (max-width: 500px){
+    .alert-dialog{
+        margin: -50% auto;
+        width: 310px;
+    }
+    .alert-dialog-button{
+        font-size: 24px;
+    }
+    .alert-dialog-content{
+        font-size: 24px;
+    }
+    .alert-dialog-title{
+        font-size: 27px;
+    } 
+}

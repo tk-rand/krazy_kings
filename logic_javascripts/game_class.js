@@ -131,7 +131,28 @@ Game.prototype.draw_game = function(){
             break;
         }
     }
-       
+    
+    var device_width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    
+    if(device_width < 800){
+        //just an easy way of saying don't do it the first round
+        if(this.current_wilds > 3){
+            var hand_area_style = window.getComputedStyle(player_1_area, null);
+            var left = parseInt(hand_area_style.marginLeft);
+            if(this.current_wilds > 10){
+                left = left - 30;
+            }else{
+                left = left - 20;
+            }
+            
+            player_1_area.style.marginLeft = left + "px";
+            player_2_area.style.marginLeft = left + "px";
+        }else{ //reset for new games
+            player_1_area.style.marginLeft = "270px";
+            player_2_area.style.marginLeft = "270px";
+        } 
+    }
+    
     player_1_area.innerHTML = '';
 	player_2_area.innerHTML = '';
 	player_3_area.innerHTML = '';
