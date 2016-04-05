@@ -8,7 +8,8 @@ var game_constants = null;
 var _game = new Game();
 var game_mode = false;
 
-function Main(mode){
+//@continued: bool, true means they are coming back to a saved game
+function Main(mode, continued){
 	if(game_started == false){
         if(window.localStorage.getItem('settings') == undefined){
             var settings = {
@@ -24,10 +25,13 @@ function Main(mode){
             _game.draw_game();
             assign_event_listeners(round_constants);
         });
-	}else{
+	}else if(continued == false){
         var round_constants = _game.new_round(game_constants);
         _game.draw_game();
         assign_event_listeners(round_constants);
+    }else if(continued === true){
+        _game.draw_game();
+        assign_event_listeners(_game.round_constants);
     }
 }
 

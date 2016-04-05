@@ -111,14 +111,13 @@ function change_ai_level(event){
     var hard_click_area = bar_width - easy_click_area;
     var ai_level = {};
     
-    if(window.localStorage.getItem("ai_level") !== undefined){
+    if(window.localStorage.getItem("ai_level") !== null){
         ai_level = JSON.parse(window.localStorage.getItem("ai_level"));
     }else{
         //default to easy
         ai_level = {
             difficulty: "easy"
         };
-        
     }
     
     if(event.offsetX < easy_click_area){
