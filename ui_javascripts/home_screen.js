@@ -5,6 +5,7 @@
             var attachFastClick = Origami.fastclick;
             attachFastClick(document.body);
             window.addEventListener('beforeunload', handle_game_pause, false);
+            window.addEventListener('unload', handle_game_pause, false);
             check_for_saved_game();
         }, false);
     }
@@ -12,8 +13,13 @@
 
 function handle_game_pause(event){
     var confirm_message = "\o/";
+    if(!game_started){
+        event.preventDefault();
+        return confirm_message;
+    }
+    
     var player_length = _game.players.length;
-    var game_state = JSON.parse(window.localStorage.getItem('game_state')) || {};
+    var game_state = {};
     
     _game.deck.forEach(function(card){
         return stringify_nodes(card);
@@ -32,11 +38,13 @@ function handle_game_pause(event){
     game_state = JSON.stringify(_game);
     window.localStorage.setItem('game_state', game_state);
     
+    game_started = false; //stops this function from running twice
     event.preventDefault();
     return confirm_message;
 }
 
 function stringify_nodes(card){
+    console.log("hello");
     card.display = card.display.outerHTML;
     return card;
 }
