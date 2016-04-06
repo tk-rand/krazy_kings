@@ -6,6 +6,11 @@
             attachFastClick(document.body);
             window.addEventListener('beforeunload', handle_game_pause, false);
             window.addEventListener('unload', handle_game_pause, false);
+            document.addEventListener('visibilityState', function(event){
+                if(document.visibilityState == 'hidden'){
+                    return handle_game_pause(event);
+                }    
+            }, false);
             check_for_saved_game();
         }, false);
     }
