@@ -43,10 +43,13 @@ function remove_event_listeners(){
 }
 
 function end_game(){
+    var continue_button = id('continue_button');
     game_started = false;
     _game.undraw_game();
     remove_event_listeners();
     game_constants = null;
+    window.localStorage.removeItem('game_state');
+    continue_button.style.display = "none";
     _game = new Game();   
 }
 

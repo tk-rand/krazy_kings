@@ -491,7 +491,7 @@ Game.prototype.handle_events = function(event, npc_card){
                 if(round_instance.round === 11){
                     this.end_game();
                 }else{
-                    Main();
+                    Main(game_mode, false);
                 }
                 break;
             }

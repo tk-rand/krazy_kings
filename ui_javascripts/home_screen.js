@@ -78,23 +78,29 @@ function continue_game(){
     game_state.round_constants.discard_pile.forEach(function(card){
         return create_node_from_string(card);
     });
-    _game.initialize_game(player_length, player_names);
+    
+    if(game_state.players[1].name.indexOf('Man1') !== -1){
+        game_mode = true;
+    }
+    game_constants = _game.initialize_game(player_length, player_names);
+    game_started = true;
     _game.deck = [];
     _game.deck = game_state.deck;
     
     for(var j = 0; j < player_length; j++){
         _game.players[j].hand = game_state.players[j].hand;
         _game.players[j].score = game_state.players[j].score;
+        _game.players[j].actions_taken = game_state.players[j].actions_taken;
+        _game.players[j].has_been_scored = game_state.players[j].has_been_scored;
     }
     
     _game.round_constants.discard_pile = game_state.round_constants.discard_pile;
     _game.round_constants.round = game_state.round_constants.round;
-    
-    if(game_state.players[1].name.indexOf('Man1') !== -1){
-        game_mode = true;
-    }
-    game_started = true;
-    
+    game_constants.round_instance.round = game_state.round_constants.round;
+    _game.round_constants.round_instance = game_constants.round_instance;
+    _game.round_constants.deck_instance = game_constants.deck_instance;
+    _game.current_wilds = game_state.current_wilds;
+
     navigation("main_screen");
     Main(game_mode, true);
 }

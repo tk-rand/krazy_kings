@@ -23,20 +23,19 @@ function Main(mode, continued){
             game_constants = constants;
             var round_constants = _game.new_round(game_constants);
             _game.draw_game();
-            assign_event_listeners(round_constants);
+            assign_event_listeners(round_constants, false);
         });
 	}else if(continued == false){
         var round_constants = _game.new_round(game_constants);
         _game.draw_game();
-        assign_event_listeners(round_constants);
+        assign_event_listeners(round_constants, false);
     }else if(continued === true){
         _game.draw_game();
-        assign_event_listeners(_game.round_constants);
+        assign_event_listeners(_game.round_constants, true);
     }
 }
 
-function init(_game, callback){
-    
+function init(_game, callback){  
     get_number_of_players_and_names(function(player_names){
         var _constants = _game.initialize_game(player_names.length, player_names);
     
@@ -45,7 +44,7 @@ function init(_game, callback){
     });
 }
 
-function assign_event_listeners(round_constants){
+function assign_event_listeners(round_constants, continued){
     var deck = id('playing_deck');
     var discard_pile = id('discard_pile');
     var player_1 = id('player_1_hand');
@@ -57,7 +56,7 @@ function assign_event_listeners(round_constants){
 
     //these only need to be assigned once, but the deck and discard pile are recreated every round so need new
     //listeners attached to them.
-    if(round_constants.round == 1){
+    if(round_constants.round == 1 || continued){
         player_1.addEventListener('click', named_event_listener, false);
         player_2.addEventListener('click', named_event_listener, false);
         player_3.addEventListener('click', named_event_listener, false);
